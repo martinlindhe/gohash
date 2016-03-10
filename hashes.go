@@ -1,15 +1,24 @@
 package gohash
 
-import "crypto/sha1"
+import (
+	"crypto/sha1"
+	"crypto/sha512"
+)
 
+// HashComparer ...
 type HashComparer func(val []byte, expected []byte) bool
 
-// see if hash of computed value match expected value
+// MatchSha1 checks if two hashes match
 func MatchSha1(data []byte, expected []byte) bool {
 	return ByteArrayEquals(sha1.Sum(data), expected)
 }
 
-// calc all possible combinations of keys of given length
+// MatchSha512 checks if two hashes match
+func MatchSha512(data []byte, expected []byte) bool {
+	return Byte64ArrayEquals(sha512.Sum512(data), expected)
+}
+
+// FindMatchingHash calcs all possible combinations of keys of given length
 func FindMatchingHash(keys []byte, comparer HashComparer, expected []byte, length int) []byte {
 
 	pos := make([]byte, length)
@@ -18,7 +27,7 @@ func FindMatchingHash(keys []byte, comparer HashComparer, expected []byte, lengt
 
 	iterations := Pow(len(keys), length)
 
-	for i := 0; i < iterations; i++ {
+	for i := int64(0); i < iterations; i++ {
 		tmp := make([]byte, length)
 
 		// create current mutation:
@@ -33,7 +42,7 @@ func FindMatchingHash(keys []byte, comparer HashComparer, expected []byte, lengt
 		// update mutation
 		for roller := length - 1; roller >= 0; roller-- {
 			pos[roller]++
-			if pos[roller] < numKeys {
+			if pos[roller] < numKeys { // XXX ???
 				break
 			}
 			pos[roller] = 0

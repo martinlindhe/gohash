@@ -31,6 +31,20 @@ func ByteArrayEquals(a [20]byte, b []byte) bool {
 	return true
 }
 
+// XXX sha512.Sum512() returns 60 byte arrays
+func Byte64ArrayEquals(a [64]byte, b []byte) bool {
+
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
 func IsByteInSlice(a byte, list []byte) bool {
 	for _, b := range list {
 		if b == a {
