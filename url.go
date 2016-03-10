@@ -1,6 +1,7 @@
 package gohash
 
 import (
+	"crypto/sha512"
 	"fmt"
 	"math/rand"
 )
@@ -11,9 +12,10 @@ func FindMatchingOnionURL(expected []byte) string {
 	keys := []byte("aaaaaaaaaaaaaaaa")
 	length := len(keys)
 
+	tmp := make([]byte, length)
+
 	cnt := 0
 	for {
-		tmp := make([]byte, length)
 
 		// create current mutation:
 		for x := 0; x < length; x++ {
@@ -22,7 +24,7 @@ func FindMatchingOnionURL(expected []byte) string {
 
 		toCheck := append(tmp, []byte(".onion")...)
 
-		if MatchSha512(toCheck, expected) {
+		if byte64ArrayEquals(sha512.Sum512(toCheck), expected) {
 			fmt.Println("Matched ", string(toCheck))
 			return string(toCheck)
 		}
@@ -70,6 +72,8 @@ func FindMatchingOnionURLByRandom(expected []byte) string {
 		tmp[x] = keys[x]
 	}
 
+	fmt.Println("INITIAL STATE:", string(tmp))
+
 	cnt := 0
 	for {
 		// update mutation of first 16 letters
@@ -77,7 +81,7 @@ func FindMatchingOnionURLByRandom(expected []byte) string {
 			tmp[roller] = allowedChars[rand.Intn(allowedCharsLen)]
 		}
 
-		if MatchSha512(tmp, expected) {
+		if byte64ArrayEquals(sha512.Sum512(tmp), expected) {
 			fmt.Println("Matched ", string(tmp))
 			return string(tmp)
 		}

@@ -3,10 +3,11 @@ package gohash
 import (
 	"encoding/hex"
 	"fmt"
+	"sort"
 )
 
 // return byte array from hex string
-func HexStringToBytes(s string) []byte {
+func hexStringToBytes(s string) []byte {
 
 	res, err := hex.DecodeString(s)
 	if err != nil {
@@ -18,7 +19,7 @@ func HexStringToBytes(s string) []byte {
 }
 
 // sha1.Sum() returns 20 bytes (160 bit)
-func Byte20ArrayEquals(a [20]byte, b []byte) bool {
+func byte20ArrayEquals(a [20]byte, b []byte) bool {
 
 	if len(a) != len(b) {
 		return false
@@ -32,7 +33,7 @@ func Byte20ArrayEquals(a [20]byte, b []byte) bool {
 }
 
 // sha512.Sum512() returns 64 bytes (512 bit)
-func Byte64ArrayEquals(a [64]byte, b []byte) bool {
+func byte64ArrayEquals(a [64]byte, b []byte) bool {
 
 	if len(a) != len(b) {
 		return false
@@ -45,7 +46,8 @@ func Byte64ArrayEquals(a [64]byte, b []byte) bool {
 	return true
 }
 
-func IsByteInSlice(a byte, list []byte) bool {
+func isByteInSlice(a byte, list []byte) bool {
+
 	for _, b := range list {
 		if b == a {
 			return true
@@ -54,17 +56,29 @@ func IsByteInSlice(a byte, list []byte) bool {
 	return false
 }
 
-func StrToDistinctByteSlice(s string) []byte {
+func strToDistinctByteSlice(s string) []byte {
+
 	res := []byte{}
 
 	ptr := 0
 	for i := 0; i < len(s); i++ {
-		if IsByteInSlice(s[i], res) {
+		if isByteInSlice(s[i], res) {
 			continue
 		}
 		res = append(res, s[i])
 		ptr++
 	}
 
+	// XXX TODO sort it too
+	sort.Sort(byteSlice(res))
+
 	return res
 }
+
+// byteSlice implements sort.Interface for []Person based on
+// the Age field.
+type byteSlice []byte
+
+func (a byteSlice) Len() int           { return len(a) }
+func (a byteSlice) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a byteSlice) Less(i, j int) bool { return a[i] < a[j] }

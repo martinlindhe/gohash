@@ -1,55 +1,55 @@
 package gohash
 
 import (
-	"fmt"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestHexStringToBytes(t *testing.T) {
 
-	assert.Equal(t, []byte("hej"), HexStringToBytes("68656a"))
+	assert.Equal(t, []byte("hej"), hexStringToBytes("68656a"))
 }
 
-// find hash of some string
-func TestFindSha1Hash(t *testing.T) {
+func TestHashSha1(t *testing.T) {
 
-	keys := StrToDistinctByteSlice("tom")
+	hasher := NewHasher()
 
-	length := 5
+	hasher.Algo("sha1")
+	hasher.AllowedKeys("tom")
+	hasher.ExpectedHash("9af7d87edaba03e23f6dbdaed29101ee1291c8a6")
+	hasher.Length(5)
 
-	// sha1 of "motom":
-	expectedHash := HexStringToBytes("9af7d87edaba03e23f6dbdaed29101ee1291c8a6")
+	res, err := hasher.Find()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "motom", string(res))
+}
 
-	chk := FindMatchingHash(keys, MatchSha1, expectedHash, length)
+func TestHashSha512(t *testing.T) {
 
-	assert.Equal(t, "motom", string(chk))
+	hasher := NewHasher()
+
+	hasher.Algo("sha512")
+	hasher.AllowedKeys("mota")
+	hasher.ExpectedHash("2b4df6c7b86d49a71c5ad6c1ffc2e85fde618c69400d2a0ccabb8dd12df4ae2584103b6947379742c0bc11a4e81ad4a3a832c11a734bf8ae5f8a8af9317a4c03")
+	hasher.Length(4)
+
+	assert.Equal(t, "amot", hasher.GetAllowedKeys()) // make sure they are sorted alphabetically
+
+	res, err := hasher.Find()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "atom", string(res))
 }
 
 // benchmarks given key length and print a prediction based on it
 func BenchmarkSha1Speed(*testing.B) {
 
-	keys := StrToDistinctByteSlice("580%(=QWI+qwi*Nn")
+	hasher := NewHasher()
 
-	length := 5
+	hasher.Algo("sha1")
+	hasher.AllowedKeys("580%(=QWI+qwi*Nn")
+	hasher.ExpectedHash("0000000000000000000000000000000000000000")
+	hasher.Length(5)
 
-	expectedHash := HexStringToBytes("0000000000000000000000000000000000000000")
-
-	iterations := Pow(len(keys), length)
-	start := time.Now()
-	FindMatchingHash(keys, MatchSha1, expectedHash, length)
-	duration := time.Since(start)
-
-	//	fmt.Printf("[benchmark length %d, %d iterations took %s]\n", length, iterations, duration)
-
-	oneOperation := duration / time.Duration(iterations)
-
-	for i := 6; i <= 10; i++ {
-		it := Pow(len(keys), i)
-		predictedTime := oneOperation * time.Duration(it)
-
-		fmt.Printf("length = %2d, iterations = %-15d, predicted time = %s\n", i, it, predictedTime)
-	}
+	hasher.Find()
 }

@@ -3,50 +3,112 @@ package gohash
 import (
 	"crypto/sha1"
 	"crypto/sha512"
+	"fmt"
 )
 
-// HashComparer ...
-type HashComparer func(val []byte, expected []byte) bool
-
-// MatchSha1 checks if two hashes match
-func MatchSha1(data []byte, expected []byte) bool {
-	return Byte20ArrayEquals(sha1.Sum(data), expected)
+// Hasher ...
+type Hasher struct {
+	algo        string
+	expected    []byte
+	minLength   int
+	maxLength   int
+	allowedKeys []byte
 }
 
-// MatchSha512 checks if two hashes match
-func MatchSha512(data []byte, expected []byte) bool {
-	return Byte64ArrayEquals(sha512.Sum512(data), expected)
+// NewHasher returns a new Hasher
+func NewHasher() *Hasher {
+	return &Hasher{}
 }
 
-// FindMatchingHash calcs all possible combinations of keys of given length
-func FindMatchingHash(keys []byte, comparer HashComparer, expected []byte, length int) []byte {
+// Algo sets the hash algorithm ("sha1", "sha512")
+func (h *Hasher) Algo(algo string) { h.algo = algo }
 
-	pos := make([]byte, length)
+// ExpectedHash sets the expected hash
+func (h *Hasher) ExpectedHash(expected string) {
+	tmp := hexStringToBytes(expected)
+	h.expected = tmp[:]
+}
 
-	numKeys := byte(len(keys))
+// Length sets the length of key to find
+func (h *Hasher) Length(len int) {
+	h.minLength = len
+	h.maxLength = len
+}
 
-	iterations := Pow(len(keys), length)
+// MinLength sets min length of key to find
+func (h *Hasher) MinLength(len int) { h.minLength = len }
+
+// MaxLength sets max length of key to find
+func (h *Hasher) MaxLength(len int) { h.maxLength = len }
+
+// AllowedKeys sets the allowed keys
+func (h *Hasher) AllowedKeys(s string) {
+	h.allowedKeys = strToDistinctByteSlice(s)
+}
+
+// GetAllowedKeys ...
+func (h *Hasher) GetAllowedKeys() string { return string(h.allowedKeys) }
+
+// Find calcs all possible combinations of keys of given length
+func (h Hasher) Find() (string, error) {
+
+	if len(h.allowedKeys) == 0 {
+		return "", fmt.Errorf("allowedKeys unset")
+	}
+
+	iterations := Pow(len(h.allowedKeys), h.minLength)
+
+	fmt.Println("Performing", iterations, "iterations")
+
+	tmp := make([]byte, h.minLength)
+
+	firstAllowedKey := h.allowedKeys[0]
+	lastAllowedKey := h.allowedKeys[len(h.allowedKeys)-1]
+
+	// create initial mutation
+	for x := 0; x < h.minLength; x++ {
+		tmp[x] = firstAllowedKey
+	}
+
+	fmt.Println("INITIAL STATE:", string(tmp))
 
 	for i := int64(0); i < iterations; i++ {
-		tmp := make([]byte, length)
-
-		// create current mutation:
-		for x := 0; x < length; x++ {
-			tmp[x] = keys[pos[x]]
-		}
-
-		if comparer(tmp, expected) {
-			return tmp
-		}
 
 		// update mutation
-		for roller := length - 1; roller >= 0; roller-- {
-			pos[roller]++
-			if pos[roller] < numKeys { // XXX ???
+		for roller := h.minLength - 1; roller >= 0; roller-- {
+			if tmp[roller] == lastAllowedKey {
+				// roll over
+				tmp[roller] = firstAllowedKey
+				continue
+			} else {
+				// XXX use a map with prepared lookup sequence for speed
+				tmp[roller] = h.nextValueFor(tmp[roller])
 				break
 			}
-			pos[roller] = 0
+		}
+
+		if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(tmp), h.expected) {
+			return string(tmp), nil
+		}
+
+		if h.algo == "sha512" && byte64ArrayEquals(sha512.Sum512(tmp), h.expected) {
+			return string(tmp), nil
 		}
 	}
-	return nil
+
+	return "", fmt.Errorf("should not happen xap1")
+}
+
+func (h *Hasher) nextValueFor(b byte) byte {
+
+	next := false
+	for _, x := range h.allowedKeys {
+		if next == true {
+			return x
+		}
+		if x == b {
+			next = true
+		}
+	}
+	return '0'
 }
