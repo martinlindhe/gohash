@@ -58,6 +58,8 @@ func FindMatchingOnionURLByRandom(expected []byte) string {
 		'2', '3', '4', '5', '6', '7',
 	}
 
+	allowedCharsLen := len(allowedChars)
+
 	keys := []byte("aaaaaaaaaaaaaaaa.onion")
 	length := len(keys)
 
@@ -70,10 +72,9 @@ func FindMatchingOnionURLByRandom(expected []byte) string {
 
 	cnt := 0
 	for {
-
 		// update mutation of first 16 letters
 		for roller := 0; roller < 16; roller++ {
-			tmp[roller] = allowedChars[rand.Intn(len(allowedChars))]
+			tmp[roller] = allowedChars[rand.Intn(allowedCharsLen)]
 		}
 
 		if MatchSha512(tmp, expected) {
