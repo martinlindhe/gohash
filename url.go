@@ -43,7 +43,7 @@ func FindMatchingOnionURL(expected []byte) string {
 		}
 
 		cnt++
-		if cnt%100000 == 0 {
+		if cnt%1000000 == 0 {
 			fmt.Println(string(toCheck), " (seq)")
 		}
 	}
@@ -83,7 +83,7 @@ func FindMatchingOnionURLByRandom(expected []byte) string {
 		}
 
 		cnt++
-		if cnt%100000 == 0 {
+		if cnt%1000000 == 0 {
 			fmt.Println(string(tmp), " (rnd)")
 		}
 	}
