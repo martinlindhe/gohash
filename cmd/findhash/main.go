@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -19,6 +20,8 @@ func main() {
 	// support -h for --help
 	kingpin.CommandLine.HelpFlag.Short('h')
 	kingpin.Parse()
+
+	rand.Seed(time.Now().UTC().UnixNano())
 
 	totalTime := time.Now()
 
