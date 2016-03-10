@@ -10,7 +10,7 @@ type HashComparer func(val []byte, expected []byte) bool
 
 // MatchSha1 checks if two hashes match
 func MatchSha1(data []byte, expected []byte) bool {
-	return ByteArrayEquals(sha1.Sum(data), expected)
+	return Byte20ArrayEquals(sha1.Sum(data), expected)
 }
 
 // MatchSha512 checks if two hashes match

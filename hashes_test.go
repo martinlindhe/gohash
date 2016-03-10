@@ -8,6 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestHexStringToBytes(t *testing.T) {
+
+	assert.Equal(t, []byte("hej"), HexStringToBytes("68656a"))
+}
+
 // find hash of some string
 func TestFindSha1Hash(t *testing.T) {
 

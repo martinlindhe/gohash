@@ -4,15 +4,24 @@ import (
 	"fmt"
 	"time"
 
+	"gopkg.in/alecthomas/kingpin.v2"
+
 	"github.com/martinlindhe/gohash"
+)
+
+var (
+	hash = kingpin.Flag("hash", "Hash to crack, in hex string").Required().String()
 )
 
 func main() {
 
+	// support -h for --help
+	kingpin.CommandLine.HelpFlag.Short('h')
+	kingpin.Parse()
+
 	totalTime := time.Now()
 
-	hashString := "36367763ab73783c7af284446c59466b4cd653239a311cb7116d4618dee09a8425893dc7500b464fdaf1672d7bef5e891c6e2274568926a49fb4f45132c2a8b4"
-	expectedHash := gohash.HexStringToBytes(hashString)
+	expectedHash := gohash.HexStringToBytes(*hash)
 
 	chk := gohash.FindMatchingOnionURL(expectedHash)
 	fmt.Println(chk)

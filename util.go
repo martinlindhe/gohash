@@ -17,8 +17,8 @@ func HexStringToBytes(s string) []byte {
 	return res
 }
 
-// XXX sha1.Sum() returns 20 byte arrays
-func ByteArrayEquals(a [20]byte, b []byte) bool {
+// sha1.Sum() returns 20 bytes (160 bit)
+func Byte20ArrayEquals(a [20]byte, b []byte) bool {
 
 	if len(a) != len(b) {
 		return false
@@ -31,7 +31,7 @@ func ByteArrayEquals(a [20]byte, b []byte) bool {
 	return true
 }
 
-// XXX sha512.Sum512() returns 60 byte arrays
+// sha512.Sum512() returns 64 bytes (512 bit)
 func Byte64ArrayEquals(a [64]byte, b []byte) bool {
 
 	if len(a) != len(b) {

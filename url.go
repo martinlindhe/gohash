@@ -1,6 +1,11 @@
 package gohash
 
-import "fmt"
+import (
+	"crypto/sha512"
+	"encoding/hex"
+	"fmt"
+	"math/rand"
+)
 
 // FindMatchingOnionURL uses incremental brute force to try all combinations
 func FindMatchingOnionURL(expected []byte) string {
@@ -42,6 +47,46 @@ func FindMatchingOnionURL(expected []byte) string {
 		cnt++
 		if cnt%100000 == 0 {
 			fmt.Println(string(toCheck))
+		}
+	}
+}
+
+// FindMatchingOnionURLByRandom uses random brute force to attempt to find by luck
+func FindMatchingOnionURLByRandom(expected []byte) string {
+
+	allowedChars := []byte{
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+		'2', '3', '4', '5', '6', '7',
+	}
+
+	keys := []byte("aaaaaaaaaaaaaaaa.onion")
+	length := len(keys)
+
+	tmp := make([]byte, length)
+
+	// create initial mutation
+	for x := 0; x < length; x++ {
+		tmp[x] = keys[x]
+	}
+
+	cnt := 0
+	for {
+
+		// update mutation of first 16 letters
+		for roller := 0; roller < 16; roller++ {
+			tmp[roller] = allowedChars[rand.Intn(len(allowedChars))]
+		}
+
+		if MatchSha512(tmp, expected) {
+			fmt.Println("Matched ", string(tmp))
+			return string(tmp)
+		}
+
+		cnt++
+		if cnt%100000 == 0 {
+			hash := sha512.Sum512(tmp)
+			fmt.Println(string(tmp), " => ", hex.EncodeToString(hash[:]))
 		}
 	}
 }
