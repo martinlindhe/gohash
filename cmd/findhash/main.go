@@ -10,7 +10,8 @@ import (
 )
 
 var (
-	hash = kingpin.Flag("hash", "Hash to crack, in hex string").Required().String()
+	hash   = kingpin.Flag("hash", "Hash to crack, in hex string").Required().String()
+	random = kingpin.Flag("random", "Random mutation mode.").Bool()
 )
 
 func main() {
@@ -23,9 +24,13 @@ func main() {
 
 	expectedHash := gohash.HexStringToBytes(*hash)
 
-	chk := gohash.FindMatchingOnionURL(expectedHash)
-	fmt.Println(chk)
+	res := ""
+	if *random {
+		res = gohash.FindMatchingOnionURLByRandom(expectedHash)
+	} else {
+		res = gohash.FindMatchingOnionURL(expectedHash)
+	}
 
-	fmt.Printf("total time: ")
-	fmt.Println(time.Since(totalTime))
+	fmt.Println("result: ", res)
+	fmt.Println("total time: ", time.Since(totalTime))
 }

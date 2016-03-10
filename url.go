@@ -1,8 +1,6 @@
 package gohash
 
 import (
-	"crypto/sha512"
-	"encoding/hex"
 	"fmt"
 	"math/rand"
 )
@@ -85,8 +83,7 @@ func FindMatchingOnionURLByRandom(expected []byte) string {
 
 		cnt++
 		if cnt%100000 == 0 {
-			hash := sha512.Sum512(tmp)
-			fmt.Println(string(tmp), " => ", hex.EncodeToString(hash[:]))
+			fmt.Println(string(tmp))
 		}
 	}
 }
