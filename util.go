@@ -46,6 +46,20 @@ func byte20ArrayEquals(a [20]byte, b []byte) bool {
 	return true
 }
 
+// sha256.Sum224() returns 28 bytes (224 bit)
+func byte28ArrayEquals(a [28]byte, b []byte) bool {
+
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
 // sha256.Sum256() returns 32 bytes (256 bit)
 func byte32ArrayEquals(a [32]byte, b []byte) bool {
 

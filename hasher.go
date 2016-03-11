@@ -81,23 +81,31 @@ func (h *Hasher) verify() error {
 		return fmt.Errorf("algo unset")
 	}
 
-	if h.algo == "md5" && len(h.expected) != 16 {
-		return fmt.Errorf("expectedHash is wrong size, should be 128 bit, is %d", len(h.expected)*8)
+	keyBitSize := len(h.expected) * 8
+	expectedBitSize := len(h.expected) * 8
+
+	// XXX use a map with algo id -> bitsize mapping
+	if h.algo == "md5" && keyBitSize != 128 {
+		return fmt.Errorf("expectedHash is wrong size, should be 128 bit, is %d", expectedBitSize)
 	}
 
-	if h.algo == "sha1" && len(h.expected) != 20 {
-		return fmt.Errorf("expectedHash is wrong size, should be 160 bit, is %d", len(h.expected)*8)
+	if h.algo == "sha1" && keyBitSize != 160 {
+		return fmt.Errorf("expectedHash is wrong size, should be 160 bit, is %d", expectedBitSize)
 	}
 
-	if h.algo == "sha256" && len(h.expected) != 32 {
-		return fmt.Errorf("expectedHash is wrong size, should be 256 bit, is %d", len(h.expected)*8)
+	if h.algo == "sha224" && keyBitSize != 224 {
+		return fmt.Errorf("expectedHash is wrong size, should be 224 bit, is %d", expectedBitSize)
 	}
 
-	if h.algo == "sha512" && len(h.expected) != 64 {
-		return fmt.Errorf("expectedHash is wrong size, should be 512 bit, is %d", len(h.expected)*8)
+	if h.algo == "sha256" && keyBitSize != 256 {
+		return fmt.Errorf("expectedHash is wrong size, should be 256 bit, is %d", expectedBitSize)
 	}
 
-	if h.algo != "md5" && h.algo != "sha1" && h.algo != "sha256" && h.algo != "sha512" {
+	if h.algo == "sha512" && keyBitSize != 512 {
+		return fmt.Errorf("expectedHash is wrong size, should be 512 bit, is %d", expectedBitSize)
+	}
+
+	if h.algo != "md5" && h.algo != "sha1" && h.algo != "sha224" && h.algo != "sha256" && h.algo != "sha512" {
 		return fmt.Errorf("unknown algo %s", h.algo)
 	}
 
@@ -209,6 +217,10 @@ func (h *Hasher) equals(t []byte) bool {
 	}
 
 	if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(t), h.expected) {
+		return true
+	}
+
+	if h.algo == "sha224" && byte28ArrayEquals(sha256.Sum224(t), h.expected) {
 		return true
 	}
 
