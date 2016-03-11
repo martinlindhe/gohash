@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
-	"os/signal"
 	"time"
 
 	"github.com/martinlindhe/gohash"
@@ -38,19 +37,21 @@ func main() {
 	hasher.ExpectedHash(*hash)
 	hasher.Length(*minLength)
 
-	// catch ctrl-c interrupt signal
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
-	go func() {
-		for range c {
-			// sig is a ^C, handle it
+	/*
+		// catch ctrl-c interrupt signal
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, os.Interrupt)
+		go func() {
+			for range c { // XXX requires newer go than on battle
+				// sig is a ^C, handle it
 
-			// XXX * when exited, show number of tries and time ran, and tries/sec
-			fmt.Println("")
-			fmt.Println("total time: ", time.Since(startTime))
-			os.Exit(0)
-		}
-	}()
+				// XXX * when exited, show number of tries and time ran, and tries/sec
+				fmt.Println("")
+				fmt.Println("total time: ", time.Since(startTime))
+				os.Exit(0)
+			}
+		}()
+	*/
 
 	var err error
 	if *random {
