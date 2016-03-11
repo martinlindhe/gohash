@@ -170,12 +170,51 @@ func TestHashSha3_512(t *testing.T) {
 	assert.Equal(t, "atom", string(res))
 }
 
+func TestHashShake128(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("shake128")
+	hasher.AllowedKeys("mota")
+	hasher.ExpectedHash("4d4a61f7f33e9d7166e9690239f5e64c6c1e0bb790b9e19bb7b2c466315463d7")
+	hasher.Length(4)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "atom", string(res))
+}
+
+func TestHashShake256(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("shake256")
+	hasher.AllowedKeys("mota")
+	hasher.ExpectedHash("1bdf1af0ab2a906727f0a5b99a30808fc41b6ebc150f516965e12a9f1067e50788905a3fc3bc8df24fcb5248e96a92a5f214aeac74bf2eb0dec6d070a5a5968b")
+	hasher.Length(4)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "atom", string(res))
+}
+
 func TestHashWhirlpool(t *testing.T) {
 
 	hasher := NewHasher()
 	hasher.Algo("whirlpool")
 	hasher.AllowedKeys("mota")
 	hasher.ExpectedHash("a42b7d2f481d91330c77855bcc935805ddb20e6096412e0d115918984711495336bad4938e7b74568c9b532adfae497819512efcdd21147b38ab8f6ac09bb5d1")
+	hasher.Length(4)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "atom", string(res))
+}
+
+func TestRipemd160(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("ripemd160")
+	hasher.AllowedKeys("mota")
+	hasher.ExpectedHash("5bbb79e23ab1d617bd97ef9a3f289ddf5545a5c1")
 	hasher.Length(4)
 
 	res, err := hasher.FindSequential()

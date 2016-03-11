@@ -8,6 +8,7 @@ import (
 
 	"github.com/jzelinskie/whirlpool"
 
+	"golang.org/x/crypto/ripemd160"
 	"golang.org/x/crypto/sha3"
 )
 
@@ -25,7 +26,10 @@ var (
 		"sha3-256":   256,
 		"sha3-384":   384,
 		"sha3-512":   512,
+		"shake128":   256,
+		"shake256":   512,
 		"whirlpool":  512,
+		"ripemd160":  160,
 	}
 
 	algoEquals = map[string]func(*[]byte, *[]byte) bool{
@@ -41,7 +45,10 @@ var (
 		"sha3-256":   sha3_256Equals,
 		"sha3-384":   sha3_384Equals,
 		"sha3-512":   sha3_512Equals,
+		"shake128":   shake128Equals,
+		"shake256":   shake256Equals,
 		"whirlpool":  whirlpoolEquals,
+		"ripemd160":  ripemd160Equals,
 	}
 )
 
@@ -92,9 +99,32 @@ func sha3_512Equals(b *[]byte, expected *[]byte) bool {
 	return byte64ArrayEquals(sha3.Sum512(*b), *expected)
 }
 
+func shake128Equals(b *[]byte, expected *[]byte) bool {
+
+	h := make([]byte, 32)
+	sha3.ShakeSum128(h, *b)
+	return byteArrayEquals(h, *expected)
+}
+
+func shake256Equals(b *[]byte, expected *[]byte) bool {
+
+	h := make([]byte, 64)
+	sha3.ShakeSum256(h, *b)
+
+	return byteArrayEquals(h, *expected)
+}
+
 func whirlpoolEquals(b *[]byte, expected *[]byte) bool {
 
 	w := whirlpool.New()
+	w.Write(*b)
+
+	return byteArrayEquals(w.Sum(nil), *expected)
+}
+
+func ripemd160Equals(b *[]byte, expected *[]byte) bool {
+
+	w := ripemd160.New()
 	w.Write(*b)
 
 	return byteArrayEquals(w.Sum(nil), *expected)
