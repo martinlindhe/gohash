@@ -125,15 +125,7 @@ func (h *Hasher) FindSequential() (string, error) {
 
 		tmp2 := append(tmp, h.suffix...)
 
-		if h.algo == "md5" && byte16ArrayEquals(md5.Sum(tmp2), h.expected) {
-			return string(tmp2), nil
-		}
-
-		if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(tmp2), h.expected) {
-			return string(tmp2), nil
-		}
-
-		if h.algo == "sha512" && byte64ArrayEquals(sha512.Sum512(tmp2), h.expected) {
+		if h.equals(tmp2) {
 			return string(tmp2), nil
 		}
 
@@ -195,15 +187,7 @@ func (h *Hasher) FindRandom() (string, error) {
 			tmp[roller] = h.allowedKeys[rand.Intn(allowedKeysLen)]
 		}
 
-		if h.algo == "md5" && byte16ArrayEquals(md5.Sum(tmp), h.expected) {
-			return string(tmp), nil
-		}
-
-		if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(tmp), h.expected) {
-			return string(tmp), nil
-		}
-
-		if h.algo == "sha512" && byte64ArrayEquals(sha512.Sum512(tmp), h.expected) {
+		if h.equals(tmp) {
 			return string(tmp), nil
 		}
 
@@ -212,6 +196,21 @@ func (h *Hasher) FindRandom() (string, error) {
 			fmt.Println(string(tmp), " (rnd)")
 		}
 	}
+}
+
+func (h *Hasher) equals(t []byte) bool {
+	if h.algo == "md5" && byte16ArrayEquals(md5.Sum(t), h.expected) {
+		return true
+	}
+
+	if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(t), h.expected) {
+		return true
+	}
+
+	if h.algo == "sha512" && byte64ArrayEquals(sha512.Sum512(t), h.expected) {
+		return true
+	}
+	return false
 }
 
 func (h *Hasher) nextValueFor(b byte) byte {
