@@ -6,7 +6,8 @@ import (
 	"strings"
 )
 
-// Dictionary ...
+// Dictionary is used to find cleartext for checksum in `expected`,
+// using dictionary and any algorithm with matching bitsize
 type Dictionary struct {
 	dictFileName  string
 	lines         []string
@@ -16,7 +17,7 @@ type Dictionary struct {
 	suffix        string
 }
 
-// NewDictionary ...
+// NewDictionary creates a new Dictionary
 func NewDictionary(dictFileName string) (*Dictionary, error) {
 
 	data, err := ioutil.ReadFile(dictFileName)

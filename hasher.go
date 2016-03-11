@@ -12,7 +12,7 @@ const (
 	AllowedOnion = "abcdefghijklmnopqrstuvwxyz234567"
 )
 
-// Hasher ...
+// Hasher is used to find cleartext for checksum in `expected`, using algorithm in `algo`
 type Hasher struct {
 	algo        string
 	prefix      string
@@ -80,46 +80,6 @@ func (h *Hasher) AllowedKeys(s string) {
 
 // GetAllowedKeys ...
 func (h *Hasher) GetAllowedKeys() string { return string(h.allowedKeys) }
-
-func (h *Hasher) verify() error {
-
-	if len(h.allowedKeys) == 0 {
-		return fmt.Errorf("allowedKeys unset")
-	}
-
-	if h.minLength == 0 {
-		return fmt.Errorf("minLength unset")
-	}
-
-	if len(h.algo) == 0 {
-		return fmt.Errorf("algo unset")
-	}
-
-	keyBitSize := len(h.expected) * 8
-	expectedBitSize := len(h.expected) * 8
-
-	if requiredBitSize, ok := algos[h.algo]; ok {
-		if keyBitSize != requiredBitSize {
-			return fmt.Errorf("expectedHash is wrong size, should be %d bit, is %d",
-				requiredBitSize, expectedBitSize)
-		}
-	} else {
-		return fmt.Errorf("unknown algo %s", h.algo)
-	}
-
-	return nil
-}
-
-func (h *Hasher) equals() bool {
-
-	if equals, ok := algoEquals[h.algo]; ok {
-		return equals(&h.buffer, &h.expected)
-	}
-
-	// NOTE: ok to panic here, since code path can only occur
-	// while adding a new algo to the lib
-	panic(fmt.Errorf("Unknown algo %s", h.algo))
-}
 
 // FindSequential calcs all possible combinations of keys of given length
 func (h *Hasher) FindSequential() (string, error) {
@@ -212,6 +172,46 @@ func (h *Hasher) FindRandom() (string, error) {
 		}
 		h.try++
 	}
+}
+
+func (h *Hasher) verify() error {
+
+	if len(h.allowedKeys) == 0 {
+		return fmt.Errorf("allowedKeys unset")
+	}
+
+	if h.minLength == 0 {
+		return fmt.Errorf("minLength unset")
+	}
+
+	if len(h.algo) == 0 {
+		return fmt.Errorf("algo unset")
+	}
+
+	keyBitSize := len(h.expected) * 8
+	expectedBitSize := len(h.expected) * 8
+
+	if requiredBitSize, ok := algos[h.algo]; ok {
+		if keyBitSize != requiredBitSize {
+			return fmt.Errorf("expectedHash is wrong size, should be %d bit, is %d",
+				requiredBitSize, expectedBitSize)
+		}
+	} else {
+		return fmt.Errorf("unknown algo %s", h.algo)
+	}
+
+	return nil
+}
+
+func (h *Hasher) equals() bool {
+
+	if equals, ok := algoEquals[h.algo]; ok {
+		return equals(&h.buffer, &h.expected)
+	}
+
+	// NOTE: ok to panic here, since code path can only occur
+	// while adding a new algo to the lib
+	panic(fmt.Errorf("Unknown algo %s", h.algo))
 }
 
 func (h *Hasher) statusReport() {

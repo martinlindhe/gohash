@@ -306,7 +306,7 @@ func TestHashSha3_512(t *testing.T) {
 func TestHashShake128(t *testing.T) {
 
 	hasher := NewHasher()
-	hasher.Algo("shake128")
+	hasher.Algo("shake128-256")
 	hasher.AllowedKeys("mota")
 	hasher.ExpectedHash("4d4a61f7f33e9d7166e9690239f5e64c6c1e0bb790b9e19bb7b2c466315463d7")
 	hasher.Length(4)
@@ -319,7 +319,7 @@ func TestHashShake128(t *testing.T) {
 func TestHashShake256(t *testing.T) {
 
 	hasher := NewHasher()
-	hasher.Algo("shake256")
+	hasher.Algo("shake256-512")
 	hasher.AllowedKeys("mota")
 	hasher.ExpectedHash("1bdf1af0ab2a906727f0a5b99a30808fc41b6ebc150f516965e12a9f1067e50788905a3fc3bc8df24fcb5248e96a92a5f214aeac74bf2eb0dec6d070a5a5968b")
 	hasher.Length(4)

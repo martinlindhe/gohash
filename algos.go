@@ -31,24 +31,24 @@ var (
 		"crc32c":   32,
 		"crc32k":   32,
 		// "gost":       256,
-		"md2":        128,
-		"md4":        128,
-		"md5":        128,
-		"ripemd160":  160,
-		"sha0":       160, // XXX todo support
-		"sha1":       160,
-		"sha224":     224,
-		"sha256":     256,
-		"sha384":     384,
-		"sha512":     512,
-		"sha512-224": 224,
-		"sha512-256": 256,
-		"sha3-224":   224,
-		"sha3-256":   256,
-		"sha3-384":   384,
-		"sha3-512":   512,
-		"shake128":   256,
-		"shake256":   512,
+		"md2":          128,
+		"md4":          128,
+		"md5":          128,
+		"ripemd160":    160,
+		"sha0":         160, // XXX todo support
+		"sha1":         160,
+		"sha224":       224,
+		"sha256":       256,
+		"sha384":       384,
+		"sha512":       512,
+		"sha512-224":   224,
+		"sha512-256":   256,
+		"sha3-224":     224,
+		"sha3-256":     256,
+		"sha3-384":     384,
+		"sha3-512":     512,
+		"shake128-256": 256,
+		"shake256-512": 512,
 		//"skein256-256": 256,
 		//"skein512-256": 256,
 		//"skein512-512": 512,
@@ -66,23 +66,23 @@ var (
 		"crc32c":   crc32cEquals,
 		"crc32k":   crc32kEquals,
 		// "gost":       gostEquals,
-		"md2":        md2Equals,
-		"md4":        md4Equals,
-		"md5":        md5Equals,
-		"ripemd160":  ripemd160Equals,
-		"sha1":       sha1Equals,
-		"sha224":     sha224Equals,
-		"sha256":     sha256Equals,
-		"sha384":     sha384Equals,
-		"sha512":     sha512Equals,
-		"sha512-224": sha512_224Equals,
-		"sha512-256": sha512_256Equals,
-		"sha3-224":   sha3_224Equals,
-		"sha3-256":   sha3_256Equals,
-		"sha3-384":   sha3_384Equals,
-		"sha3-512":   sha3_512Equals,
-		"shake128":   shake128Equals,
-		"shake256":   shake256Equals,
+		"md2":          md2Equals,
+		"md4":          md4Equals,
+		"md5":          md5Equals,
+		"ripemd160":    ripemd160Equals,
+		"sha1":         sha1Equals,
+		"sha224":       sha224Equals,
+		"sha256":       sha256Equals,
+		"sha384":       sha384Equals,
+		"sha512":       sha512Equals,
+		"sha512-224":   sha512_224Equals,
+		"sha512-256":   sha512_256Equals,
+		"sha3-224":     sha3_224Equals,
+		"sha3-256":     sha3_256Equals,
+		"sha3-384":     sha3_384Equals,
+		"sha3-512":     sha3_512Equals,
+		"shake128-256": shake128Equals,
+		"shake256-512": shake256Equals,
 		//"skein256-256": skein256_256Equals,
 		//"skein512-256": skein512_256Equals,
 		//"skein512-512": skein512_512Equals,
@@ -179,6 +179,13 @@ func md5Equals(b *[]byte, expected *[]byte) bool {
 	return byte16ArrayEquals(md5.Sum(*b), *expected)
 }
 
+func ripemd160Equals(b *[]byte, expected *[]byte) bool {
+
+	w := ripemd160.New()
+	w.Write(*b)
+	return byteArrayEquals(w.Sum(nil), *expected)
+}
+
 func sha1Equals(b *[]byte, expected *[]byte) bool {
 	return byte20ArrayEquals(sha1.Sum(*b), *expected)
 }
@@ -269,13 +276,6 @@ func tiger192Equals(b *[]byte, expected *[]byte) bool {
 func whirlpoolEquals(b *[]byte, expected *[]byte) bool {
 
 	w := whirlpool.New()
-	w.Write(*b)
-	return byteArrayEquals(w.Sum(nil), *expected)
-}
-
-func ripemd160Equals(b *[]byte, expected *[]byte) bool {
-
-	w := ripemd160.New()
 	w.Write(*b)
 	return byteArrayEquals(w.Sum(nil), *expected)
 }

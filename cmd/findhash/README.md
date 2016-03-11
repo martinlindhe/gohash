@@ -1,3 +1,8 @@
+# About
+
+
+Findhash is a command line tool that searches for plaintext matching known hashes
+
 # Sequential brute force
 
 For example, try to find the hidden .onion url from cicada 3301
