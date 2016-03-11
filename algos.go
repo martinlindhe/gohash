@@ -35,6 +35,7 @@ var (
 		"md4":        128,
 		"md5":        128,
 		"ripemd160":  160,
+		"sha0":       160, // XXX todo support
 		"sha1":       160,
 		"sha224":     224,
 		"sha256":     256,

@@ -38,6 +38,7 @@ tiger192      Tiger               192 bit  24 byte      php's hash() calls this 
 md2           MD2                 128 bit  16 byte
 md4           MD4                 128 bit  16 byte
 md5           MD5                 128 bit  16 byte
+md6           MD6                   --variable--        XXX no golang impl found
 sha1          SHA1                160 bit  20 byte
 sha224        SHA2-224            224 bit  28 byte
 sha256        SHA2-256            256 bit  32 byte
@@ -75,3 +76,6 @@ ripemd320     80 eb0cf45114c56a8421fbcb33430fa22e0cd607560a88bbe14ce
 
 TODO later, port a sha0 lib to golang and add sha0 support
     http://home.utah.edu/~nahaj/ada/sha/sha-0/sha-0.tar
+
+
+Algorithms: https://en.wikipedia.org/wiki/Comparison_of_cryptographic_hash_functions
