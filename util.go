@@ -102,6 +102,19 @@ func byte64ArrayEquals(a [64]byte, b []byte) bool {
 	return true
 }
 
+func byteArrayEquals(a []byte, b []byte) bool {
+
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
 func isByteInSlice(a byte, list []byte) bool {
 
 	for _, b := range list {

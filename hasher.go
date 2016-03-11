@@ -1,16 +1,10 @@
 package gohash
 
 import (
-	"crypto/md5"
-	"crypto/sha1"
-	"crypto/sha256"
-	"crypto/sha512"
 	"fmt"
 	"math/rand"
 	"strings"
 	"time"
-
-	"golang.org/x/crypto/sha3"
 )
 
 // ...
@@ -21,6 +15,7 @@ const (
 // Hasher ...
 type Hasher struct {
 	algo        string
+	prefix      string
 	suffix      string
 	expected    []byte
 	minLength   int
@@ -42,6 +37,7 @@ func NewHasher() *Hasher {
 // Algo sets the hash algorithm ("sha1", "sha512")
 func (h *Hasher) Algo(algo string) {
 	algo = strings.Replace(algo, "_", "-", -1)
+	algo = strings.ToLower(algo)
 	h.algo = algo
 }
 
@@ -60,6 +56,12 @@ func (h *Hasher) Length(len int) {
 // Reverse sets wether to do sequential find in reverse order
 func (h *Hasher) Reverse(b bool) {
 	h.reverse = b
+}
+
+// Prefix sets a fixed prefix
+func (h *Hasher) Prefix(s string) {
+	h.prefix = s
+	panic(fmt.Errorf("TODO impl Prefix for Hasher"))
 }
 
 // Suffix sets a fixed suffix
@@ -106,54 +108,6 @@ func (h *Hasher) verify() error {
 	}
 
 	return nil
-}
-
-func md5Equals(b *[]byte, expected *[]byte) bool {
-
-	return byte16ArrayEquals(md5.Sum(*b), *expected)
-}
-
-func sha1Equals(b *[]byte, expected *[]byte) bool {
-	return byte20ArrayEquals(sha1.Sum(*b), *expected)
-}
-
-func sha224Equals(b *[]byte, expected *[]byte) bool {
-	return byte28ArrayEquals(sha256.Sum224(*b), *expected)
-}
-func sha256Equals(b *[]byte, expected *[]byte) bool {
-	return byte32ArrayEquals(sha256.Sum256(*b), *expected)
-}
-
-func sha384Equals(b *[]byte, expected *[]byte) bool {
-	return byte48ArrayEquals(sha512.Sum384(*b), *expected)
-}
-
-func sha512Equals(b *[]byte, expected *[]byte) bool {
-	return byte64ArrayEquals(sha512.Sum512(*b), *expected)
-}
-
-func sha512_224Equals(b *[]byte, expected *[]byte) bool {
-	return byte28ArrayEquals(sha512.Sum512_224(*b), *expected)
-}
-
-func sha512_256Equals(b *[]byte, expected *[]byte) bool {
-	return byte32ArrayEquals(sha512.Sum512_256(*b), *expected)
-}
-
-func sha3_224Equals(b *[]byte, expected *[]byte) bool {
-	return byte28ArrayEquals(sha3.Sum224(*b), *expected)
-}
-
-func sha3_256Equals(b *[]byte, expected *[]byte) bool {
-	return byte32ArrayEquals(sha3.Sum256(*b), *expected)
-}
-
-func sha3_384Equals(b *[]byte, expected *[]byte) bool {
-	return byte48ArrayEquals(sha3.Sum384(*b), *expected)
-}
-
-func sha3_512Equals(b *[]byte, expected *[]byte) bool {
-	return byte64ArrayEquals(sha3.Sum512(*b), *expected)
 }
 
 func (h *Hasher) equals() bool {

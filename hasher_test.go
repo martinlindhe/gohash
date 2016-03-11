@@ -170,6 +170,19 @@ func TestHashSha3_512(t *testing.T) {
 	assert.Equal(t, "atom", string(res))
 }
 
+func TestHashWhirlpool(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("whirlpool")
+	hasher.AllowedKeys("mota")
+	hasher.ExpectedHash("a42b7d2f481d91330c77855bcc935805ddb20e6096412e0d115918984711495336bad4938e7b74568c9b532adfae497819512efcdd21147b38ab8f6ac09bb5d1")
+	hasher.Length(4)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "atom", string(res))
+}
+
 func TestHashSha512Onion(t *testing.T) {
 
 	hasher := NewHasher()

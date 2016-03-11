@@ -12,6 +12,8 @@ type Dictionary struct {
 	lines         []string
 	expected      []byte
 	possibleAlgos []string
+	prefix        string
+	suffix        string
 }
 
 // NewDictionary ...
@@ -30,6 +32,12 @@ func NewDictionary(dictFileName string) (*Dictionary, error) {
 	}, nil
 }
 
+// Prefix sets a fixed prefix
+func (d *Dictionary) Prefix(s string) { d.prefix = s }
+
+// Suffix sets a fixed suffix
+func (d *Dictionary) Suffix(s string) { d.suffix = s }
+
 // ExpectedHash sets the expected hash
 func (d *Dictionary) ExpectedHash(expected string) {
 	tmp := hexStringToBytes(expected)
@@ -47,7 +55,12 @@ func (d *Dictionary) Find() (string, string, error) {
 	fmt.Println("Trying with", d.possibleAlgos)
 
 	for _, line := range d.lines {
-		buf := []byte(line)
+		if line == "" {
+			continue
+		}
+
+		buf := []byte(d.prefix + line + d.suffix)
+
 		for _, algo := range d.possibleAlgos {
 			if d.equals(algo, &buf) {
 				return line, algo, nil
