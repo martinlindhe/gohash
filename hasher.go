@@ -15,6 +15,19 @@ const (
 	AllowedOnion = "abcdefghijklmnopqrstuvwxyz234567"
 )
 
+var (
+	algos = map[string]int{
+		"md5":        128,
+		"sha1":       160,
+		"sha224":     224,
+		"sha256":     256,
+		"sha384":     384,
+		"sha512":     512,
+		"sha512-224": 224,
+		"sha512-256": 256,
+	}
+)
+
 // Hasher ...
 type Hasher struct {
 	algo        string
@@ -88,42 +101,12 @@ func (h *Hasher) verify() error {
 	keyBitSize := len(h.expected) * 8
 	expectedBitSize := len(h.expected) * 8
 
-	// XXX use a map with algo id -> bitsize mapping
-	if h.algo == "md5" && keyBitSize != 128 {
-		return fmt.Errorf("expectedHash is wrong size, should be 128 bit, is %d", expectedBitSize)
-	}
-
-	if h.algo == "sha1" && keyBitSize != 160 {
-		return fmt.Errorf("expectedHash is wrong size, should be 160 bit, is %d", expectedBitSize)
-	}
-
-	if h.algo == "sha224" && keyBitSize != 224 {
-		return fmt.Errorf("expectedHash is wrong size, should be 224 bit, is %d", expectedBitSize)
-	}
-
-	if h.algo == "sha256" && keyBitSize != 256 {
-		return fmt.Errorf("expectedHash is wrong size, should be 256 bit, is %d", expectedBitSize)
-	}
-
-	if h.algo == "sha384" && keyBitSize != 384 {
-		return fmt.Errorf("expectedHash is wrong size, should be 384 bit, is %d", expectedBitSize)
-	}
-
-	if h.algo == "sha512" && keyBitSize != 512 {
-		return fmt.Errorf("expectedHash is wrong size, should be 512 bit, is %d", expectedBitSize)
-	}
-
-	if h.algo == "sha512-224" && keyBitSize != 224 {
-		return fmt.Errorf("expectedHash is wrong size, should be 224 bit, is %d", expectedBitSize)
-	}
-
-	if h.algo == "sha512-256" && keyBitSize != 256 {
-		return fmt.Errorf("expectedHash is wrong size, should be 256 bit, is %d", expectedBitSize)
-	}
-
-	if h.algo != "md5" && h.algo != "sha1" &&
-		h.algo != "sha224" && h.algo != "sha256" && h.algo != "sha384" &&
-		h.algo != "sha512" && h.algo != "sha512-224" && h.algo != "sha512-256" {
+	if requiredBitSize, ok := algos[h.algo]; ok {
+		if keyBitSize != requiredBitSize {
+			return fmt.Errorf("expectedHash is wrong size, should be %d bit, is %d",
+				requiredBitSize, expectedBitSize)
+		}
+	} else {
 		return fmt.Errorf("unknown algo %s", h.algo)
 	}
 
@@ -131,6 +114,7 @@ func (h *Hasher) verify() error {
 }
 
 func (h *Hasher) equals(t []byte) bool {
+
 	if h.algo == "md5" && byte16ArrayEquals(md5.Sum(t), h.expected) {
 		return true
 	}
