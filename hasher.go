@@ -150,8 +150,8 @@ func (h *Hasher) FindSequential() (string, error) {
 		}
 
 		cnt++
-		if cnt%100000 == 0 {
-			fmt.Println(string(tmp2))
+		if cnt%1000000 == 0 {
+			fmt.Println(string(tmp2), " (seq)")
 		}
 	}
 }
