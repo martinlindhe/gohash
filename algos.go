@@ -1,10 +1,14 @@
 package gohash
 
 import (
+	"bytes"
 	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/sha512"
+	"encoding/binary"
+	"hash/adler32"
+	"hash/crc32"
 
 	"github.com/htruong/go-md2"
 	"github.com/jzelinskie/whirlpool"
@@ -15,6 +19,10 @@ import (
 
 var (
 	algos = map[string]int{
+		"adler32":    32,
+		"crc32":      32,
+		"crc32c":     32,
+		"crc32k":     32,
 		"md2":        128,
 		"md4":        128,
 		"md5":        128,
@@ -36,6 +44,10 @@ var (
 	}
 
 	algoEquals = map[string]func(*[]byte, *[]byte) bool{
+		"adler32":    adler32Equals,
+		"crc32":      crc32Equals,
+		"crc32c":     crc32cEquals,
+		"crc32k":     crc32kEquals,
 		"md2":        md2Equals,
 		"md4":        md4Equals,
 		"md5":        md5Equals,
@@ -56,6 +68,38 @@ var (
 		"ripemd160":  ripemd160Equals,
 	}
 )
+
+func adler32Equals(b *[]byte, expected *[]byte) bool {
+
+	var expectedInt uint32
+	_ = binary.Read(bytes.NewReader(*expected), binary.BigEndian, &expectedInt)
+	return adler32.Checksum(*b) == expectedInt
+}
+
+func crc32Equals(b *[]byte, expected *[]byte) bool {
+
+	var expectedInt uint32
+	_ = binary.Read(bytes.NewReader(*expected), binary.BigEndian, &expectedInt)
+	return crc32.ChecksumIEEE(*b) == expectedInt
+}
+
+func crc32cEquals(b *[]byte, expected *[]byte) bool {
+
+	var expectedInt uint32
+	_ = binary.Read(bytes.NewReader(*expected), binary.BigEndian, &expectedInt)
+
+	tbl := crc32.MakeTable(crc32.Castagnoli)
+	return crc32.Checksum(*b, tbl) == expectedInt
+}
+
+func crc32kEquals(b *[]byte, expected *[]byte) bool {
+
+	var expectedInt uint32
+	_ = binary.Read(bytes.NewReader(*expected), binary.BigEndian, &expectedInt)
+
+	tbl := crc32.MakeTable(crc32.Koopman)
+	return crc32.Checksum(*b, tbl) == expectedInt
+}
 
 func md2Equals(b *[]byte, expected *[]byte) bool {
 

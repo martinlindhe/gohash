@@ -12,6 +12,61 @@ func TestHexStringToBytes(t *testing.T) {
 	assert.Equal(t, []byte("hej"), hexStringToBytes("68656a"))
 }
 
+func TestHashAdler32(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("adler32")
+	hasher.AllowedKeys("holej")
+	hasher.ExpectedHash("026f0138")
+	hasher.Length(3)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hej", string(res))
+}
+
+func TestHashCrc32(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("crc32")
+	hasher.AllowedKeys("holej")
+	hasher.ExpectedHash("0C68542E") // verify uppercase hex works
+	hasher.Length(3)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hej", string(res))
+}
+
+/*
+func TestHashCrc32c(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("crc32c")
+	hasher.AllowedKeys("holej")
+	hasher.ExpectedHash("xxx")
+	hasher.Length(3)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hej", string(res))
+}
+
+
+func TestHashCrc32k(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("crc32c")
+	hasher.AllowedKeys("holej")
+	hasher.ExpectedHash("b9fd977e")
+	hasher.Length(3)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hej", string(res))
+}
+*/
+
 func TestHashMd2(t *testing.T) {
 
 	hasher := NewHasher()

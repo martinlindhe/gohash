@@ -29,25 +29,29 @@ more benchmarks
 
 Set algo with --algo=<id>
 
-id          Algorithm       keysize  keysize
-md2         MD2             128 bit  16 byte
-md4         MD4             128 bit  16 byte
-md5         MD5             128 bit  16 byte
-sha1        SHA1            160 bit  20 byte
-sha224      SHA2-224        224 bit  28 byte
-sha256      SHA2-256        256 bit  32 byte
-sha384      SHA2-384        384 bit  48 byte
-sha512      SHA2-512        512 bit  64 byte
-sha512-224  SHA2-512/224    224 bit  28 byte
-sha512-256  SHA2-512/256    256 bit  32 byte
-sha3-224    SHA3-224        224 bit  28 byte
-sha3-256    SHA3-256        256 bit  32 byte
-sha3-384    SHA3-384        384 bit  48 byte
-sha3-512    SHA3-512        512 bit  64 byte
-shake128    SHA3-SHAKE128   256 bit  32 byte
-shake256    SHA3-SHAKE256   512 bit  64 byte
-whirlpool   Whirlpool       512 bit  64 byte
-ripemd160   RIPEMD-160      160 bit  20 byte
+id          Algorithm           keysize  keysize        Notes
+crc32       Crc-32 (IEEE)       32 bit   4 byte         php's hash() calls this "crc32b"
+crc32c      Crc-32 (Castagnoli) 32 bit   4 byte         XXX haven't verified calculations
+crc32k      Crc-32 (Koopman)    32 bit   4 byte         XXX haven't verified calculations
+adler32     Adler-32            32 bit   4 byte
+md2         MD2                 128 bit  16 byte
+md4         MD4                 128 bit  16 byte
+md5         MD5                 128 bit  16 byte
+sha1        SHA1                160 bit  20 byte
+sha224      SHA2-224            224 bit  28 byte
+sha256      SHA2-256            256 bit  32 byte
+sha384      SHA2-384            384 bit  48 byte
+sha512      SHA2-512            512 bit  64 byte
+sha512-224  SHA2-512/224        224 bit  28 byte
+sha512-256  SHA2-512/256        256 bit  32 byte
+sha3-224    SHA3-224            224 bit  28 byte
+sha3-256    SHA3-256            256 bit  32 byte
+sha3-384    SHA3-384            384 bit  48 byte
+sha3-512    SHA3-512            512 bit  64 byte
+shake128    SHA3-SHAKE128       256 bit  32 byte
+shake256    SHA3-SHAKE256       512 bit  64 byte
+whirlpool   Whirlpool           512 bit  64 byte
+ripemd160   RIPEMD-160          160 bit  20 byte
 
 
 
