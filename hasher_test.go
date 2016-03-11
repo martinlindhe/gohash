@@ -25,6 +25,58 @@ func TestHashAdler32(t *testing.T) {
 	assert.Equal(t, "hej", string(res))
 }
 
+func TestHashBlake224(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("blake224")
+	hasher.AllowedKeys("holej")
+	hasher.ExpectedHash("c5d6e24c89a45385af97ae89c9edde904656d75e5a3582b1c9a390de")
+	hasher.Length(3)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hej", string(res))
+}
+
+func TestHashBlake256(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("blake256")
+	hasher.AllowedKeys("holej")
+	hasher.ExpectedHash("91bff832dc57e964a521c660b6500ad04d565536fc5ccd98032bdcb1ebc9402c")
+	hasher.Length(3)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hej", string(res))
+}
+
+func TestHashBlake384(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("blake384")
+	hasher.AllowedKeys("holej")
+	hasher.ExpectedHash("11a0ee2934bdd0f3c39ca0eee3b09287db24bc995df15d238da8d95f337ab39badcc6ca2dad0ba10cb49d32113f378b8")
+	hasher.Length(3)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hej", string(res))
+}
+
+func TestHashBlake512(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("blake512")
+	hasher.AllowedKeys("holej")
+	hasher.ExpectedHash("3f0b354957782ac9f690683117d391bbd4d0b35061c21043e0915201a16fbf31a0dceac3d98b357a5624e93060df59e607b645a645f4bc944ef825aaf7022348")
+	hasher.Length(3)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hej", string(res))
+}
+
 func TestHashCrc32(t *testing.T) {
 
 	hasher := NewHasher()

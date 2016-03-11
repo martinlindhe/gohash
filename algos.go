@@ -11,6 +11,8 @@ import (
 	"hash/crc32"
 
 	"github.com/cxmcc/tiger"
+	"github.com/dchest/blake256"
+	"github.com/dchest/blake512"
 	"github.com/htruong/go-md2"
 	"github.com/jzelinskie/whirlpool"
 	"golang.org/x/crypto/md4"
@@ -21,12 +23,17 @@ import (
 var (
 	algos = map[string]int{
 		"adler32":    32,
+		"blake224":   224,
+		"blake256":   256,
+		"blake384":   384,
+		"blake512":   512,
 		"crc32":      32,
 		"crc32c":     32,
 		"crc32k":     32,
 		"md2":        128,
 		"md4":        128,
 		"md5":        128,
+		"ripemd160":  160,
 		"sha1":       160,
 		"sha224":     224,
 		"sha256":     256,
@@ -42,17 +49,21 @@ var (
 		"shake256":   512,
 		"tiger192":   192,
 		"whirlpool":  512,
-		"ripemd160":  160,
 	}
 
 	algoEquals = map[string]func(*[]byte, *[]byte) bool{
 		"adler32":    adler32Equals,
+		"blake224":   blake224Equals,
+		"blake256":   blake256Equals,
+		"blake384":   blake384Equals,
+		"blake512":   blake512Equals,
 		"crc32":      crc32Equals,
 		"crc32c":     crc32cEquals,
 		"crc32k":     crc32kEquals,
 		"md2":        md2Equals,
 		"md4":        md4Equals,
 		"md5":        md5Equals,
+		"ripemd160":  ripemd160Equals,
 		"sha1":       sha1Equals,
 		"sha224":     sha224Equals,
 		"sha256":     sha256Equals,
@@ -68,7 +79,6 @@ var (
 		"shake256":   shake256Equals,
 		"tiger192":   tiger192Equals,
 		"whirlpool":  whirlpoolEquals,
-		"ripemd160":  ripemd160Equals,
 	}
 )
 
@@ -77,6 +87,34 @@ func adler32Equals(b *[]byte, expected *[]byte) bool {
 	var expectedInt uint32
 	_ = binary.Read(bytes.NewReader(*expected), binary.BigEndian, &expectedInt)
 	return adler32.Checksum(*b) == expectedInt
+}
+
+func blake224Equals(b *[]byte, expected *[]byte) bool {
+
+	w := blake256.New224()
+	w.Write(*b)
+	return byteArrayEquals(w.Sum(nil), *expected)
+}
+
+func blake256Equals(b *[]byte, expected *[]byte) bool {
+
+	w := blake256.New()
+	w.Write(*b)
+	return byteArrayEquals(w.Sum(nil), *expected)
+}
+
+func blake384Equals(b *[]byte, expected *[]byte) bool {
+
+	w := blake512.New384()
+	w.Write(*b)
+	return byteArrayEquals(w.Sum(nil), *expected)
+}
+
+func blake512Equals(b *[]byte, expected *[]byte) bool {
+
+	w := blake512.New()
+	w.Write(*b)
+	return byteArrayEquals(w.Sum(nil), *expected)
 }
 
 func crc32Equals(b *[]byte, expected *[]byte) bool {
