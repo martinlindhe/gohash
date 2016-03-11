@@ -92,6 +92,32 @@ func TestHashSha512(t *testing.T) {
 	assert.Equal(t, "atom", string(res))
 }
 
+func TestHashSha512_224(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("sha512-224")
+	hasher.AllowedKeys("mota")
+	hasher.ExpectedHash("34278cf3456954a9133745d308a3ab1a9d8c82f3f7b73ff4ecb6977e")
+	hasher.Length(4)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "atom", string(res))
+}
+
+func TestHashSha512_256(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("sha512_256") // verify this is handled as "sha512-256"
+	hasher.AllowedKeys("mota")
+	hasher.ExpectedHash("6f00138d3734506cd4b98adf20d9f6262e981e34ef56dfc8fb24d2daa89e7041")
+	hasher.Length(4)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "atom", string(res))
+}
+
 func TestHashSha512Onion(t *testing.T) {
 
 	hasher := NewHasher()
