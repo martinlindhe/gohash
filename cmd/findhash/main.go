@@ -12,11 +12,14 @@ import (
 )
 
 var (
-	hash      = kingpin.Flag("hash", "Hash to crack, in hex string").Required().String()
-	algo      = kingpin.Flag("algo", "Hash algorithm to use. sha512, sha256 etc").Required().String()
-	random    = kingpin.Flag("random", "Random mutation mode.").Bool()
-	startTime = time.Now()
-	result    = ""
+	hash        = kingpin.Flag("hash", "Hash to crack, in hex string").Required().String()
+	algo        = kingpin.Flag("algo", "Hash algorithm to use. sha1, sha512 etc").Required().String()
+	allowedKeys = kingpin.Flag("allowed", "Allowed keys to use.").Required().String()
+	minLength   = kingpin.Flag("min-length", "Minimum length.").Required().Int()
+	suffix      = kingpin.Flag("suffix", "Suffix (optional).").String()
+	random      = kingpin.Flag("random", "Random mutation mode.").Bool()
+	startTime   = time.Now()
+	result      = ""
 )
 
 func main() {
@@ -27,14 +30,13 @@ func main() {
 
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	expectedHash := gohash.HexStringToBytes(*hash)
+	hasher := gohash.NewHasher()
 
-	if len(expectedHash) != 64 {
-		fmt.Println("hash is wrong size, is ", len(expectedHash), ", should be 64 byte")
-		os.Exit(1)
-	}
-
-	// XXX todo make use of algo
+	hasher.Algo(*algo)
+	hasher.AllowedKeys(*allowedKeys)
+	hasher.Suffix(*suffix)
+	hasher.ExpectedHash(*hash)
+	hasher.Length(*minLength)
 
 	// catch ctrl-c interrupt signal
 	c := make(chan os.Signal, 1)
@@ -44,15 +46,22 @@ func main() {
 			// sig is a ^C, handle it
 
 			// XXX * when exited, show number of tries and time ran, and tries/sec
+			fmt.Println("")
 			fmt.Println("total time: ", time.Since(startTime))
 			os.Exit(0)
 		}
 	}()
 
+	var err error
 	if *random {
-		result = gohash.FindMatchingOnionURLByRandom(expectedHash)
+		result, err = hasher.FindRandom()
 	} else {
-		result = gohash.FindMatchingOnionURL(expectedHash)
+		result, err = hasher.FindSequential()
+	}
+
+	if err != nil {
+		fmt.Println("ERROR", err)
+		os.Exit(1)
 	}
 
 	fmt.Println("result: ", result)

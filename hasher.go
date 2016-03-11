@@ -4,7 +4,7 @@ import (
 	"crypto/sha1"
 	"crypto/sha512"
 	"fmt"
-	"math"
+	"math/rand"
 )
 
 // Hasher ...
@@ -54,20 +54,41 @@ func (h *Hasher) AllowedKeys(s string) {
 // GetAllowedKeys ...
 func (h *Hasher) GetAllowedKeys() string { return string(h.allowedKeys) }
 
-// SequentialFind calcs all possible combinations of keys of given length
-func (h Hasher) SequentialFind() (string, error) {
+func (h *Hasher) verify() error {
 
 	if len(h.allowedKeys) == 0 {
-		return "", fmt.Errorf("allowedKeys unset")
+		return fmt.Errorf("allowedKeys unset")
 	}
 
 	if h.minLength == 0 {
-		return "", fmt.Errorf("minLength unset")
+		return fmt.Errorf("minLength unset")
 	}
 
-	combinations := math.Pow(float64(len(h.allowedKeys)), float64(h.minLength))
+	if len(h.algo) == 0 {
+		return fmt.Errorf("algo unset")
+	}
 
-	fmt.Println("Brute-forcing", combinations, "combinations")
+	if h.algo == "sha1" && len(h.expected) != 20 {
+		return fmt.Errorf("expectedHash is wrong size, should be 160 bit (20 byte)")
+	}
+
+	if h.algo == "sha512" && len(h.expected) != 64 {
+		return fmt.Errorf("expectedHash is wrong size, should be 512 bit (64 byte)")
+	}
+
+	if h.algo != "sha1" && h.algo != "sha512" {
+		return fmt.Errorf("unknown algo %s", h.algo)
+	}
+
+	return nil
+}
+
+// FindSequential calcs all possible combinations of keys of given length
+func (h *Hasher) FindSequential() (string, error) {
+
+	if err := h.verify(); err != nil {
+		return "", err
+	}
 
 	tmp := make([]byte, h.minLength)
 
@@ -78,8 +99,6 @@ func (h Hasher) SequentialFind() (string, error) {
 	for x := 0; x < h.minLength; x++ {
 		tmp[x] = firstAllowedKey
 	}
-
-	fmt.Println("INITIAL STATE:", string(tmp))
 
 	cnt := 0
 	for {
@@ -114,6 +133,47 @@ func (h Hasher) SequentialFind() (string, error) {
 
 		if cnt > 100 {
 			// return "xx", nil
+		}
+	}
+}
+
+// FindRandom uses random brute force to attempt to find by luck
+func (h *Hasher) FindRandom() (string, error) {
+
+	if err := h.verify(); err != nil {
+		return "", err
+	}
+
+	tmp := make([]byte, h.minLength)
+
+	firstAllowedKey := h.allowedKeys[0]
+	allowedKeysLen := len(h.allowedKeys)
+
+	// create initial mutation
+	for x := 0; x < h.minLength; x++ {
+		tmp[x] = firstAllowedKey
+	}
+
+	tmp = append(tmp, h.suffix...)
+
+	cnt := 0
+	for {
+		// update mutation of first letters
+		for roller := 0; roller < h.minLength; roller++ {
+			tmp[roller] = h.allowedKeys[rand.Intn(allowedKeysLen)]
+		}
+
+		if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(tmp), h.expected) {
+			return string(tmp), nil
+		}
+
+		if h.algo == "sha512" && byte64ArrayEquals(sha512.Sum512(tmp), h.expected) {
+			return string(tmp), nil
+		}
+
+		cnt++
+		if cnt%1000000 == 0 {
+			fmt.Println(string(tmp), " (rnd)")
 		}
 	}
 }
