@@ -64,6 +64,19 @@ func TestHashSha256(t *testing.T) {
 	assert.Equal(t, "tex", string(res))
 }
 
+func TestHashSha384(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("sha384")
+	hasher.AllowedKeys("bexlopslmv")
+	hasher.ExpectedHash("35dc3a0822d431161309a0fe460786618c7a6fd3b0d2883e03fc21c851000ce2817bad134c1a72e179ada6fc207b6f15")
+	hasher.Length(4)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "slop", string(res))
+}
+
 func TestHashSha512(t *testing.T) {
 
 	hasher := NewHasher()

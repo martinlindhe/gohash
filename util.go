@@ -74,6 +74,20 @@ func byte32ArrayEquals(a [32]byte, b []byte) bool {
 	return true
 }
 
+// sha512.Sum384() returns 48 bytes (384 bit)
+func byte48ArrayEquals(a [48]byte, b []byte) bool {
+
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
 // sha512.Sum512() returns 64 bytes (512 bit)
 func byte64ArrayEquals(a [64]byte, b []byte) bool {
 
