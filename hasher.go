@@ -4,11 +4,13 @@ import (
 	"crypto/sha1"
 	"crypto/sha512"
 	"fmt"
+	"math"
 )
 
 // Hasher ...
 type Hasher struct {
 	algo        string
+	suffix      string
 	expected    []byte
 	minLength   int
 	maxLength   int
@@ -35,6 +37,9 @@ func (h *Hasher) Length(len int) {
 	h.maxLength = len
 }
 
+// Suffix sets a fixed suffix
+func (h *Hasher) Suffix(s string) { h.suffix = s }
+
 // MinLength sets min length of key to find
 func (h *Hasher) MinLength(len int) { h.minLength = len }
 
@@ -49,16 +54,20 @@ func (h *Hasher) AllowedKeys(s string) {
 // GetAllowedKeys ...
 func (h *Hasher) GetAllowedKeys() string { return string(h.allowedKeys) }
 
-// Find calcs all possible combinations of keys of given length
-func (h Hasher) Find() (string, error) {
+// SequentialFind calcs all possible combinations of keys of given length
+func (h Hasher) SequentialFind() (string, error) {
 
 	if len(h.allowedKeys) == 0 {
 		return "", fmt.Errorf("allowedKeys unset")
 	}
 
-	iterations := Pow(len(h.allowedKeys), h.minLength)
+	if h.minLength == 0 {
+		return "", fmt.Errorf("minLength unset")
+	}
 
-	fmt.Println("Performing", iterations, "iterations")
+	combinations := math.Pow(float64(len(h.allowedKeys)), float64(h.minLength))
+
+	fmt.Println("Brute-forcing", combinations, "combinations")
 
 	tmp := make([]byte, h.minLength)
 
@@ -72,7 +81,8 @@ func (h Hasher) Find() (string, error) {
 
 	fmt.Println("INITIAL STATE:", string(tmp))
 
-	for i := int64(0); i < iterations; i++ {
+	cnt := 0
+	for {
 
 		// update mutation
 		for roller := h.minLength - 1; roller >= 0; roller-- {
@@ -87,16 +97,25 @@ func (h Hasher) Find() (string, error) {
 			}
 		}
 
-		if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(tmp), h.expected) {
-			return string(tmp), nil
+		tmp2 := append(tmp, h.suffix...)
+
+		if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(tmp2), h.expected) {
+			return string(tmp2), nil
 		}
 
-		if h.algo == "sha512" && byte64ArrayEquals(sha512.Sum512(tmp), h.expected) {
-			return string(tmp), nil
+		if h.algo == "sha512" && byte64ArrayEquals(sha512.Sum512(tmp2), h.expected) {
+			return string(tmp2), nil
+		}
+
+		cnt++
+		if cnt%100000 == 0 {
+			fmt.Println(string(tmp2))
+		}
+
+		if cnt > 100 {
+			// return "xx", nil
 		}
 	}
-
-	return "", fmt.Errorf("should not happen xap1")
 }
 
 func (h *Hasher) nextValueFor(b byte) byte {
