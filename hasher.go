@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math/rand"
 	"strings"
+	"time"
 
 	"golang.org/x/crypto/sha3"
 )
@@ -43,6 +44,11 @@ type Hasher struct {
 	maxLength   int
 	allowedKeys []byte
 	reverse     bool
+
+	// for runtime stats
+	buffer []byte
+	try    uint64
+	tick   uint64
 }
 
 // NewHasher returns a new Hasher
@@ -119,61 +125,56 @@ func (h *Hasher) verify() error {
 	return nil
 }
 
-func (h *Hasher) equals(t []byte) bool {
+func (h *Hasher) equals() bool {
 
-	if h.algo == "md5" && byte16ArrayEquals(md5.Sum(t), h.expected) {
+	if h.algo == "md5" && byte16ArrayEquals(md5.Sum(h.buffer), h.expected) {
 		return true
 	}
 
-	if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(t), h.expected) {
+	if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(h.buffer), h.expected) {
 		return true
 	}
 
-	if h.algo == "sha224" && byte28ArrayEquals(sha256.Sum224(t), h.expected) {
+	if h.algo == "sha224" && byte28ArrayEquals(sha256.Sum224(h.buffer), h.expected) {
 		return true
 	}
 
-	if h.algo == "sha256" && byte32ArrayEquals(sha256.Sum256(t), h.expected) {
+	if h.algo == "sha256" && byte32ArrayEquals(sha256.Sum256(h.buffer), h.expected) {
 		return true
 	}
 
-	if h.algo == "sha384" && byte48ArrayEquals(sha512.Sum384(t), h.expected) {
+	if h.algo == "sha384" && byte48ArrayEquals(sha512.Sum384(h.buffer), h.expected) {
 		return true
 	}
 
-	if h.algo == "sha512" && byte64ArrayEquals(sha512.Sum512(t), h.expected) {
+	if h.algo == "sha512" && byte64ArrayEquals(sha512.Sum512(h.buffer), h.expected) {
 		return true
 	}
 
-	if h.algo == "sha512-224" && byte28ArrayEquals(sha512.Sum512_224(t), h.expected) {
+	if h.algo == "sha512-224" && byte28ArrayEquals(sha512.Sum512_224(h.buffer), h.expected) {
 		return true
 	}
 
-	if h.algo == "sha512-256" && byte32ArrayEquals(sha512.Sum512_256(t), h.expected) {
+	if h.algo == "sha512-256" && byte32ArrayEquals(sha512.Sum512_256(h.buffer), h.expected) {
 		return true
 	}
 
-	if h.algo == "sha3-224" && byte28ArrayEquals(sha3.Sum224(t), h.expected) {
+	if h.algo == "sha3-224" && byte28ArrayEquals(sha3.Sum224(h.buffer), h.expected) {
 		return true
 	}
 
-	if h.algo == "sha3-256" && byte32ArrayEquals(sha3.Sum256(t), h.expected) {
+	if h.algo == "sha3-256" && byte32ArrayEquals(sha3.Sum256(h.buffer), h.expected) {
 		return true
 	}
 
-	if h.algo == "sha3-384" && byte48ArrayEquals(sha3.Sum384(t), h.expected) {
+	if h.algo == "sha3-384" && byte48ArrayEquals(sha3.Sum384(h.buffer), h.expected) {
 		return true
 	}
 
-	if h.algo == "sha3-512" && byte64ArrayEquals(sha3.Sum512(t), h.expected) {
+	if h.algo == "sha3-512" && byte64ArrayEquals(sha3.Sum512(h.buffer), h.expected) {
 		return true
 	}
 
-	/*
-		if h.algo == "shake-128" && byte64ArrayEquals(sha3.ShakeSum128(t), h.expected) {
-			return true
-		}
-	*/
 	return false
 }
 
@@ -184,7 +185,7 @@ func (h *Hasher) FindSequential() (string, error) {
 		return "", err
 	}
 
-	tmp := make([]byte, h.minLength)
+	h.buffer = make([]byte, h.minLength)
 
 	firstAllowedKey := h.allowedKeys[0]
 	lastAllowedKey := h.allowedKeys[len(h.allowedKeys)-1]
@@ -192,46 +193,43 @@ func (h *Hasher) FindSequential() (string, error) {
 	// create initial mutation
 	for x := 0; x < h.minLength; x++ {
 		if h.reverse {
-			tmp[x] = lastAllowedKey
+			h.buffer[x] = lastAllowedKey
 		} else {
-			tmp[x] = firstAllowedKey
+			h.buffer[x] = firstAllowedKey
 		}
 	}
 
-	cnt := 0
+	h.buffer = append(h.buffer, h.suffix...)
+
+	go h.statusReport()
+
 	for {
 
-		tmp2 := append(tmp, h.suffix...)
-
-		if h.equals(tmp2) {
-			return string(tmp2), nil
+		if h.equals() {
+			return string(h.buffer), nil
 		}
 
 		// update mutation
 		for roller := h.minLength - 1; roller >= 0; roller-- {
 			if h.reverse {
-				if tmp[roller] == firstAllowedKey {
-					tmp[roller] = lastAllowedKey
+				if h.buffer[roller] == firstAllowedKey {
+					h.buffer[roller] = lastAllowedKey
 					continue
 				} else {
-					tmp[roller] = h.prevValueFor(tmp[roller])
+					h.buffer[roller] = h.prevValueFor(h.buffer[roller])
 					break
 				}
 			} else {
-				if tmp[roller] == lastAllowedKey {
-					tmp[roller] = firstAllowedKey
+				if h.buffer[roller] == lastAllowedKey {
+					h.buffer[roller] = firstAllowedKey
 					continue
 				} else {
-					tmp[roller] = h.nextValueFor(tmp[roller])
+					h.buffer[roller] = h.nextValueFor(h.buffer[roller])
 					break
 				}
 			}
 		}
-
-		cnt++
-		if cnt%1000000 == 0 {
-			fmt.Println(string(tmp2), " (seq,", h.algo, ")")
-		}
+		h.try++
 	}
 }
 
@@ -246,33 +244,41 @@ func (h *Hasher) FindRandom() (string, error) {
 		return "", err
 	}
 
-	tmp := make([]byte, h.minLength)
+	h.buffer = make([]byte, h.minLength)
 
 	firstAllowedKey := h.allowedKeys[0]
 	allowedKeysLen := len(h.allowedKeys)
 
 	// create initial mutation
 	for x := 0; x < h.minLength; x++ {
-		tmp[x] = firstAllowedKey
+		h.buffer[x] = firstAllowedKey
 	}
 
-	tmp = append(tmp, h.suffix...)
+	h.buffer = append(h.buffer, h.suffix...)
 
-	cnt := 0
+	go h.statusReport()
+
 	for {
+		if h.equals() {
+			return string(h.buffer), nil
+		}
+
 		// update mutation of first letters
 		for roller := 0; roller < h.minLength; roller++ {
-			tmp[roller] = h.allowedKeys[rand.Intn(allowedKeysLen)]
+			h.buffer[roller] = h.allowedKeys[rand.Intn(allowedKeysLen)]
 		}
+		h.try++
+	}
+}
 
-		if h.equals(tmp) {
-			return string(tmp), nil
-		}
+func (h *Hasher) statusReport() {
 
-		cnt++
-		if cnt%1000000 == 0 {
-			fmt.Println(string(tmp), " (rnd,", h.algo, ")")
-		}
+	for {
+		time.Sleep(1 * time.Second)
+		h.tick++
+		avg := h.try / h.tick
+
+		fmt.Printf("%s ~%d/s %s\n", h.algo, avg, string(h.buffer))
 	}
 }
 
