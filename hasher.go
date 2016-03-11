@@ -3,6 +3,7 @@ package gohash
 import (
 	"crypto/md5"
 	"crypto/sha1"
+	"crypto/sha256"
 	"crypto/sha512"
 	"fmt"
 	"math/rand"
@@ -88,11 +89,15 @@ func (h *Hasher) verify() error {
 		return fmt.Errorf("expectedHash is wrong size, should be 160 bit, is %d", len(h.expected)*8)
 	}
 
+	if h.algo == "sha256" && len(h.expected) != 32 {
+		return fmt.Errorf("expectedHash is wrong size, should be 256 bit, is %d", len(h.expected)*8)
+	}
+
 	if h.algo == "sha512" && len(h.expected) != 64 {
 		return fmt.Errorf("expectedHash is wrong size, should be 512 bit, is %d", len(h.expected)*8)
 	}
 
-	if h.algo != "md5" && h.algo != "sha1" && h.algo != "sha512" {
+	if h.algo != "md5" && h.algo != "sha1" && h.algo != "sha256" && h.algo != "sha512" {
 		return fmt.Errorf("unknown algo %s", h.algo)
 	}
 
@@ -204,6 +209,10 @@ func (h *Hasher) equals(t []byte) bool {
 	}
 
 	if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(t), h.expected) {
+		return true
+	}
+
+	if h.algo == "sha256" && byte32ArrayEquals(sha256.Sum256(t), h.expected) {
 		return true
 	}
 

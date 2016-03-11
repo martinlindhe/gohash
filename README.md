@@ -21,8 +21,14 @@ more benchmarks
 
 
 
+
+
+
 # Hash sizes
 
-md5     128 bit     16 byte
-sha1    160 bit     20 byte
-sha512  512 bit     64 byte
+
+id      Algorithm   bit size    byte size
+md5     MD5         128 bit     16 byte
+sha1    SHA1        160 bit     20 byte
+sha256  SHA2-256    256 bit     32 byte
+sha512  SHA2-512    512 bit     64 byte

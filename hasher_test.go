@@ -38,6 +38,19 @@ func TestHashSha1(t *testing.T) {
 	assert.Equal(t, "motom", string(res))
 }
 
+func TestHashSha256(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("sha256")
+	hasher.AllowedKeys("aeltx")
+	hasher.ExpectedHash("a0b04eaca76db465982af821d6a304c3b904a7f13d6a9704d135aa07b3f1f6c2")
+	hasher.Length(3)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "tex", string(res))
+}
+
 func TestHashSha512(t *testing.T) {
 
 	hasher := NewHasher()
