@@ -7,6 +7,9 @@ STATUS: priv
 
 # TODO
 
+* XXX 0: expose dict to cli
+
+
 * if ran in random mode, spawn X goroutines (?) that work independently,
     to use max cpu by one app
 

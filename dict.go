@@ -1,7 +1,6 @@
 package gohash
 
 import (
-	"crypto/sha256"
 	"fmt"
 	"io/ioutil"
 	"strings"
@@ -38,33 +37,36 @@ func (d *Dictionary) ExpectedHash(expected string) {
 }
 
 // Find ...
-func (d *Dictionary) Find() (string, error) {
+func (d *Dictionary) Find() (string, string, error) {
 
 	err := d.decidePossibleAlgos()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	fmt.Println("possibly using", d.possibleAlgos)
+	fmt.Println("Trying with", d.possibleAlgos)
 
 	for _, line := range d.lines {
+		buf := []byte(line)
 		for _, algo := range d.possibleAlgos {
-			if d.equals(algo, []byte(line)) {
-				return line, nil
+			if d.equals(algo, &buf) {
+				return line, algo, nil
 			}
 		}
 	}
 
-	return "", nil
+	return "", "", nil
 }
 
-func (d *Dictionary) equals(algo string, buffer []byte) bool {
+func (d *Dictionary) equals(algo string, buffer *[]byte) bool {
 
-	// XXX use a  map[string]()func instead. first do that in hasher.go equals()
-	if algo == "sha256" && byte32ArrayEquals(sha256.Sum256(buffer), d.expected) {
-		return true
+	if equals, ok := algoEquals[algo]; ok {
+		return equals(buffer, &d.expected)
 	}
-	return false
+
+	// NOTE: ok to panic here, since code path can only occur
+	// while adding a new algo to the lib
+	panic(fmt.Errorf("Unknown algo %s", algo))
 }
 
 // derive possible hashes from bitsize

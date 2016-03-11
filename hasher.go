@@ -108,57 +108,63 @@ func (h *Hasher) verify() error {
 	return nil
 }
 
+func md5Equals(b *[]byte, expected *[]byte) bool {
+
+	return byte16ArrayEquals(md5.Sum(*b), *expected)
+}
+
+func sha1Equals(b *[]byte, expected *[]byte) bool {
+	return byte20ArrayEquals(sha1.Sum(*b), *expected)
+}
+
+func sha224Equals(b *[]byte, expected *[]byte) bool {
+	return byte28ArrayEquals(sha256.Sum224(*b), *expected)
+}
+func sha256Equals(b *[]byte, expected *[]byte) bool {
+	return byte32ArrayEquals(sha256.Sum256(*b), *expected)
+}
+
+func sha384Equals(b *[]byte, expected *[]byte) bool {
+	return byte48ArrayEquals(sha512.Sum384(*b), *expected)
+}
+
+func sha512Equals(b *[]byte, expected *[]byte) bool {
+	return byte64ArrayEquals(sha512.Sum512(*b), *expected)
+}
+
+func sha512_224Equals(b *[]byte, expected *[]byte) bool {
+	return byte28ArrayEquals(sha512.Sum512_224(*b), *expected)
+}
+
+func sha512_256Equals(b *[]byte, expected *[]byte) bool {
+	return byte32ArrayEquals(sha512.Sum512_256(*b), *expected)
+}
+
+func sha3_224Equals(b *[]byte, expected *[]byte) bool {
+	return byte28ArrayEquals(sha3.Sum224(*b), *expected)
+}
+
+func sha3_256Equals(b *[]byte, expected *[]byte) bool {
+	return byte32ArrayEquals(sha3.Sum256(*b), *expected)
+}
+
+func sha3_384Equals(b *[]byte, expected *[]byte) bool {
+	return byte48ArrayEquals(sha3.Sum384(*b), *expected)
+}
+
+func sha3_512Equals(b *[]byte, expected *[]byte) bool {
+	return byte64ArrayEquals(sha3.Sum512(*b), *expected)
+}
+
 func (h *Hasher) equals() bool {
 
-	if h.algo == "md5" && byte16ArrayEquals(md5.Sum(h.buffer), h.expected) {
-		return true
+	if equals, ok := algoEquals[h.algo]; ok {
+		return equals(&h.buffer, &h.expected)
 	}
 
-	if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(h.buffer), h.expected) {
-		return true
-	}
-
-	if h.algo == "sha224" && byte28ArrayEquals(sha256.Sum224(h.buffer), h.expected) {
-		return true
-	}
-
-	if h.algo == "sha256" && byte32ArrayEquals(sha256.Sum256(h.buffer), h.expected) {
-		return true
-	}
-
-	if h.algo == "sha384" && byte48ArrayEquals(sha512.Sum384(h.buffer), h.expected) {
-		return true
-	}
-
-	if h.algo == "sha512" && byte64ArrayEquals(sha512.Sum512(h.buffer), h.expected) {
-		return true
-	}
-
-	if h.algo == "sha512-224" && byte28ArrayEquals(sha512.Sum512_224(h.buffer), h.expected) {
-		return true
-	}
-
-	if h.algo == "sha512-256" && byte32ArrayEquals(sha512.Sum512_256(h.buffer), h.expected) {
-		return true
-	}
-
-	if h.algo == "sha3-224" && byte28ArrayEquals(sha3.Sum224(h.buffer), h.expected) {
-		return true
-	}
-
-	if h.algo == "sha3-256" && byte32ArrayEquals(sha3.Sum256(h.buffer), h.expected) {
-		return true
-	}
-
-	if h.algo == "sha3-384" && byte48ArrayEquals(sha3.Sum384(h.buffer), h.expected) {
-		return true
-	}
-
-	if h.algo == "sha3-512" && byte64ArrayEquals(sha3.Sum512(h.buffer), h.expected) {
-		return true
-	}
-
-	return false
+	// NOTE: ok to panic here, since code path can only occur
+	// while adding a new algo to the lib
+	panic(fmt.Errorf("Unknown algo %s", h.algo))
 }
 
 // FindSequential calcs all possible combinations of keys of given length

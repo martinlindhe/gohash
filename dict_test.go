@@ -14,7 +14,8 @@ func TestDictionary(t *testing.T) {
 	// sha256 of a row in onion-sites.txt, lets find it
 	dict.ExpectedHash("be80cf12710923248c15649dbe44012623708399e34add8f1d5cb89bf6f96299")
 
-	res, err := dict.Find()
+	res, algo, err := dict.Find()
 	assert.Equal(t, nil, err)
+	assert.Equal(t, "sha256", algo)
 	assert.Equal(t, "3qr42dbkhrjp55kg.onion", string(res))
 }
