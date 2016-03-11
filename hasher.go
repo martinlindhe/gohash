@@ -1,6 +1,7 @@
 package gohash
 
 import (
+	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha512"
 	"fmt"
@@ -87,7 +88,7 @@ func (h *Hasher) verify() error {
 		return fmt.Errorf("expectedHash is wrong size, should be 512 bit (64 byte)")
 	}
 
-	if h.algo != "sha1" && h.algo != "sha512" {
+	if h.algo != "md5" && h.algo != "sha1" && h.algo != "sha512" {
 		return fmt.Errorf("unknown algo %s", h.algo)
 	}
 
@@ -119,6 +120,10 @@ func (h *Hasher) FindSequential() (string, error) {
 	for {
 
 		tmp2 := append(tmp, h.suffix...)
+
+		if h.algo == "md5" && byte16ArrayEquals(md5.Sum(tmp2), h.expected) {
+			return string(tmp2), nil
+		}
 
 		if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(tmp2), h.expected) {
 			return string(tmp2), nil
@@ -184,6 +189,10 @@ func (h *Hasher) FindRandom() (string, error) {
 		// update mutation of first letters
 		for roller := 0; roller < h.minLength; roller++ {
 			tmp[roller] = h.allowedKeys[rand.Intn(allowedKeysLen)]
+		}
+
+		if h.algo == "md5" && byte16ArrayEquals(md5.Sum(tmp), h.expected) {
+			return string(tmp), nil
 		}
 
 		if h.algo == "sha1" && byte20ArrayEquals(sha1.Sum(tmp), h.expected) {

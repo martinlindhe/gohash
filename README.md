@@ -13,5 +13,7 @@ Hasher in golang
 * if ran in seq mode, save snapshots to ~/.config/gohash.yml regularry
 
 
+* support Apache MD5 (htpasswd)
+
 
 more benchmarks

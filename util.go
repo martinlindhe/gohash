@@ -18,6 +18,20 @@ func hexStringToBytes(s string) []byte {
 	return res
 }
 
+// md5.Sum() returns 16 bytes (128 bit)
+func byte16ArrayEquals(a [16]byte, b []byte) bool {
+
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
 // sha1.Sum() returns 20 bytes (160 bit)
 func byte20ArrayEquals(a [20]byte, b []byte) bool {
 
