@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"math/rand"
 	"strings"
+
+	"golang.org/x/crypto/sha3"
 )
 
 // ...
@@ -25,6 +27,10 @@ var (
 		"sha512":     512,
 		"sha512-224": 224,
 		"sha512-256": 256,
+		"sha3-224":   224,
+		"sha3-256":   256,
+		"sha3-384":   384,
+		"sha3-512":   512,
 	}
 )
 
@@ -147,6 +153,27 @@ func (h *Hasher) equals(t []byte) bool {
 		return true
 	}
 
+	if h.algo == "sha3-224" && byte28ArrayEquals(sha3.Sum224(t), h.expected) {
+		return true
+	}
+
+	if h.algo == "sha3-256" && byte32ArrayEquals(sha3.Sum256(t), h.expected) {
+		return true
+	}
+
+	if h.algo == "sha3-384" && byte48ArrayEquals(sha3.Sum384(t), h.expected) {
+		return true
+	}
+
+	if h.algo == "sha3-512" && byte64ArrayEquals(sha3.Sum512(t), h.expected) {
+		return true
+	}
+
+	/*
+		if h.algo == "shake-128" && byte64ArrayEquals(sha3.ShakeSum128(t), h.expected) {
+			return true
+		}
+	*/
 	return false
 }
 
@@ -203,7 +230,7 @@ func (h *Hasher) FindSequential() (string, error) {
 
 		cnt++
 		if cnt%1000000 == 0 {
-			fmt.Println(string(tmp2), " (seq)")
+			fmt.Println(string(tmp2), " (seq,", h.algo, ")")
 		}
 	}
 }
@@ -244,7 +271,7 @@ func (h *Hasher) FindRandom() (string, error) {
 
 		cnt++
 		if cnt%1000000 == 0 {
-			fmt.Println(string(tmp), " (rnd)")
+			fmt.Println(string(tmp), " (rnd,", h.algo, ")")
 		}
 	}
 }
