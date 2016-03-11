@@ -12,6 +12,32 @@ func TestHexStringToBytes(t *testing.T) {
 	assert.Equal(t, []byte("hej"), hexStringToBytes("68656a"))
 }
 
+func TestHashMd2(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("md2")
+	hasher.AllowedKeys("holej")
+	hasher.ExpectedHash("a8791e99e1a205db46c6cdef1f459108")
+	hasher.Length(3)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hej", string(res))
+}
+
+func TestHashMd4(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("md4")
+	hasher.AllowedKeys("holej")
+	hasher.ExpectedHash("da3a901f9f5956d23553b9f00bc134a9")
+	hasher.Length(3)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hej", string(res))
+}
+
 func TestHashMd5(t *testing.T) {
 
 	hasher := NewHasher()

@@ -30,6 +30,8 @@ more benchmarks
 Set algo with --algo=<id>
 
 id          Algorithm       keysize  keysize
+md2         MD2             128 bit  16 byte
+md4         MD4             128 bit  16 byte
 md5         MD5             128 bit  16 byte
 sha1        SHA1            160 bit  20 byte
 sha224      SHA2-224        224 bit  28 byte

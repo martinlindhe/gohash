@@ -6,14 +6,17 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 
+	"github.com/htruong/go-md2"
 	"github.com/jzelinskie/whirlpool"
-
+	"golang.org/x/crypto/md4"
 	"golang.org/x/crypto/ripemd160"
 	"golang.org/x/crypto/sha3"
 )
 
 var (
 	algos = map[string]int{
+		"md2":        128,
+		"md4":        128,
 		"md5":        128,
 		"sha1":       160,
 		"sha224":     224,
@@ -33,6 +36,8 @@ var (
 	}
 
 	algoEquals = map[string]func(*[]byte, *[]byte) bool{
+		"md2":        md2Equals,
+		"md4":        md4Equals,
 		"md5":        md5Equals,
 		"sha1":       sha1Equals,
 		"sha224":     sha224Equals,
@@ -51,6 +56,20 @@ var (
 		"ripemd160":  ripemd160Equals,
 	}
 )
+
+func md2Equals(b *[]byte, expected *[]byte) bool {
+
+	w := md2.New()
+	w.Write(*b)
+	return byteArrayEquals(w.Sum(nil), *expected)
+}
+
+func md4Equals(b *[]byte, expected *[]byte) bool {
+
+	w := md4.New()
+	w.Write(*b)
+	return byteArrayEquals(w.Sum(nil), *expected)
+}
 
 func md5Equals(b *[]byte, expected *[]byte) bool {
 	return byte16ArrayEquals(md5.Sum(*b), *expected)
