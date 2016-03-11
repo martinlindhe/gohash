@@ -10,6 +10,7 @@ import (
 	"hash/adler32"
 	"hash/crc32"
 
+	"github.com/cxmcc/tiger"
 	"github.com/htruong/go-md2"
 	"github.com/jzelinskie/whirlpool"
 	"golang.org/x/crypto/md4"
@@ -39,6 +40,7 @@ var (
 		"sha3-512":   512,
 		"shake128":   256,
 		"shake256":   512,
+		"tiger192":   192,
 		"whirlpool":  512,
 		"ripemd160":  160,
 	}
@@ -64,6 +66,7 @@ var (
 		"sha3-512":   sha3_512Equals,
 		"shake128":   shake128Equals,
 		"shake256":   shake256Equals,
+		"tiger192":   tiger192Equals,
 		"whirlpool":  whirlpoolEquals,
 		"ripemd160":  ripemd160Equals,
 	}
@@ -173,15 +176,20 @@ func shake256Equals(b *[]byte, expected *[]byte) bool {
 
 	h := make([]byte, 64)
 	sha3.ShakeSum256(h, *b)
-
 	return byteArrayEquals(h, *expected)
+}
+
+func tiger192Equals(b *[]byte, expected *[]byte) bool {
+
+	w := tiger.New()
+	w.Write(*b)
+	return byteArrayEquals(w.Sum(nil), *expected)
 }
 
 func whirlpoolEquals(b *[]byte, expected *[]byte) bool {
 
 	w := whirlpool.New()
 	w.Write(*b)
-
 	return byteArrayEquals(w.Sum(nil), *expected)
 }
 
@@ -189,6 +197,5 @@ func ripemd160Equals(b *[]byte, expected *[]byte) bool {
 
 	w := ripemd160.New()
 	w.Write(*b)
-
 	return byteArrayEquals(w.Sum(nil), *expected)
 }

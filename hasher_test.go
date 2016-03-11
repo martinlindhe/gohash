@@ -290,6 +290,19 @@ func TestHashWhirlpool(t *testing.T) {
 	assert.Equal(t, "atom", string(res))
 }
 
+func TestHashTiger192(t *testing.T) {
+
+	hasher := NewHasher()
+	hasher.Algo("tiger192")
+	hasher.AllowedKeys("mota")
+	hasher.ExpectedHash("7d4bb5a29d4bc1fb0e3070057f20c6498ba96872ce69ec25")
+	hasher.Length(4)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "atom", string(res))
+}
+
 func TestRipemd160(t *testing.T) {
 
 	hasher := NewHasher()

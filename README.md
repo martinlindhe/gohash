@@ -34,6 +34,7 @@ crc32       Crc-32 (IEEE)       32 bit   4 byte         php's hash() calls this 
 crc32c      Crc-32 (Castagnoli) 32 bit   4 byte         XXX haven't verified calculations
 crc32k      Crc-32 (Koopman)    32 bit   4 byte         XXX haven't verified calculations
 adler32     Adler-32            32 bit   4 byte
+tiger192    Tiger               192 bit  24 byte        php's hash() calls this "tiger192,3"
 md2         MD2                 128 bit  16 byte
 md4         MD4                 128 bit  16 byte
 md5         MD5                 128 bit  16 byte
