@@ -7,6 +7,11 @@ import (
 	"math/rand"
 )
 
+// ...
+const (
+	AllowedOnion = "abcdefghijklmnopqrstuvwxyz234567"
+)
+
 // Hasher ...
 type Hasher struct {
 	algo        string
@@ -15,6 +20,7 @@ type Hasher struct {
 	minLength   int
 	maxLength   int
 	allowedKeys []byte
+	reverse     bool
 }
 
 // NewHasher returns a new Hasher
@@ -35,6 +41,11 @@ func (h *Hasher) ExpectedHash(expected string) {
 func (h *Hasher) Length(len int) {
 	h.minLength = len
 	h.maxLength = len
+}
+
+// Reverse sets wether to do sequential find in reverse order
+func (h *Hasher) Reverse(b bool) {
+	h.reverse = b
 }
 
 // Suffix sets a fixed suffix
@@ -97,24 +108,15 @@ func (h *Hasher) FindSequential() (string, error) {
 
 	// create initial mutation
 	for x := 0; x < h.minLength; x++ {
-		tmp[x] = firstAllowedKey
+		if h.reverse {
+			tmp[x] = lastAllowedKey
+		} else {
+			tmp[x] = firstAllowedKey
+		}
 	}
 
 	cnt := 0
 	for {
-
-		// update mutation
-		for roller := h.minLength - 1; roller >= 0; roller-- {
-			if tmp[roller] == lastAllowedKey {
-				// roll over
-				tmp[roller] = firstAllowedKey
-				continue
-			} else {
-				// XXX use a map with prepared lookup sequence for speed
-				tmp[roller] = h.nextValueFor(tmp[roller])
-				break
-			}
-		}
 
 		tmp2 := append(tmp, h.suffix...)
 
@@ -126,19 +128,40 @@ func (h *Hasher) FindSequential() (string, error) {
 			return string(tmp2), nil
 		}
 
+		// update mutation
+		for roller := h.minLength - 1; roller >= 0; roller-- {
+			if h.reverse {
+				if tmp[roller] == firstAllowedKey {
+					tmp[roller] = lastAllowedKey
+					continue
+				} else {
+					tmp[roller] = h.prevValueFor(tmp[roller])
+					break
+				}
+			} else {
+				if tmp[roller] == lastAllowedKey {
+					tmp[roller] = firstAllowedKey
+					continue
+				} else {
+					tmp[roller] = h.nextValueFor(tmp[roller])
+					break
+				}
+			}
+		}
+
 		cnt++
 		if cnt%100000 == 0 {
 			fmt.Println(string(tmp2))
-		}
-
-		if cnt > 100 {
-			// return "xx", nil
 		}
 	}
 }
 
 // FindRandom uses random brute force to attempt to find by luck
 func (h *Hasher) FindRandom() (string, error) {
+
+	if h.reverse {
+		return "", fmt.Errorf("reverse and random dont mix")
+	}
 
 	if err := h.verify(); err != nil {
 		return "", err
@@ -190,4 +213,16 @@ func (h *Hasher) nextValueFor(b byte) byte {
 		}
 	}
 	return '0'
+}
+
+func (h *Hasher) prevValueFor(b byte) byte {
+
+	prev := h.allowedKeys[0]
+	for _, x := range h.allowedKeys {
+		if x == b {
+			return prev
+		}
+		prev = x
+	}
+	return prev
 }

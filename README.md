@@ -1,6 +1,6 @@
 == README
 
-xxx
+Hasher in golang
 
 
 == TODO
@@ -14,6 +14,4 @@ xxx
 
 
 
-see if there is any golang OpenCV libs to use
-
-add benchmarks for FindMatchingOnionURLByRandom and FindMatchingOnionURL
+more benchmarks

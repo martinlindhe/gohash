@@ -17,6 +17,7 @@ var (
 	minLength   = kingpin.Flag("min-length", "Minimum length.").Required().Int()
 	suffix      = kingpin.Flag("suffix", "Suffix (optional).").String()
 	random      = kingpin.Flag("random", "Random mutation mode.").Bool()
+	reverse     = kingpin.Flag("reverse", "Reverse order (if not random mode)").Bool()
 	startTime   = time.Now()
 	result      = ""
 )
@@ -27,15 +28,15 @@ func main() {
 	kingpin.CommandLine.HelpFlag.Short('h')
 	kingpin.Parse()
 
-	rand.Seed(time.Now().UTC().UnixNano())
+	rand.Seed(startTime.UTC().UnixNano())
 
 	hasher := gohash.NewHasher()
-
 	hasher.Algo(*algo)
 	hasher.AllowedKeys(*allowedKeys)
 	hasher.Suffix(*suffix)
 	hasher.ExpectedHash(*hash)
 	hasher.Length(*minLength)
+	hasher.Reverse(*reverse)
 
 	/*
 		// catch ctrl-c interrupt signal
