@@ -41,6 +41,6 @@ sha3-256    SHA3-256        256 bit  32 byte
 sha3-384    SHA3-384        384 bit  48 byte
 sha3-512    SHA3-512        512 bit  64 byte
 
-XXX TODO sha3:
+TODO-later sha3-shake:
 shake128    SHA3-SHAKE128       https://godoc.org/golang.org/x/crypto/sha3
 shake256    SHA3-SHAKE256
