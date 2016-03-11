@@ -329,6 +329,20 @@ func TestHashShake256(t *testing.T) {
 	assert.Equal(t, "atom", string(res))
 }
 
+/*
+func TestHashSkein512_512(t *testing.T) {
+// XXX dont work
+	hasher := NewHasher()
+	hasher.Algo("skein512-512")
+	hasher.AllowedKeys("mota")
+	hasher.ExpectedHash("d678cbd86810bb6d7f376f76722c7bbda1602b19ec185d3b9faa5e49d97a98d5f69cc407c5252c229fc4c6407817d1ce60f84485c66bbdb2913d4706a27feb33")
+	hasher.Length(4)
+
+	res, err := hasher.FindSequential()
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "atom", string(res))
+}
+*/
 func TestHashWhirlpool(t *testing.T) {
 
 	hasher := NewHasher()

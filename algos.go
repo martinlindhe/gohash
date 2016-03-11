@@ -48,8 +48,11 @@ var (
 		"sha3-512":   512,
 		"shake128":   256,
 		"shake256":   512,
-		"tiger192":   192,
-		"whirlpool":  512,
+		//"skein256-256": 256,
+		//"skein512-256": 256,
+		//"skein512-512": 512,
+		"tiger192":  192,
+		"whirlpool": 512,
 	}
 
 	algoEquals = map[string]func(*[]byte, *[]byte) bool{
@@ -79,8 +82,11 @@ var (
 		"sha3-512":   sha3_512Equals,
 		"shake128":   shake128Equals,
 		"shake256":   shake256Equals,
-		"tiger192":   tiger192Equals,
-		"whirlpool":  whirlpoolEquals,
+		//"skein256-256": skein256_256Equals,
+		//"skein512-256": skein512_256Equals,
+		//"skein512-512": skein512_512Equals,
+		"tiger192":  tiger192Equals,
+		"whirlpool": whirlpoolEquals,
 	}
 )
 
@@ -228,6 +234,29 @@ func shake256Equals(b *[]byte, expected *[]byte) bool {
 	sha3.ShakeSum256(h, *b)
 	return byteArrayEquals(h, *expected)
 }
+
+/*
+func skein256_256Equals(b *[]byte, expected *[]byte) bool {
+
+	w := skein.NewHash(32) // XXX
+	w.Write(*b)
+	return byteArrayEquals(w.Sum(nil), *expected)
+}
+
+func skein512_256Equals(b *[]byte, expected *[]byte) bool {
+
+	w := skein.NewHash(32)
+	w.Write(*b)
+	return byteArrayEquals(w.Sum(nil), *expected)
+}
+
+func skein512_512Equals(b *[]byte, expected *[]byte) bool {
+
+	w := skein.NewHash(64) // XXXX dont work... xxxx
+	w.Write(*b)
+	return byteArrayEquals(w.Sum(nil), *expected)
+}
+*/
 
 func tiger192Equals(b *[]byte, expected *[]byte) bool {
 
