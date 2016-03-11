@@ -22,14 +22,15 @@ import (
 
 var (
 	algos = map[string]int{
-		"adler32":    32,
-		"blake224":   224,
-		"blake256":   256,
-		"blake384":   384,
-		"blake512":   512,
-		"crc32":      32,
-		"crc32c":     32,
-		"crc32k":     32,
+		"adler32":  32,
+		"blake224": 224,
+		"blake256": 256,
+		"blake384": 384,
+		"blake512": 512,
+		"crc32":    32,
+		"crc32c":   32,
+		"crc32k":   32,
+		// "gost":       256,
 		"md2":        128,
 		"md4":        128,
 		"md5":        128,
@@ -52,14 +53,15 @@ var (
 	}
 
 	algoEquals = map[string]func(*[]byte, *[]byte) bool{
-		"adler32":    adler32Equals,
-		"blake224":   blake224Equals,
-		"blake256":   blake256Equals,
-		"blake384":   blake384Equals,
-		"blake512":   blake512Equals,
-		"crc32":      crc32Equals,
-		"crc32c":     crc32cEquals,
-		"crc32k":     crc32kEquals,
+		"adler32":  adler32Equals,
+		"blake224": blake224Equals,
+		"blake256": blake256Equals,
+		"blake384": blake384Equals,
+		"blake512": blake512Equals,
+		"crc32":    crc32Equals,
+		"crc32c":   crc32cEquals,
+		"crc32k":   crc32kEquals,
+		// "gost":       gostEquals,
 		"md2":        md2Equals,
 		"md4":        md4Equals,
 		"md5":        md5Equals,
@@ -141,6 +143,16 @@ func crc32kEquals(b *[]byte, expected *[]byte) bool {
 	tbl := crc32.MakeTable(crc32.Koopman)
 	return crc32.Checksum(*b, tbl) == expectedInt
 }
+
+/*
+func gostEquals(b *[]byte, expected *[]byte) bool {
+	// XXX cannot use due to packaging, see https://github.com/stargrave/gogost/issues/1
+
+	w := gost341194.New(gost341194.SboxDefault)
+	w.Write(*b)
+	return byteArrayEquals(w.Sum(nil), *expected)
+}
+*/
 
 func md2Equals(b *[]byte, expected *[]byte) bool {
 

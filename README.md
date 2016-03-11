@@ -57,6 +57,7 @@ blake224    BLAKE-224           224 bit  28 byte
 blake256    BLAKE-256           256 bit  32 byte
 blake384    BLAKE-384           384 bit  48 byte
 blake512    BLAKE-512           512 bit  64 byte
+gost        GOST                256 bit  32 byte        XXX cant use, see https://github.com/stargrave/gogost/issues/1
 
 
 
