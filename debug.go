@@ -8,6 +8,6 @@ import (
 // dump as hex
 func dh(data []byte) {
 
-	fmt.Printf("%d bytes:\n", len(data))
-	fmt.Printf("%s", hex.Dump(data))
+	fmt.Println(len(data), "bytes:")
+	fmt.Println(hex.Dump(data))
 }

@@ -69,14 +69,13 @@ func strToDistinctByteSlice(s string) []byte {
 		ptr++
 	}
 
-	// XXX TODO sort it too
+	// sort it too
 	sort.Sort(byteSlice(res))
 
 	return res
 }
 
-// byteSlice implements sort.Interface for []Person based on
-// the Age field.
+// byteSlice implements sort.Interface to sort a []byte
 type byteSlice []byte
 
 func (a byteSlice) Len() int           { return len(a) }
