@@ -17,3 +17,12 @@ Hasher in golang
 
 
 more benchmarks
+
+
+
+
+# Hash sizes
+
+md5     128 bit     16 byte
+sha1    160 bit     20 byte
+sha512  512 bit     64 byte

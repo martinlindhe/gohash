@@ -80,12 +80,16 @@ func (h *Hasher) verify() error {
 		return fmt.Errorf("algo unset")
 	}
 
+	if h.algo == "md5" && len(h.expected) != 16 {
+		return fmt.Errorf("expectedHash is wrong size, should be 128 bit, is %d", len(h.expected)*8)
+	}
+
 	if h.algo == "sha1" && len(h.expected) != 20 {
-		return fmt.Errorf("expectedHash is wrong size, should be 160 bit (20 byte)")
+		return fmt.Errorf("expectedHash is wrong size, should be 160 bit, is %d", len(h.expected)*8)
 	}
 
 	if h.algo == "sha512" && len(h.expected) != 64 {
-		return fmt.Errorf("expectedHash is wrong size, should be 512 bit (64 byte)")
+		return fmt.Errorf("expectedHash is wrong size, should be 512 bit, is %d", len(h.expected)*8)
 	}
 
 	if h.algo != "md5" && h.algo != "sha1" && h.algo != "sha512" {
