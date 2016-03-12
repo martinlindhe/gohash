@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/ascii85"
 	"encoding/base32"
 	"encoding/base64"
 	"encoding/hex"
@@ -11,10 +12,10 @@ import (
 
 	"gopkg.in/alecthomas/kingpin.v2"
 
+	b58 "github.com/jbenet/go-base58"
 	"github.com/martinlindhe/bubblebabble"
 	"github.com/martinlindhe/gohash"
 	"github.com/tilinna/z85"
-
 	"golang.org/x/crypto/ssh/terminal"
 )
 
@@ -24,7 +25,7 @@ var (
 	algo       = kingpin.Flag("algo", "Hash algorithm to use. sha1, sha512 etc").Short('a').String()
 	fileName   = kingpin.Flag("file", "File to read").Short('i').String()
 	listHashes = kingpin.Flag("list-hashes", "List available hash algorithms").Bool()
-	encoding   = kingpin.Flag("encoding", "Output encoding: hex (default), hexup, base32, base64, bb, bin, oct, dec, z85").Short('e').String()
+	encoding   = kingpin.Flag("encoding", "Output encoding: hex (default), hexup, base32, base36, base58, base64, bb, bin, oct, dec, z85").Short('e').String()
 )
 
 func main() {
@@ -78,39 +79,41 @@ func main() {
 
 	encodedHash := ""
 	switch *encoding {
-	case "base16":
-		fallthrough
-	case "hex":
+	case "ascii85", "base85":
+		buf := make([]byte, ascii85.MaxEncodedLen(len(*hash)))
+		n := ascii85.Encode(buf, *hash)
+		buf = buf[0:n]
+		encodedHash = string(buf)
+
+	case "base16", "hex":
 		encodedHash = hex.EncodeToString(*hash)
 
 	case "base32":
 		encodedHash = base32.StdEncoding.EncodeToString(*hash)
 
+	case "base36":
+		encodedHash = "XXX" // FIXME finish base36 lib
+
+	case "base58":
+		encodedHash = b58.Encode(*hash)
+
 	case "base64":
 		encodedHash = base64.StdEncoding.EncodeToString(*hash)
 
-	case "bb":
-		fallthrough
-	case "bubblebabble":
+	case "bb", "bubblebabble":
 		encodedHash = bubblebabble.EncodeToString(*hash)
 
-	case "bin":
-		fallthrough
-	case "binary":
+	case "bin", "binary":
 		encodedHash = toBinaryString(*hash, " ")
 
-	case "dec":
-		fallthrough
-	case "decimal":
+	case "dec", "decimal":
 		encodedHash = toDecimalString(*hash, " ")
 
 	case "hexup":
 		encodedHash = hex.EncodeToString(*hash)
 		encodedHash = strings.ToUpper(encodedHash)
 
-	case "oct":
-		fallthrough
-	case "octal":
+	case "oct", "octal":
 		encodedHash = toOctalString(*hash, " ")
 
 	case "z85":

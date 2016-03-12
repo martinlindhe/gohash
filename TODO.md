@@ -5,6 +5,23 @@ hasher_test.go: rewrite to use a table like calc_test.go
 
 # TODO hasher:
 
+encodings:
+    Base36      WIP egen impl
+
+    UUEncoded   https://en.wikipedia.org/wiki/Uuencoding
+        The program uudecode reverses the effect of uuencode, recreating the original binary file exactly
+
+    XXEncoded   https://en.wikipedia.org/wiki/Xxencoding
+
+
+    8BITMIME  (super old SMTP stuff, exists https://golang.org/src/net/smtp/smtp.go?s=8766:8844#L290 somewhere)
+
+
+encodings: move to encoding.go  and add a struct usage pattern
+
+encode: do a separate cli that encodes input stream / file
+
+
 
 
     --algo.  Algorithms can be combinded by the plus  character,  e.  g.
