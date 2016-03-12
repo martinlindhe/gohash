@@ -7,12 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCalcAdler32(t *testing.T) {
-
-	// from https://en.wikipedia.org/wiki/Adler-32#Example
-	calc := NewCalculator([]byte("Wikipedia"))
-	assert.Equal(t, "11e60398", hex.EncodeToString(*calc.Sum("adler32")))
-}
+// XXX make one calc test, with a map of expected hashes, use data/hash-golden.txt
+// XXX verify each run with sphsum cmd (from sphlib)
+// XXX sphlib dont support: adler32, crc32*, fnv*
 
 func TestCalcBlake(t *testing.T) {
 
@@ -30,22 +27,6 @@ func TestCalcBlake(t *testing.T) {
 	// from https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE_hashes
 	assert.Equal(t, "1f7e26f63b6ad25a0896fd978fd050a1766391d2fd0471a77afb975e5034b7ad2d9ccf8dfb47abbbe656e1b82fbc634ba42ce186e8dc5e1ce09a885d41f43451",
 		hex.EncodeToString(*calc.Sum("blake512")))
-}
-
-func TestCalcCrc32(t *testing.T) {
-
-	calc := NewCalculator([]byte("The quick brown fox jumps over the lazy dog"))
-
-	assert.Equal(t, "414fa339",
-		hex.EncodeToString(*calc.Sum("crc32"))) // aka "crc32b" in php
-
-	assert.Equal(t, "22620404",
-		hex.EncodeToString(*calc.Sum("crc32c")))
-
-	assert.Equal(t, "e021db90",
-		hex.EncodeToString(*calc.Sum("crc32k")))
-
-	// NOTE: none of these crc32 implementations seem to correspond to the php "crc32" one
 }
 
 func TestCalcMd2(t *testing.T) {
@@ -132,14 +113,59 @@ func TestCalcSha3(t *testing.T) {
 
 func TestCalcTiger192(t *testing.T) {
 
+	// NOTE: php's hash() calls this "tiger192,3"
+	// NOTE: rhash and sphsum calls this "tiger"
+
 	// from https://en.wikipedia.org/wiki/Tiger_(cryptography)#Examples
 	calc := NewCalculator([]byte("The quick brown fox jumps over the lazy dog"))
-	assert.Equal(t, "6d12a41e72e644f017b6f0e2f7b44c6285f06dd5d2c5b075", hex.EncodeToString(*calc.Sum("tiger192")))
+	assert.Equal(t, "6d12a41e72e644f017b6f0e2f7b44c6285f06dd5d2c5b075",
+		hex.EncodeToString(*calc.Sum("tiger192")))
 }
 
 func TestCalcWhirlpool(t *testing.T) {
 
 	// from https://en.wikipedia.org/wiki/Whirlpool_(cryptography)#Whirlpool_hashes
 	calc := NewCalculator([]byte("The quick brown fox jumps over the lazy dog"))
-	assert.Equal(t, "b97de512e91e3828b40d2b0fdce9ceb3c4a71f9bea8d88e75c4fa854df36725fd2b52eb6544edcacd6f8beddfea403cb55ae31f03ad62a5ef54e42ee82c3fb35", hex.EncodeToString(*calc.Sum("whirlpool")))
+	assert.Equal(t, "b97de512e91e3828b40d2b0fdce9ceb3c4a71f9bea8d88e75c4fa854df36725fd2b52eb6544edcacd6f8beddfea403cb55ae31f03ad62a5ef54e42ee82c3fb35",
+		hex.EncodeToString(*calc.Sum("whirlpool")))
+}
+
+func TestCalcAdler32(t *testing.T) {
+
+	// from https://en.wikipedia.org/wiki/Adler-32#Example
+	calc := NewCalculator([]byte("Wikipedia"))
+	assert.Equal(t, "11e60398", hex.EncodeToString(*calc.Sum("adler32")))
+}
+
+func TestCalcCrc32(t *testing.T) {
+
+	calc := NewCalculator([]byte("The quick brown fox jumps over the lazy dog"))
+
+	assert.Equal(t, "414fa339",
+		hex.EncodeToString(*calc.Sum("crc32"))) // NOTE: php's hash() calls this "crc32b"
+
+	assert.Equal(t, "22620404",
+		hex.EncodeToString(*calc.Sum("crc32c")))
+
+	assert.Equal(t, "e021db90",
+		hex.EncodeToString(*calc.Sum("crc32k")))
+
+	// NOTE: none of these crc32 implementations seem to correspond to the php "crc32" one
+}
+
+func TestCalcFnv(t *testing.T) {
+
+	calc := NewCalculator([]byte("The quick brown fox jumps over the lazy dog"))
+
+	assert.Equal(t, "e9c86c6e",
+		hex.EncodeToString(*calc.Sum("fnv1-32")))
+
+	assert.Equal(t, "048fff90",
+		hex.EncodeToString(*calc.Sum("fnv1a-32")))
+
+	assert.Equal(t, "a8b2f3117de37ace",
+		hex.EncodeToString(*calc.Sum("fnv1-64")))
+
+	assert.Equal(t, "f3f9b7f5e7e47110",
+		hex.EncodeToString(*calc.Sum("fnv1a-64")))
 }

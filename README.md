@@ -7,9 +7,11 @@ STATUS: priv
 
 # TODO
 
-* XXX 1: in dict mode it makes sense to try reverse of each input line
+XXX 0: use Calculator in hasher and dict, drop most of algos.go
 
-* XXX 2: make a hash cli tool using all this: work on stdin or files
+
+
+* XXX 1: in dict mode it makes sense to try reverse of each input line
 
 
 # TODO findhash:
@@ -39,15 +41,20 @@ blake224      BLAKE-224           224 bit  28 byte
 blake256      BLAKE-256           256 bit  32 byte
 blake384      BLAKE-384           384 bit  48 byte
 blake512      BLAKE-512           512 bit  64 byte
-crc32         Crc-32 (IEEE)       32 bit   4 byte       php's hash() calls this "crc32b"
-crc32c        Crc-32 (Castagnoli) 32 bit   4 byte       XXX haven't verified calculations
-crc32k        Crc-32 (Koopman)    32 bit   4 byte       XXX haven't verified calculations
+crc32         Crc-32 (IEEE)       32 bit   4 byte
+crc32c        Crc-32 (Castagnoli) 32 bit   4 byte
+crc32k        Crc-32 (Koopman)    32 bit   4 byte
+fnv1-32       FNV-1 32            32 bit   4 byte
+fnv1a-32      FNV-1a 32           32 bit   4 byte
+fnv1-64       FNV-1 64            64 bit   8 byte
+fnv1a-64      FNV-1a 64           64 bit   8 byte
 gost          GOST                256 bit  32 byte      XXX cant use, see https://github.com/stargrave/gogost/issues/1
 md2           MD2                 128 bit  16 byte
 md4           MD4                 128 bit  16 byte
 md5           MD5                 128 bit  16 byte
 md6           MD6                   --variable--        XXX no golang impl found
 ripemd160     RIPEMD-160          160 bit  20 byte
+sha0          SHA0                160 bit  20 byte      XXX no golang impl found
 sha1          SHA1                160 bit  20 byte
 sha224        SHA2-224            224 bit  28 byte
 sha256        SHA2-256            256 bit  32 byte
@@ -61,13 +68,15 @@ sha3-384      SHA3-384            384 bit  48 byte
 sha3-512      SHA3-512            512 bit  64 byte
 shake128-256  SHA3-SHAKE128       256 bit  32 byte
 shake256-512  SHA3-SHAKE256       512 bit  64 byte
-tiger192      Tiger               192 bit  24 byte      php's hash() calls this "tiger192,3"
+tiger192      Tiger               192 bit  24 byte
 whirlpool     Whirlpool           512 bit  64 byte
 
 TODO skein:
 skein256-256  Skein-256-256       256 bit  32 byte      XXX
 skein512-256  Skein-512-256       256 bit  32 byte      XXX
 skein512-512  Skein-512-512       512 bit  64 byte      XXX
+
+
 
 
 
@@ -109,16 +118,6 @@ Algorithms: https://en.wikipedia.org/wiki/Comparison_of_cryptographic_hash_funct
   [21]=>
 
 
-  string(6) "fnv132"
-  [27]=>
-  string(7) "fnv1a32"
-  [28]=>
-  string(6) "fnv164"
-  [29]=>
-  string(7) "fnv1a64"
-  [30]=>
-  string(5) "joaat"
-  [31]=>
 
   string(10) "haval128,3"
   [32]=>

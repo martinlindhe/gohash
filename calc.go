@@ -8,6 +8,8 @@ import (
 	"encoding/binary"
 	"hash/adler32"
 	"hash/crc32"
+	"hash/fnv"
+	"sort"
 
 	"github.com/cxmcc/tiger"
 	"github.com/dchest/blake256"
@@ -19,8 +21,6 @@ import (
 	"golang.org/x/crypto/ripemd160"
 	"golang.org/x/crypto/sha3"
 )
-
-// TODO use this in hasher and dict, move all wrappers in algos.go here
 
 // Calculator is used to calculate hash of input cleartext
 type Calculator struct {
@@ -45,6 +45,10 @@ var (
 		"crc32":    crc32Sum,
 		"crc32c":   crc32cSum,
 		"crc32k":   crc32kSum,
+		"fnv1-32":  fnv1_32Sum,
+		"fnv1a-32": fnv1a_32Sum,
+		"fnv1-64":  fnv1_64Sum,
+		"fnv1a-64": fnv1a_64Sum,
 		// "gost":       gostEquals,
 		"md2":          md2Sum,
 		"md4":          md4Sum,
@@ -74,11 +78,28 @@ var (
 // Sum returns the checksum
 func (c *Calculator) Sum(algo string) *[]byte {
 
+	// "tiger" is used by rhash, sphsum
+	if algo == "tiger" {
+		algo = "tiger192"
+	}
+
 	if checksum, ok := checksummers[algo]; ok {
 		return checksum(&c.data)
 	}
-
 	return nil
+}
+
+// AvailableHashes returns the available hash id's
+func AvailableHashes() []string {
+
+	res := []string{}
+
+	for key := range checksummers {
+		res = append(res, key)
+	}
+
+	sort.Strings(res)
+	return res
 }
 
 func adler32Sum(b *[]byte) *[]byte {
@@ -137,6 +158,34 @@ func crc32kSum(b *[]byte) *[]byte {
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
 	return &bs
+}
+
+func fnv1_32Sum(b *[]byte) *[]byte {
+	w := fnv.New32()
+	w.Write(*b)
+	res := w.Sum(nil)
+	return &res
+}
+
+func fnv1a_32Sum(b *[]byte) *[]byte {
+	w := fnv.New32a()
+	w.Write(*b)
+	res := w.Sum(nil)
+	return &res
+}
+
+func fnv1_64Sum(b *[]byte) *[]byte {
+	w := fnv.New64()
+	w.Write(*b)
+	res := w.Sum(nil)
+	return &res
+}
+
+func fnv1a_64Sum(b *[]byte) *[]byte {
+	w := fnv.New64a()
+	w.Write(*b)
+	res := w.Sum(nil)
+	return &res
 }
 
 func md2Sum(b *[]byte) *[]byte {
