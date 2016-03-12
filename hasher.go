@@ -7,9 +7,8 @@ import (
 	"time"
 )
 
-// ...
 const (
-	AllowedOnion = "abcdefghijklmnopqrstuvwxyz234567"
+	allowedOnion = "abcdefghijklmnopqrstuvwxyz234567"
 )
 
 // Hasher is used to find cleartext for checksum in `expected`, using algorithm in `algo`
@@ -78,7 +77,7 @@ func (h *Hasher) AllowedKeys(s string) {
 	h.allowedKeys = strToDistinctByteSlice(s)
 }
 
-// GetAllowedKeys ...
+// GetAllowedKeys returns the allowed keys
 func (h *Hasher) GetAllowedKeys() string { return string(h.allowedKeys) }
 
 // FindSequential calcs all possible combinations of keys of given length

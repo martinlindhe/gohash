@@ -21,7 +21,7 @@ var (
 		"blake256":     expectedSeqRev{3, "holej", "91bff832dc57e964a521c660b6500ad04d565536fc5ccd98032bdcb1ebc9402c", "hej"},
 		"blake384":     expectedSeqRev{3, "holej", "11a0ee2934bdd0f3c39ca0eee3b09287db24bc995df15d238da8d95f337ab39badcc6ca2dad0ba10cb49d32113f378b8", "hej"},
 		"blake512":     expectedSeqRev{3, "holej", "3f0b354957782ac9f690683117d391bbd4d0b35061c21043e0915201a16fbf31a0dceac3d98b357a5624e93060df59e607b645a645f4bc944ef825aaf7022348", "hej"},
-		"crc32-ieee":   expectedSeqRev{3, "holej", "0C68542E", "hej"},
+		"crc32-ieee":   expectedSeqRev{3, "holej", "0c68542e", "hej"},
 		"md2":          expectedSeqRev{3, "holej", "a8791e99e1a205db46c6cdef1f459108", "hej"},
 		"md4":          expectedSeqRev{3, "holej", "da3a901f9f5956d23553b9f00bc134a9", "hej"},
 		"md5":          expectedSeqRev{3, "holej", "541c57960bb997942655d14e3b9607f9", "hej"},
@@ -64,7 +64,7 @@ func TestHashSequential(t *testing.T) {
 
 	hasher := NewHasher()
 	hasher.Algo("sha512")
-	hasher.AllowedKeys(AllowedOnion)
+	hasher.AllowedKeys(allowedOnion)
 	hasher.Suffix(".onion")
 	hasher.ExpectedHash("f07be23625ad049e9c44d9d2a8088d3902f5dbbd3f16a1469c34051d5987c5859fc1eeb0127764ad1ba1de4da51297002baaa1b41f3e259d54b135434d8851cc")
 	hasher.Length(16)
@@ -80,7 +80,7 @@ func TestHashRandom(t *testing.T) {
 
 	hasher := NewHasher()
 	hasher.Algo("sha512")
-	hasher.AllowedKeys(AllowedOnion)
+	hasher.AllowedKeys(allowedOnion)
 	hasher.Suffix(".onion")
 	hasher.ExpectedHash("bbc3581fa536cf90d95b60d226495d38257d73e971b3193cc3fd532338caba7710966c5c91eddc8c1193e9cf401db94cb7c16205f064b6c45e3320d8c5d0b5f3")
 	hasher.Length(16)
@@ -96,7 +96,7 @@ func TestHashReverse(t *testing.T) {
 
 	hasher := NewHasher()
 	hasher.Algo("sha512")
-	hasher.AllowedKeys(AllowedOnion)
+	hasher.AllowedKeys(allowedOnion)
 	hasher.Suffix(".onion")
 	hasher.ExpectedHash("4e73702fa409f71f7a564276998b5c663e0617d301dc2f6f79ee4b58d18794eea8449e3a385360e774be22f970a7127a4117ba41a576cab2f46704fd0b6b29e0")
 	hasher.Length(16)
