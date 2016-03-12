@@ -2,14 +2,20 @@
 
 Hasher in golang
 
+
+If you are familiar with php's [hash()](php.net/manual/en/function.hash.php):
+```
+func hash(algo string, b *[]byte) string {
+
+	calc := gohash.NewCalculator(*b)
+	return hex.EncodeToString(*calc.Sum(algo))
+}
+```
+
 STATUS: priv
 
 
 # TODO
-
-XXX 0: use Calculator in hasher and dict, drop most of algos.go
-
-
 
 * XXX 1: in dict mode it makes sense to try reverse of each input line
 
@@ -21,9 +27,6 @@ XXX 0: use Calculator in hasher and dict, drop most of algos.go
 * performance: if ran in seq mode, spawn 2 goroutines, one working from start and one from end.
 
 * performance: if ran in seq mode, save snapshots to ~/.config/gohash.yml regularry
-
-
-* support Apache MD5 (htpasswd)
 
 
 more benchmarks
@@ -48,13 +51,11 @@ fnv1-32       FNV-1 32            32 bit   4 byte
 fnv1a-32      FNV-1a 32           32 bit   4 byte
 fnv1-64       FNV-1 64            64 bit   8 byte
 fnv1a-64      FNV-1a 64           64 bit   8 byte
-gost          GOST                256 bit  32 byte      XXX cant use, see https://github.com/stargrave/gogost/issues/1
+gost          GOST                256 bit  32 byte      FIXME works with patch https://github.com/stargrave/gogost/pull/2
 md2           MD2                 128 bit  16 byte
 md4           MD4                 128 bit  16 byte
 md5           MD5                 128 bit  16 byte
-md6           MD6                   --variable--        XXX no golang impl found
 ripemd160     RIPEMD-160          160 bit  20 byte
-sha0          SHA0                160 bit  20 byte      XXX no golang impl found
 sha1          SHA1                160 bit  20 byte
 sha224        SHA2-224            224 bit  28 byte
 sha256        SHA2-256            256 bit  32 byte
@@ -68,6 +69,7 @@ sha3-384      SHA3-384            384 bit  48 byte
 sha3-512      SHA3-512            512 bit  64 byte
 shake128-256  SHA3-SHAKE128       256 bit  32 byte
 shake256-512  SHA3-SHAKE256       512 bit  64 byte
+siphash-2-4   SipHash-2-4         64 bit   8 byte
 tiger192      Tiger               192 bit  24 byte
 whirlpool     Whirlpool           512 bit  64 byte
 
@@ -78,74 +80,58 @@ skein512-512  Skein-512-512       512 bit  64 byte      XXX
 
 
 
-
-
-
 NOTE no golang impl for these ripemd forms:
-ripemd128     32 789d569f08ed7055e94b4289a4195012
-ripemd256     64 cc1d2594aece0a064b7aed75a57283d9490fd5705ed3d66bf9a
-ripemd320     80 eb0cf45114c56a8421fbcb33430fa22e0cd607560a88bbe14ce
+ripemd128     RIPEMD-128          128 bit  16 byte
+ripemd256     RIPEMD-256          256 bit  32 byte
+ripemd320     RIPEMD-320          320 bit  40 byte
 
+TODO later, sha0:
+sha0          SHA0                160 bit  20 byte      XXX no golang impl found
 
-TODO later, port a sha0 lib to golang and add sha0 support
-    http://home.utah.edu/~nahaj/ada/sha/sha-0/sha-0.tar
+TODO later, md6:
+md6           MD6                   --variable--        XXX no golang impl found
 
 
 Algorithms: https://en.wikipedia.org/wiki/Comparison_of_cryptographic_hash_functions
 
 
 
+TODO JH, sha3-finalist, https://en.wikipedia.org/wiki/JH_(hash_function)
 
-  string(9) "ripemd128"
-  string(9) "ripemd256"
-  string(9) "ripemd320"
+TODO Grøstl, sha3-finalist, https://en.wikipedia.org/wiki/Gr%C3%B8stl
+    https://github.com/ctz/groestl/blob/master/groestl.py
 
-  string(10) "tiger128,3"
-  [14]=>
-  string(10) "tiger160,3"
-  [15]=>
-  string(10) "tiger192,3"
-  [16]=>
-  string(10) "tiger128,4"
-  [17]=>
-  string(10) "tiger160,4"
-  [18]=>
-  string(10) "tiger192,4"
-  [19]=>
-  string(6) "snefru"
-  [20]=>
-  string(9) "snefru256"
-  [21]=>
+TODO never(?), panama, https://en.wikipedia.org/wiki/Panama_(cryptography)
+
+TODO never(?), ECOH, sha3-disqualified, https://en.wikipedia.org/wiki/Elliptic_curve_only_hash
 
 
+TODO later, tiger variants (from php):
+tiger128,3
+tiger160,3
+tiger192,3
+tiger128,4
+tiger160,4
+tiger192,4
 
-  string(10) "haval128,3"
-  [32]=>
-  string(10) "haval160,3"
-  [33]=>
-  string(10) "haval192,3"
-  [34]=>
-  string(10) "haval224,3"
-  [35]=>
-  string(10) "haval256,3"
-  [36]=>
-  string(10) "haval128,4"
-  [37]=>
-  string(10) "haval160,4"
-  [38]=>
-  string(10) "haval192,4"
-  [39]=>
-  string(10) "haval224,4"
-  [40]=>
-  string(10) "haval256,4"
-  [41]=>
-  string(10) "haval128,5"
-  [42]=>
-  string(10) "haval160,5"
-  [43]=>
-  string(10) "haval192,5"
-  [44]=>
-  string(10) "haval224,5"
-  [45]=>
-  string(10) "haval256,5"
-}
+
+TODO never(?), snefru (from php), https://en.wikipedia.org/wiki/Snefru
+snefru
+snefru256
+
+TODO never(?), haval (from php), https://en.wikipedia.org/wiki/HAVAL
+haval128,3
+haval160,3
+haval192,3
+haval224,3
+haval256,3
+haval128,4
+haval160,4
+haval192,4
+haval224,4
+haval256,4
+haval128,5
+haval160,5
+haval192,5
+haval224,5
+haval256,5

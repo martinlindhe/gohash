@@ -51,6 +51,9 @@ var (
 		"fnv1a-64": expectedForms{
 			fox:   "f3f9b7f5e7e47110",
 			blank: "cbf29ce484222325"},
+		"gost": expectedForms{
+			fox:   "77b7fa410c9ac58a25f49bca7d0468c9296529315eaca76bd1a10f376d1f4294",
+			blank: "ce85b99cc46752fffee35cab9a7b0278abb4c2d2055cff685af4912c49490f8d"},
 		"md2": expectedForms{
 			fox:   "03d85a0d629d2c442e987525319fc471",
 			blank: "8350e5a3e24c153df2275c9f80692773"},
@@ -102,6 +105,18 @@ var (
 		"shake256-512": expectedForms{
 			fox:   "2f671343d9b2e1604dc9dcf0753e5fe15c7c64a0d283cbbf722d411a0e36f6ca1d01d1369a23539cd80f7c054b6e5daf9c962cad5b8ed5bd11998b40d5734442",
 			blank: "46b9dd2b0ba88d13233b3feb743eeb243fcd52ea62b81b82b50c27646ed5762fd75dc4ddd8c0f200cb05019d67b592f6fc821c49479ab48640292eacb3b7c4be"},
+		"siphash-2-4": expectedForms{
+			fox:   "0de4702506520059",
+			blank: "d70077739d4b921e"},
+		/*"skein256-256": expectedForms{ // xxx
+		fox:   "xx",
+		blank: "c8877087da56e072870daa843f176e9453115929094c3a40c463a196c29bf7ba"},*/
+		"skein512-256": expectedForms{
+			fox:   "b3250457e05d3060b1a4bbc1428bc75a3f525ca389aeab96cfa34638d96e492a",
+			blank: "39ccc4554a8b31853b9de7a1fe638a24cce6b35a55f2431009e18780335d2621"},
+		"skein512-512": expectedForms{
+			fox:   "94c2ae036dba8783d0b3f7d6cc111ff810702f5c77707999be7e1c9486ff238a7044de734293147359b4ac7e1d09cd247c351d69826b78dcddd951f0ef912713",
+			blank: "bc5b4c50925519c290cc634277ae3d6257212395cba733bbad37a4af0fa06af41fca7903d06564fea7a2d3730dbdb80c1f85562dfcc070334ea4d1d9e72cba7a"},
 		"tiger192": expectedForms{
 			// NOTE: php's hash() calls this "tiger192,3"
 			fox:   "6d12a41e72e644f017b6f0e2f7b44c6285f06dd5d2c5b075",

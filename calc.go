@@ -14,9 +14,11 @@ import (
 	"github.com/cxmcc/tiger"
 	"github.com/dchest/blake256"
 	"github.com/dchest/blake512"
+	"github.com/dchest/siphash"
+	"github.com/dchest/skein"
 	"github.com/htruong/go-md2"
 	"github.com/jzelinskie/whirlpool"
-
+	"github.com/stargrave/gogost/gost341194"
 	"golang.org/x/crypto/md4"
 	"golang.org/x/crypto/ripemd160"
 	"golang.org/x/crypto/sha3"
@@ -37,19 +39,19 @@ func NewCalculator(data []byte) *Calculator {
 
 var (
 	checksummers = map[string]func(*[]byte) *[]byte{
-		"adler32":  adler32Sum,
-		"blake224": blake224Sum,
-		"blake256": blake256Sum,
-		"blake384": blake384Sum,
-		"blake512": blake512Sum,
-		"crc32":    crc32Sum,
-		"crc32c":   crc32cSum,
-		"crc32k":   crc32kSum,
-		"fnv1-32":  fnv1_32Sum,
-		"fnv1a-32": fnv1a_32Sum,
-		"fnv1-64":  fnv1_64Sum,
-		"fnv1a-64": fnv1a_64Sum,
-		// "gost":       gostEquals,
+		"adler32":      adler32Sum,
+		"blake224":     blake224Sum,
+		"blake256":     blake256Sum,
+		"blake384":     blake384Sum,
+		"blake512":     blake512Sum,
+		"crc32":        crc32Sum,
+		"crc32c":       crc32cSum,
+		"crc32k":       crc32kSum,
+		"fnv1-32":      fnv1_32Sum,
+		"fnv1a-32":     fnv1a_32Sum,
+		"fnv1-64":      fnv1_64Sum,
+		"fnv1a-64":     fnv1a_64Sum,
+		"gost":         gostSum,
 		"md2":          md2Sum,
 		"md4":          md4Sum,
 		"md5":          md5Sum,
@@ -67,21 +69,19 @@ var (
 		"sha3-512":     sha3_512Sum,
 		"shake128-256": shake128_256Sum,
 		"shake256-512": shake256_512Sum,
-		//"skein256-256": skein256_256Equals,
-		//"skein512-256": skein512_256Equals,
-		//"skein512-512": skein512_512Equals,
-		"tiger192":  tiger192Sum,
-		"whirlpool": whirlpoolSum,
+		"siphash-2-4":  siphash2_4Sum,
+		// "skein256-256": skein256_256Sum, // XXX
+		"skein512-256": skein512_256Sum,
+		"skein512-512": skein512_512Sum,
+		"tiger192":     tiger192Sum,
+		"whirlpool":    whirlpoolSum,
 	}
 )
 
 // Sum returns the checksum
 func (c *Calculator) Sum(algo string) *[]byte {
 
-	// "tiger" is used by rhash, sphsum
-	if algo == "tiger" {
-		algo = "tiger192"
-	}
+	algo = resolveAlgoAliases(algo)
 
 	if checksum, ok := checksummers[algo]; ok {
 		return checksum(&c.data)
@@ -100,6 +100,26 @@ func AvailableHashes() []string {
 
 	sort.Strings(res)
 	return res
+}
+
+func resolveAlgoAliases(s string) string {
+
+	// "tiger" is used by rhash, sphsum
+	if s == "tiger" {
+		return "tiger192"
+	}
+
+	// "skein256" is used in sphsum
+	if s == "skein256" {
+		return "skein512-256"
+	}
+
+	// "skein512" is used in sphsum
+	if s == "skein512" {
+		return "skein512-256"
+	}
+
+	return s
 }
 
 func adler32Sum(b *[]byte) *[]byte {
@@ -185,6 +205,13 @@ func fnv1a_64Sum(b *[]byte) *[]byte {
 	w := fnv.New64a()
 	w.Write(*b)
 	res := w.Sum(nil)
+	return &res
+}
+
+func gostSum(b *[]byte) *[]byte {
+	h := gost341194.New(gost341194.SboxDefault)
+	h.Write(*b)
+	res := h.Sum(nil)
 	return &res
 }
 
@@ -290,6 +317,36 @@ func shake128_256Sum(b *[]byte) *[]byte {
 func shake256_512Sum(b *[]byte) *[]byte {
 	res := make([]byte, 64)
 	sha3.ShakeSum256(res, *b)
+	return &res
+}
+
+func siphash2_4Sum(b *[]byte) *[]byte {
+	key := make([]byte, 16) // NOTE using empty key
+	w := siphash.New(key)
+	w.Write(*b)
+	res := w.Sum(nil)
+	return &res
+}
+
+func skein256_256Sum(b *[]byte) *[]byte { // XXX
+	w := skein.NewHash(32)
+	w.Write(*b)
+	res := w.Sum(nil)
+	return &res
+}
+
+func skein512_256Sum(b *[]byte) *[]byte { // XXX
+	w := skein.NewHash(32)
+	w.Write(*b)
+	res := w.Sum(nil)
+	return &res
+
+}
+
+func skein512_512Sum(b *[]byte) *[]byte {
+	w := skein.NewHash(64)
+	w.Write(*b)
+	res := w.Sum(nil)
 	return &res
 }
 
