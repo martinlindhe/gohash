@@ -1,10 +1,6 @@
 package gohash
 
-import (
-	"encoding/hex"
-	"fmt"
-	"sort"
-)
+import "sort"
 
 // used in tests
 type expectedForms map[string]string
@@ -14,18 +10,6 @@ var (
 	blank = ""
 	fox   = "The quick brown fox jumps over the lazy dog"
 )
-
-// return byte array from hex string
-func hexStringToBytes(s string) []byte { // XXX decoder from hex
-
-	res, err := hex.DecodeString(s)
-	if err != nil {
-		fmt.Println("ERROR decoding")
-		return nil
-	}
-
-	return res
-}
 
 func byteArrayEquals(a []byte, b []byte) bool {
 

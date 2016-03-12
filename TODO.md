@@ -1,10 +1,8 @@
 # TODO XXX
 
-0: coder: do a separate cli that encodes/decodes input stream / file
+coder: do a separate cli that encodes/decodes input stream / file
 
 
-
-hasher_test.go: rewrite to use a table like calc_test.go
 
 
 # TODO cmd/hasher
@@ -43,6 +41,7 @@ UUEncoded   https://en.wikipedia.org/wiki/Uuencoding
     The program uudecode reverses the effect of uuencode, recreating the original binary file exactly
 
 XXEncoded   https://en.wikipedia.org/wiki/Xxencoding
+
 
 
 # TODO - hashes

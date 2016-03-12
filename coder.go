@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"sort"
 	"strings"
 
 	b58 "github.com/jbenet/go-base58"
@@ -18,18 +19,9 @@ type Coder struct {
 	encoding string
 }
 
-// NewCoder creates a new Coder
-func NewCoder(encoding string) *Coder {
-
-	return &Coder{
-		encoding: resolveEncodingAliases(encoding),
-	}
-}
-
 var (
 	separator = " "
-
-	coders = map[string]func([]byte) (string, error){
+	coders    = map[string]func([]byte) (string, error){
 		"ascii85":      encodeASCII85,
 		"base32":       encodeBase32,
 		"base36":       encodeBase36,
@@ -45,6 +37,14 @@ var (
 	}
 )
 
+// NewCoder creates a new Coder
+func NewCoder(encoding string) *Coder {
+
+	return &Coder{
+		encoding: resolveEncodingAliases(encoding),
+	}
+}
+
 // Encode encodes src into some encoding
 func (c *Coder) Encode(src []byte) (string, error) {
 
@@ -52,6 +52,19 @@ func (c *Coder) Encode(src []byte) (string, error) {
 		return coder(src)
 	}
 	return "", fmt.Errorf("unknown encoding: %s", c.encoding)
+}
+
+// AvailableEncodings returns the available encoding id's
+func AvailableEncodings() []string {
+
+	res := []string{}
+
+	for key := range coders {
+		res = append(res, key)
+	}
+
+	sort.Strings(res)
+	return res
 }
 
 func encodeASCII85(src []byte) (string, error) {
@@ -161,4 +174,16 @@ func resolveEncodingAliases(s string) string {
 		return "octal"
 	}
 	return s
+}
+
+// return byte array from hex string
+func hexStringToBytes(s string) []byte { // XXX decoder from hex
+
+	res, err := hex.DecodeString(s)
+	if err != nil {
+		fmt.Println("ERROR decoding")
+		return nil
+	}
+
+	return res
 }

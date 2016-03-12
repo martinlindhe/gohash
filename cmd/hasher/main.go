@@ -13,10 +13,11 @@ import (
 import "io/ioutil"
 
 var (
-	algo       = kingpin.Flag("algo", "Hash algorithm to use. sha1, sha512 etc").Short('a').String()
-	fileName   = kingpin.Flag("file", "File to read").Short('i').String()
-	listHashes = kingpin.Flag("list-hashes", "List available hash algorithms").Bool()
-	encoding   = kingpin.Flag("encoding", "Output encoding: hex (default), hexup, base32, base36, base58, base64, bb, bin, oct, dec, z85").Short('e').String()
+	fileName      = kingpin.Flag("file", "File to read").Short('i').String()
+	algo          = kingpin.Flag("algo", "Hash algorithm to use. sha1, sha512 etc").Short('a').String()
+	listHashes    = kingpin.Flag("list-hashes", "List available hash algorithms").Bool()
+	encoding      = kingpin.Flag("encoding", "Output encoding. hex is default").Short('e').String()
+	listEncodings = kingpin.Flag("list-encodings", "List available encodings").Bool()
 )
 
 func main() {
@@ -29,6 +30,13 @@ func main() {
 		fmt.Println("Available hashes")
 		fmt.Println("")
 		fmt.Println(gohash.AvailableHashes())
+		os.Exit(0)
+	}
+
+	if *listEncodings {
+		fmt.Println("Available encodings")
+		fmt.Println("")
+		fmt.Println(gohash.AvailableEncodings())
 		os.Exit(0)
 	}
 

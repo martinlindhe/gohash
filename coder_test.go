@@ -68,3 +68,8 @@ func TestEncodeZ85(t *testing.T) {
 	res, _ := encodeZ85([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B})
 	assert.Equal(t, "HelloWorld", res)
 }
+
+func TestHexStringToBytes(t *testing.T) {
+
+	assert.Equal(t, []byte("hej"), hexStringToBytes("68656a"))
+}
