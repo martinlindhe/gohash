@@ -21,6 +21,7 @@ import (
 	"github.com/howeyc/crc16"
 	"github.com/htruong/go-md2"
 	"github.com/jzelinskie/whirlpool"
+	"github.com/mewpkg/hashutil/crc8"
 	"github.com/stargrave/gogost/gost341194"
 	"golang.org/x/crypto/md4"
 	"golang.org/x/crypto/ripemd160"
@@ -49,6 +50,7 @@ var (
 		"blake512":          512,
 		"blake2b-512":       512,
 		"blake2s-256":       256,
+		"crc8-atm":          8,
 		"crc16-ccitt":       16,
 		"crc16-ccitt-false": 16,
 		"crc16-ibm":         16,
@@ -89,6 +91,7 @@ var (
 		"blake512":          blake512Sum,
 		"blake2b-512":       blake2b_512Sum,
 		"blake2s-256":       blake2s_256Sum,
+		"crc8-atm":          crc8AtmSum,
 		"crc16-ccitt":       crc16CcittSum,
 		"crc16-ccitt-false": crc16CcittFalseSum,
 		"crc16-ibm":         crc16IbmSum,
@@ -215,6 +218,13 @@ func blake2s_256Sum(b *[]byte) *[]byte {
 	x := blake2s.Sum256(*b)
 	res := x[:]
 	return &res
+}
+
+func crc8AtmSum(b *[]byte) *[]byte {
+	i := crc8.ChecksumATM(*b)
+	bs := make([]byte, 1)
+	bs[0] = i
+	return &bs
 }
 
 func crc16CcittSum(b *[]byte) *[]byte {

@@ -27,6 +27,7 @@ blake384          BLAKE-384            384 bit  48 byte
 blake512          BLAKE-512            512 bit  64 byte
 blake2b-512       BLAKE2b-512          512 bit  64 byte
 blake2s-256       BLAKE2s-256          256 bit  32 byte
+crc8-atm          Crc-8 (ATM)          8 bit    1 byte
 crc16-ccitt       Crc-16 (CCITT)       16 bit   2 byte
 crc16-ccitt-false Crc-16 (CCITT-False) 16 bit   2 byte
 crc16-ibm         Crc-16 (IBM)         16 bit   2 byte

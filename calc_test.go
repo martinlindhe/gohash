@@ -34,6 +34,9 @@ var (
 		"blake2s-256": expectedForms{
 			fox:   "606beeec743ccbeff6cbcdf5d5302aa855c256c29b88c8ed331ea1a6bf3c8812",
 			blank: "69217a3079908094e11121d042354a7c1f55b6482ca1a51e1b250dfd1ed0eef9"},
+		"crc8-atm": expectedForms{
+			fox:   "c1",
+			blank: "00"},
 		"crc16-ccitt": expectedForms{
 			fox:   "9358",
 			blank: "0000"},
