@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	hash        = kingpin.Flag("hash", "Hash to crack, in hex string").Required().String()
+	hash        = kingpin.Arg("hash", "Hash to crack, in hex string").Required().String()
 	algo        = kingpin.Flag("algo", "Hash algorithm to use. sha1, sha512 etc").String()
 	allowedKeys = kingpin.Flag("allowed", "Allowed keys to use.").String()
 	minLength   = kingpin.Flag("min-length", "Minimum length.").Int()

@@ -14,8 +14,8 @@ import "io/ioutil"
 
 var (
 	fileName      = kingpin.Flag("file", "File to read").Short('i').String()
-	algo          = kingpin.Flag("algo", "Hash algorithm to use. sha1, sha512 etc").Short('a').String()
-	listHashes    = kingpin.Flag("list-hashes", "List available hash algorithms").Bool()
+	algo          = kingpin.Arg("algo", "Hash algorithm to use. sha1, sha512 etc").String()
+	listAlgos     = kingpin.Flag("list-algos", "List available hash algorithms").Bool()
 	encoding      = kingpin.Flag("encoding", "Output encoding. hex is default").Short('e').String()
 	listEncodings = kingpin.Flag("list-encodings", "List available encodings").Bool()
 )
@@ -26,16 +26,12 @@ func main() {
 	kingpin.CommandLine.HelpFlag.Short('h')
 	kingpin.Parse()
 
-	if *listHashes {
-		fmt.Println("Available hashes")
-		fmt.Println("")
+	if *listAlgos {
 		fmt.Println(gohash.AvailableHashes())
 		os.Exit(0)
 	}
 
 	if *listEncodings {
-		fmt.Println("Available encodings")
-		fmt.Println("")
 		fmt.Println(gohash.AvailableEncodings())
 		os.Exit(0)
 	}
