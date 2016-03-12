@@ -1,4 +1,0 @@
-# Misc "golden keys", corresponding to known hashes
-
-The quick brown fox jumps over the lazy dog
-Wikipedia
