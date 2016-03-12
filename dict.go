@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"sort"
 	"strings"
+	"time"
 )
 
 // Dictionary is used to find cleartext for checksum in `expected`,
@@ -16,6 +17,12 @@ type Dictionary struct {
 	possibleAlgos []string
 	prefix        string
 	suffix        string
+
+	// runtime stats
+	try    uint64
+	tick   uint64
+	buffer []byte
+	algo   string
 }
 
 // NewDictionary creates a new Dictionary
@@ -46,7 +53,7 @@ func (d *Dictionary) ExpectedHash(expected string) {
 	d.expected = tmp[:]
 }
 
-// Find ...
+// Find searches for a cleartext for expected hash
 func (d *Dictionary) Find() (string, string, error) {
 
 	err := d.decidePossibleAlgos()
@@ -56,21 +63,56 @@ func (d *Dictionary) Find() (string, string, error) {
 
 	fmt.Println("Trying with", d.possibleAlgos)
 
+	go d.statusReport()
+
 	for _, line := range d.lines {
 		if line == "" {
 			continue
 		}
 
-		buf := []byte(d.prefix + line + d.suffix)
+		d.buffer = []byte(d.prefix + line + d.suffix)
+
+		guesses := [][]byte{
+			d.buffer,
+			reverse(d.buffer),
+		}
 
 		for _, algo := range d.possibleAlgos {
-			if d.equals(algo, &buf) {
-				return line, algo, nil
+			d.algo = algo // XXX slow to copy in hot path
+
+			for _, guess := range guesses {
+				if d.equals(algo, &guess) {
+					return line, algo, nil
+				}
 			}
 		}
+		d.try++
 	}
 
 	return "", "", nil
+}
+
+func (d *Dictionary) statusReport() {
+
+	for {
+		time.Sleep(1 * time.Second)
+		d.tick++
+		avg := d.try / d.tick
+
+		fmt.Printf("%s ~%d/s %s\n", d.algo, avg, string(d.buffer))
+	}
+}
+
+func reverse(b []byte) []byte {
+
+	len := len(b)
+	res := make([]byte, len)
+
+	for i := 0; i < len; i++ {
+		res[i] = b[len-1-i]
+	}
+
+	return res
 }
 
 func (d *Dictionary) equals(algo string, buffer *[]byte) bool {

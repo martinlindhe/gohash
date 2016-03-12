@@ -2,7 +2,6 @@
 
 Hasher in golang
 
-
 If you are familiar with php's [hash()](php.net/manual/en/function.hash.php):
 ```
 func hash(algo string, b *[]byte) string {
@@ -12,31 +11,11 @@ func hash(algo string, b *[]byte) string {
 }
 ```
 
-STATUS: priv
 
 
-# TODO
+# Hash algorithms
 
-* XXX 1: in dict mode it makes sense to try reverse of each input line
-
-
-# TODO findhash:
-* performance: if ran in random mode, spawn X goroutines (?) that work independently,
-    to use max cpu by one app
-
-* performance: if ran in seq mode, spawn 2 goroutines, one working from start and one from end.
-
-* performance: if ran in seq mode, save snapshots to ~/.config/gohash.yml regularry
-
-
-more benchmarks
-
-
-
-
-# Hash sizes
-
-Set algo with --algo=<id>
+Set algo with --algo=<id>, list all supported with `hasher --list-hashes`
 
 id            Algorithm           key size key size     Notes
 adler32       Adler-32            32 bit   4 byte
@@ -51,7 +30,7 @@ fnv1-32       FNV-1 32            32 bit   4 byte
 fnv1a-32      FNV-1a 32           32 bit   4 byte
 fnv1-64       FNV-1 64            64 bit   8 byte
 fnv1a-64      FNV-1a 64           64 bit   8 byte
-gost          GOST                256 bit  32 byte      FIXME works with patch https://github.com/stargrave/gogost/pull/2
+gost          GOST                256 bit  32 byte      uses fork martinlindhe/gogost#vendor
 md2           MD2                 128 bit  16 byte
 md4           MD4                 128 bit  16 byte
 md5           MD5                 128 bit  16 byte
@@ -74,66 +53,3 @@ skein512-256  Skein-512-256       256 bit  32 byte
 skein512-512  Skein-512-512       512 bit  64 byte
 tiger192      Tiger               192 bit  24 byte
 whirlpool     Whirlpool           512 bit  64 byte
-
-
-NOTE no golang impl for these ripemd forms:
-ripemd128     RIPEMD-128          128 bit  16 byte
-ripemd256     RIPEMD-256          256 bit  32 byte
-ripemd320     RIPEMD-320          320 bit  40 byte
-
-TODO later, sha0:
-sha0          SHA0                160 bit  20 byte      XXX no golang impl found
-
-TODO later, md6:
-md6           MD6                   --variable--        XXX no golang impl found
-
-
-Algorithms: https://en.wikipedia.org/wiki/Comparison_of_cryptographic_hash_functions
-
-
-
-TODO JH, sha3-finalist, https://en.wikipedia.org/wiki/JH_(hash_function)
-
-TODO Grøstl, sha3-finalist, https://en.wikipedia.org/wiki/Gr%C3%B8stl
-    https://github.com/ctz/groestl/blob/master/groestl.py
-
-TODO never(?), panama, https://en.wikipedia.org/wiki/Panama_(cryptography)
-
-TODO never(?), ECOH, sha3-disqualified, https://en.wikipedia.org/wiki/Elliptic_curve_only_hash
-
-
-TODO later, tiger variants (from php):
-tiger128,3
-tiger160,3
-tiger192,3
-tiger128,4
-tiger160,4
-tiger192,4
-
-TODO later, skein:
-skein256-256  Skein-256-256       256 bit  32 byte
-    not available in github.com/dchest/skein
-    also Skein-1024-384, and more forms
-
-
-
-TODO never(?), snefru (from php), https://en.wikipedia.org/wiki/Snefru
-snefru
-snefru256
-
-TODO never(?), haval (from php), https://en.wikipedia.org/wiki/HAVAL
-haval128,3
-haval160,3
-haval192,3
-haval224,3
-haval256,3
-haval128,4
-haval160,4
-haval192,4
-haval224,4
-haval256,4
-haval128,5
-haval160,5
-haval192,5
-haval224,5
-haval256,5

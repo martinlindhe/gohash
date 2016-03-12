@@ -23,10 +23,10 @@ type Hasher struct {
 	allowedKeys []byte
 	reverse     bool
 
-	// for runtime stats
-	buffer []byte
+	// runtime stats
 	try    uint64
 	tick   uint64
+	buffer []byte
 }
 
 // NewHasher returns a new Hasher

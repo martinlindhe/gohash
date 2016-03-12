@@ -22,7 +22,9 @@ func TestDictionary(t *testing.T) {
 
 func TestDictionaryCicada(t *testing.T) {
 
-	dict, err := NewDictionary("data/onion-sites.txt")
+	// dictFile := "data/onion-sites.txt"
+	dictFile := "/Users/m/dev/words/build/words-concated.txt"
+	dict, err := NewDictionary(dictFile)
 	assert.Equal(t, nil, err)
 
 	// unknown hash from cicada 3301, 2014onion7 56.jpg
