@@ -22,6 +22,7 @@ import (
 	"github.com/howeyc/crc16"
 	"github.com/htruong/go-md2"
 	"github.com/jzelinskie/whirlpool"
+	"github.com/martinlindhe/crc24"
 	"github.com/mewpkg/hashutil/crc8"
 	"github.com/stargrave/gogost/gost341194"
 	"golang.org/x/crypto/md4"
@@ -56,6 +57,7 @@ var (
 		"crc16-ccitt-false": 16,
 		"crc16-ibm":         16,
 		"crc16-scsi":        16,
+		"crc24-openpgp":     24,
 		"crc32-ieee":        32,
 		"crc32-castagnoli":  32,
 		"crc32-koopman":     32,
@@ -99,6 +101,7 @@ var (
 		"crc16-ccitt-false": crc16CcittFalseSum,
 		"crc16-ibm":         crc16IbmSum,
 		"crc16-scsi":        crc16ScsiSum,
+		"crc24-openpgp":     crc24OpenPGPSum,
 		"crc32-ieee":        crc32IEEESum,
 		"crc32-castagnoli":  crc32CastagnoliSum,
 		"crc32-koopman":     crc32KoopmanSum,
@@ -267,6 +270,14 @@ func crc16ScsiSum(b *[]byte) *[]byte {
 	i := crc16.ChecksumSCSI(*b)
 	bs := make([]byte, 2)
 	binary.BigEndian.PutUint16(bs, i)
+	return &bs
+}
+
+func crc24OpenPGPSum(b *[]byte) *[]byte {
+	i := crc24.ChecksumOpenPGP(*b)
+	bs := make([]byte, 4)
+	binary.BigEndian.PutUint32(bs, i)
+	bs = bs[1:4]
 	return &bs
 }
 

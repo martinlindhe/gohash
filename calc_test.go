@@ -49,6 +49,9 @@ var (
 		"crc16-scsi": expectedForms{
 			fox:   "b32b",
 			blank: "0000"},
+		"crc24-openpgp": expectedForms{
+			fox:   "3e7e22",
+			blank: "000000"},
 		"crc32-ieee": expectedForms{
 			// NOTE: php's hash() calls this "crc32b"
 			fox:   "414fa339",

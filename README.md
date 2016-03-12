@@ -32,6 +32,7 @@ crc16-ccitt       Crc-16 (CCITT)       16 bit   2 byte
 crc16-ccitt-false Crc-16 (CCITT-False) 16 bit   2 byte
 crc16-ibm         Crc-16 (IBM)         16 bit   2 byte
 crc16-scsi        Crc-16 (SCSI)        16 bit   2 byte
+crc24-openpgp     Crc-24 (OpenPGP)     24 bit   3 byte
 crc32-ieee        Crc-32 (IEEE)        32 bit   4 byte
 crc32-castagnoli  Crc-32 (Castagnoli)  32 bit   4 byte
 crc32-koopman     Crc-32 (Koopman)     32 bit   4 byte
