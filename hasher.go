@@ -42,7 +42,7 @@ func (h *Hasher) Algo(algo string) {
 
 // ExpectedHash sets the expected hash
 func (h *Hasher) ExpectedHash(expected string) {
-	tmp := hexStringToBytes(expected)
+	tmp, _ := decodeHex(expected)
 	h.expected = tmp[:]
 }
 

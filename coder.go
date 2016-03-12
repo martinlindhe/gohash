@@ -7,7 +7,9 @@ import (
 	"encoding/hex"
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
+	"unicode"
 
 	b58 "github.com/jbenet/go-base58"
 	"github.com/martinlindhe/bubblebabble"
@@ -21,7 +23,7 @@ type Coder struct {
 
 var (
 	separator = " "
-	coders    = map[string]func([]byte) (string, error){
+	encoders  = map[string]func([]byte) (string, error){
 		"ascii85":      encodeASCII85,
 		"base32":       encodeBase32,
 		"base36":       encodeBase36,
@@ -34,6 +36,21 @@ var (
 		"hexup":        encodeHexUpper,
 		"octal":        encodeOctal,
 		"z85":          encodeZ85,
+	}
+
+	decoders = map[string]func(string) ([]byte, error){
+		"ascii85":      decodeASCII85,
+		"base32":       decodeBase32,
+		"base36":       decodeBase36,
+		"base58":       decodeBase58,
+		"base64":       decodeBase64,
+		"binary":       decodeBinary,
+		"bubblebabble": decodeBubbleBabble,
+		"decimal":      decodeDecimal,
+		"hex":          decodeHex,
+		"hexup":        decodeHex,
+		"octal":        decodeOctal,
+		"z85":          decodeZ85,
 	}
 )
 
@@ -48,10 +65,19 @@ func NewCoder(encoding string) *Coder {
 // Encode encodes src into some encoding
 func (c *Coder) Encode(src []byte) (string, error) {
 
-	if coder, ok := coders[c.encoding]; ok {
+	if coder, ok := encoders[c.encoding]; ok {
 		return coder(src)
 	}
 	return "", fmt.Errorf("unknown encoding: %s", c.encoding)
+}
+
+// Decode decodes src from some encoding
+func (c *Coder) Decode(src string) ([]byte, error) {
+
+	if coder, ok := decoders[c.encoding]; ok {
+		return coder(src)
+	}
+	return nil, fmt.Errorf("unknown encoding: %s", c.encoding)
 }
 
 // AvailableEncodings returns the available encoding id's
@@ -59,7 +85,7 @@ func AvailableEncodings() []string {
 
 	res := []string{}
 
-	for key := range coders {
+	for key := range encoders {
 		res = append(res, key)
 	}
 
@@ -74,20 +100,41 @@ func encodeASCII85(src []byte) (string, error) {
 	return string(buf), nil
 }
 
+func decodeASCII85(s string) ([]byte, error) {
+	dst := make([]byte, 4*len(s))
+	ndst, _, err := ascii85.Decode(dst, []byte(s), true)
+	return dst[0:ndst], err
+}
+
 func encodeBase32(src []byte) (string, error) {
 	return base32.StdEncoding.EncodeToString(src), nil
+}
+
+func decodeBase32(s string) ([]byte, error) {
+	return base32.StdEncoding.DecodeString(s)
 }
 
 func encodeBase36(src []byte) (string, error) {
 	return "", fmt.Errorf("FIXME finish base36 lib")
 }
 
+func decodeBase36(s string) ([]byte, error) {
+	return nil, fmt.Errorf("FIXME finish base36 lib")
+}
+
 func encodeBase58(src []byte) (string, error) {
 	return b58.Encode(src), nil
 }
 
+func decodeBase58(s string) ([]byte, error) {
+	return b58.Decode(s), nil
+}
+
 func encodeBase64(src []byte) (string, error) {
 	return base64.StdEncoding.EncodeToString(src), nil
+}
+func decodeBase64(s string) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(s)
 }
 
 func encodeBinary(src []byte) (string, error) {
@@ -100,8 +147,28 @@ func encodeBinary(src []byte) (string, error) {
 	return strings.TrimRight(res, separator), nil
 }
 
+func decodeBinary(s string) ([]byte, error) {
+
+	if len(s) == 0 {
+		return []byte{}, nil
+	}
+
+	parts := strings.Split(s, separator)
+	res := make([]byte, len(parts))
+
+	for i, part := range parts {
+		b, _ := strconv.ParseInt(part, 2, 8)
+		res[i] = byte(b)
+	}
+	return res, nil
+}
+
 func encodeBubbleBabble(src []byte) (string, error) {
 	return bubblebabble.EncodeToString(src), nil
+}
+
+func decodeBubbleBabble(s string) ([]byte, error) {
+	return bubblebabble.DecodeString(s)
 }
 
 func encodeDecimal(src []byte) (string, error) {
@@ -114,12 +181,35 @@ func encodeDecimal(src []byte) (string, error) {
 	return strings.TrimRight(res, separator), nil
 }
 
+func decodeDecimal(s string) ([]byte, error) {
+
+	if len(s) == 0 {
+		return []byte{}, nil
+	}
+
+	parts := strings.Split(s, separator)
+	res := make([]byte, len(parts))
+
+	for i, part := range parts {
+		b, _ := strconv.ParseInt(part, 10, 8)
+		res[i] = byte(b)
+	}
+	return res, nil
+}
+
 func encodeHex(src []byte) (string, error) {
 	return hex.EncodeToString(src), nil
 }
 
 func encodeHexUpper(src []byte) (string, error) {
 	return strings.ToUpper(hex.EncodeToString(src)), nil
+}
+
+func decodeHex(s string) ([]byte, error) {
+
+	s = stripSpaces(s)
+	res, err := hex.DecodeString(s)
+	return res, err
 }
 
 func encodeOctal(src []byte) (string, error) {
@@ -130,6 +220,22 @@ func encodeOctal(src []byte) (string, error) {
 	}
 
 	return strings.TrimRight(res, separator), nil
+}
+
+func decodeOctal(s string) ([]byte, error) {
+
+	if len(s) == 0 {
+		return []byte{}, nil
+	}
+
+	parts := strings.Split(s, separator)
+	res := make([]byte, len(parts))
+
+	for i, part := range parts {
+		b, _ := strconv.ParseInt(part, 8, 8)
+		res[i] = byte(b)
+	}
+	return res, nil
 }
 
 func encodeZ85(src []byte) (string, error) {
@@ -150,6 +256,20 @@ func encodeZ85(src []byte) (string, error) {
 		return "", err
 	}
 	return string(b85), nil
+}
+
+func decodeZ85(s string) ([]byte, error) {
+
+	dst := make([]byte, z85.DecodedLen(len(s)))
+	n, err := z85.Decode(dst, []byte(s))
+
+	// strip padding
+	for ; n > 0; n-- {
+		if dst[n-1] != 0 {
+			break
+		}
+	}
+	return dst[0:n], err
 }
 
 func resolveEncodingAliases(s string) string {
@@ -176,14 +296,11 @@ func resolveEncodingAliases(s string) string {
 	return s
 }
 
-// return byte array from hex string
-func hexStringToBytes(s string) []byte { // XXX decoder from hex
-
-	res, err := hex.DecodeString(s)
-	if err != nil {
-		fmt.Println("ERROR decoding")
-		return nil
-	}
-
-	return res
+func stripSpaces(str string) string {
+	return strings.Map(func(r rune) rune {
+		if unicode.IsSpace(r) {
+			return -1
+		}
+		return r
+	}, str)
 }

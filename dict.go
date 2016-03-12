@@ -49,7 +49,7 @@ func (d *Dictionary) Suffix(s string) { d.suffix = s }
 
 // ExpectedHash sets the expected hash
 func (d *Dictionary) ExpectedHash(expected string) {
-	tmp := hexStringToBytes(expected)
+	tmp, _ := decodeHex(expected)
 	d.expected = tmp[:]
 }
 

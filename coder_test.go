@@ -11,6 +11,8 @@ import (
 var (
 	expectedEncodings = map[string]expectedForms{
 		"ascii85": expectedForms{
+			// XXX "A4(9GAKYMp@rGmhF!*bI6V0j/2#"
+			// XXX enl http://www.dcode.fr/ascii-85-encoding
 			fox:   "<+ohcEHPu*CER),Dg-(AAoDo:C3=B4F!,CEATAo8BOr<&@=!2AA8c)",
 			blank: ""},
 		"base32": expectedForms{
@@ -55,21 +57,40 @@ func TestCalcExpectedEncodings(t *testing.T) {
 		for form, hash := range forms {
 			coder := NewCoder(algo)
 			res, err := coder.Encode([]byte(form))
-			if err != nil {
-				t.Fatalf("ERROR algo fail %s: %s", algo, err)
-			}
+			assert.Equal(t, nil, err, algo)
 			assert.Equal(t, hash, res, algo)
+		}
+	}
+}
+
+func TestCalcExpectedDecodings(t *testing.T) {
+
+	for algo := range decoders {
+		if forms, ok := expectedEncodings[algo]; ok {
+			for clear, coded := range forms {
+				coder := NewCoder(algo)
+				res, err := coder.Decode(coded)
+				assert.Equal(t, nil, err, algo)
+				assert.Equal(t, []byte(clear), res, algo)
+			}
 		}
 	}
 }
 
 func TestEncodeZ85(t *testing.T) {
 
-	res, _ := encodeZ85([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B})
+	res, err := encodeZ85([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B})
+	assert.Equal(t, nil, err)
 	assert.Equal(t, "HelloWorld", res)
 }
 
-func TestHexStringToBytes(t *testing.T) {
+func TestDecodeHex(t *testing.T) {
 
-	assert.Equal(t, []byte("hej"), hexStringToBytes("68656a"))
+	res, err := decodeHex("484f2a")
+	assert.Equal(t, nil, err)
+	assert.Equal(t, []byte{0x48, 0x4f, 0x2a}, res)
+
+	res, err = decodeHex("48 4f 2a")
+	assert.Equal(t, nil, err)
+	assert.Equal(t, []byte{0x48, 0x4f, 0x2a}, res)
 }

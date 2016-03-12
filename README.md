@@ -19,7 +19,7 @@ Set algo with `hasher --algo=<id>`, list all supported hashes
 with `hasher --list-hashes`
 
 ```
-id                Algorithm            key size key size
+id                Algorithm            key size key size	year	XXX
 adler32           Adler-32             32 bit   4 byte
 blake224          BLAKE-224            224 bit  28 byte
 blake256          BLAKE-256            256 bit  32 byte
@@ -65,4 +65,22 @@ skein512-256      Skein-512-256        256 bit  32 byte
 skein512-512      Skein-512-512        512 bit  64 byte
 tiger192          Tiger                192 bit  24 byte
 whirlpool         Whirlpool            512 bit  64 byte
+```
+
+# Binary-to-text encodings
+
+```
+id                Algorithm              year
+ascii85           Ascii-85               ? (modern)
+base32            Base-32                ?
+base36            Base-36                ?
+base58            Base-58                ?
+base64            Base-64                ?
+bubblebabble      Bubble Babble          2000
+binary            Binary "1010"          -
+decimal           Decimal "13 0 99"      -
+hex               Hex "3f997a"           -
+hexup             Hex "3F997A"           -
+octal             Octal "0129 0226 0120" -
+z85               Z85                    2013
 ```
