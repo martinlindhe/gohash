@@ -1,3 +1,6 @@
+# TODO XXX
+
+hasher_test.go: rewrite to use a table like calc_test.go
 
 # TODO findhash:
 
