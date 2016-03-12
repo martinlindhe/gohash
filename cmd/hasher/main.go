@@ -2,13 +2,18 @@ package main
 
 import (
 	"bufio"
+	"encoding/base32"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"os"
+	"strings"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 
+	"github.com/martinlindhe/bubblebabble"
 	"github.com/martinlindhe/gohash"
+	"github.com/tilinna/z85"
 
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -16,9 +21,10 @@ import (
 import "io/ioutil"
 
 var (
-	algo       = kingpin.Flag("algo", "Hash algorithm to use. sha1, sha512 etc").String()
+	algo       = kingpin.Flag("algo", "Hash algorithm to use. sha1, sha512 etc").Short('a').String()
 	fileName   = kingpin.Flag("file", "File to read").Short('i').String()
 	listHashes = kingpin.Flag("list-hashes", "List available hash algorithms").Bool()
+	encoding   = kingpin.Flag("encoding", "Output encoding: hex (default), hexup, base32, base64, bb, bin, oct, dec, z85").Short('e').String()
 )
 
 func main() {
@@ -32,6 +38,10 @@ func main() {
 		fmt.Println("")
 		fmt.Println(gohash.AvailableHashes())
 		os.Exit(0)
+	}
+
+	if *encoding == "" {
+		*encoding = "hex"
 	}
 
 	if *algo == "" {
@@ -66,8 +76,85 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("%s  %s", hex.EncodeToString(*hash), *fileName)
+	encodedHash := ""
+	switch *encoding {
+	case "base16":
+		fallthrough
+	case "hex":
+		encodedHash = hex.EncodeToString(*hash)
+
+	case "base32":
+		encodedHash = base32.StdEncoding.EncodeToString(*hash)
+
+	case "base64":
+		encodedHash = base64.StdEncoding.EncodeToString(*hash)
+
+	case "bb":
+		fallthrough
+	case "bubblebabble":
+		encodedHash = bubblebabble.EncodeToString(*hash)
+
+	case "bin":
+		fallthrough
+	case "binary":
+		encodedHash = toBinaryString(*hash, " ")
+
+	case "dec":
+		fallthrough
+	case "decimal":
+		encodedHash = toDecimalString(*hash, " ")
+
+	case "hexup":
+		encodedHash = hex.EncodeToString(*hash)
+		encodedHash = strings.ToUpper(encodedHash)
+
+	case "oct":
+		fallthrough
+	case "octal":
+		encodedHash = toOctalString(*hash, " ")
+
+	case "z85":
+		b85 := make([]byte, z85.EncodedLen(len(*hash)))
+		z85.Encode(b85, *hash)
+		encodedHash = string(b85)
+
+	default:
+		fmt.Println("error: unknown --encoding", *encoding)
+		os.Exit(1)
+	}
+
+	fmt.Printf("%s  %s", encodedHash, *fileName)
 	fmt.Println("")
+}
+
+func toBinaryString(src []byte, separator string) string {
+
+	res := ""
+	for _, b := range src {
+		res += fmt.Sprintf("%08b", b) + separator
+	}
+
+	return res
+}
+
+func toOctalString(src []byte, separator string) string {
+
+	res := ""
+	for _, b := range src {
+		res += fmt.Sprintf("%#o", b) + separator
+	}
+
+	return res
+}
+
+func toDecimalString(src []byte, separator string) string {
+
+	res := ""
+	for _, b := range src {
+		res += fmt.Sprintf("%d", b) + separator
+	}
+
+	return res
 }
 
 func readBinaryFile(filename string) ([]byte, error) {

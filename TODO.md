@@ -8,21 +8,7 @@ hasher_test.go: rewrite to use a table like calc_test.go
 
 
     --algo.  Algorithms can be combinded by the plus  character,  e.  g.
-              "sha1+crc32",  "bsd+crc24+xor8".
-
-
-              -e --encoding, output encoding:
-
-                         bin          Binary
-                         dec          Decimal
-                         oct          Octal
-                         hex          Hexadecimal in lowercase (same as -x)
-                         hexup        Hexadecimal in uppercase (same as -X)
-                         base16       Base 16 (as defined by RFC 3548)
-                         base32       Base 32 (as defined by RFC 3548)
-                         base64       Base 64 (as defined by RFC 3548)
-                         bb           BubbleBabble (used by OpenSSH and SSH2)
-                         z85          ZeroMQ Base-85
+          "sha1+crc32",  "bsd+crc24+xor8".
 
 
 
@@ -71,6 +57,9 @@ TODO Grøstl, sha3-finalist, https://en.wikipedia.org/wiki/Gr%C3%B8stl
 TODO never(?), panama, https://en.wikipedia.org/wiki/Panama_(cryptography)
 
 TODO never(?), ECOH, sha3-disqualified, https://en.wikipedia.org/wiki/Elliptic_curve_only_hash
+
+
+TODO later, MDC-2, https://en.wikipedia.org/wiki/MDC-2
 
 
 TODO later, tiger variants (from php):
