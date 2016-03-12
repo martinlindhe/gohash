@@ -74,13 +74,8 @@ func (d *Dictionary) Find() (string, string, error) {
 
 func (d *Dictionary) equals(algo string, buffer *[]byte) bool {
 
-	if equals, ok := algoEquals[algo]; ok {
-		return equals(buffer, &d.expected)
-	}
-
-	// NOTE: ok to panic here, since code path can only occur
-	// while adding a new algo to the lib
-	panic(fmt.Errorf("Unknown algo %s", algo))
+	calc := NewCalculator(*buffer)
+	return byteArrayEquals(*calc.Sum(algo), d.expected)
 }
 
 // derive possible hashes from bitsize

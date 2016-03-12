@@ -205,13 +205,8 @@ func (h *Hasher) verify() error {
 
 func (h *Hasher) equals() bool {
 
-	if equals, ok := algoEquals[h.algo]; ok {
-		return equals(&h.buffer, &h.expected)
-	}
-
-	// NOTE: ok to panic here, since code path can only occur
-	// while adding a new algo to the lib
-	panic(fmt.Errorf("Unknown algo %s", h.algo))
+	calc := NewCalculator(h.buffer)
+	return byteArrayEquals(*calc.Sum(h.algo), h.expected)
 }
 
 func (h *Hasher) statusReport() {
