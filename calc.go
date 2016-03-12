@@ -13,12 +13,14 @@ import (
 
 	"github.com/cxmcc/tiger"
 	"github.com/dchest/blake256"
+	"github.com/dchest/blake2b"
+	"github.com/dchest/blake2s"
 	"github.com/dchest/blake512"
 	"github.com/dchest/siphash"
 	"github.com/dchest/skein"
 	"github.com/htruong/go-md2"
 	"github.com/jzelinskie/whirlpool"
-	"github.com/martinlindhe/gogost/gost341194"
+	"github.com/stargrave/gogost/gost341194"
 	"golang.org/x/crypto/md4"
 	"golang.org/x/crypto/ripemd160"
 	"golang.org/x/crypto/sha3"
@@ -44,6 +46,8 @@ var (
 		"blake256":     256,
 		"blake384":     384,
 		"blake512":     512,
+		"blake2b-512":  512,
+		"blake2s-256":  256,
 		"crc32":        32,
 		"crc32c":       32,
 		"crc32k":       32,
@@ -78,6 +82,8 @@ var (
 		"blake256":     blake256Sum,
 		"blake384":     blake384Sum,
 		"blake512":     blake512Sum,
+		"blake2b-512":  blake2b_512Sum,
+		"blake2s-256":  blake2s_256Sum,
 		"crc32":        crc32Sum,
 		"crc32c":       crc32cSum,
 		"crc32k":       crc32kSum,
@@ -187,6 +193,18 @@ func blake512Sum(b *[]byte) *[]byte {
 	w := blake512.New()
 	w.Write(*b)
 	res := w.Sum(nil)
+	return &res
+}
+
+func blake2b_512Sum(b *[]byte) *[]byte {
+	x := blake2b.Sum512(*b)
+	res := x[:]
+	return &res
+}
+
+func blake2s_256Sum(b *[]byte) *[]byte {
+	x := blake2s.Sum256(*b)
+	res := x[:]
 	return &res
 }
 

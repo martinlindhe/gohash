@@ -23,6 +23,8 @@ blake224      BLAKE-224           224 bit  28 byte
 blake256      BLAKE-256           256 bit  32 byte
 blake384      BLAKE-384           384 bit  48 byte
 blake512      BLAKE-512           512 bit  64 byte
+blake2b-512   blake2b-512         512 bit  64 byte
+blake2s-256   blake2s-256         256 bit  32 byte
 crc32         Crc-32 (IEEE)       32 bit   4 byte
 crc32c        Crc-32 (Castagnoli) 32 bit   4 byte
 crc32k        Crc-32 (Koopman)    32 bit   4 byte
@@ -30,7 +32,7 @@ fnv1-32       FNV-1 32            32 bit   4 byte
 fnv1a-32      FNV-1a 32           32 bit   4 byte
 fnv1-64       FNV-1 64            64 bit   8 byte
 fnv1a-64      FNV-1a 64           64 bit   8 byte
-gost          GOST                256 bit  32 byte      uses fork martinlindhe/gogost#vendor
+gost          GOST                256 bit  32 byte
 md2           MD2                 128 bit  16 byte
 md4           MD4                 128 bit  16 byte
 md5           MD5                 128 bit  16 byte
