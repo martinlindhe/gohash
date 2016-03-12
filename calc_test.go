@@ -59,6 +59,12 @@ var (
 		"crc32-koopman": expectedForms{
 			fox:   "e021db90",
 			blank: "00000000"},
+		"crc64-iso": expectedForms{
+			fox:   "4ef14e19f4c6e28e",
+			blank: "0000000000000000"},
+		"crc64-ecma": expectedForms{
+			fox:   "5b5eb8c2e54aa1c4",
+			blank: "0000000000000000"},
 		"fnv1-32": expectedForms{
 			fox:   "e9c86c6e",
 			blank: "811c9dc5"},

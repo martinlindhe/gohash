@@ -6,6 +6,28 @@ XXX none of the supported crc32 hashes seem to correspond to the one php calls "
     find seed and add....
 
 
+# TODO hasher:
+
+
+
+    --algo.  Algorithms can be combinded by the plus  character,  e.  g.
+              "sha1+crc32",  "bsd+crc24+xor8".
+
+
+              -e --encoding, output encoding:
+
+                         bin          Binary
+                         dec          Decimal
+                         oct          Octal
+                         hex          Hexadecimal in lowercase (same as -x)
+                         hexup        Hexadecimal in uppercase (same as -X)
+                         base16       Base 16 (as defined by RFC 3548)
+                         base32       Base 32 (as defined by RFC 3548)
+                         base64       Base 64 (as defined by RFC 3548)
+                         bb           BubbleBabble (used by OpenSSH and SSH2)
+                         z85          ZeroMQ Base-85
+
+
 
 # TODO findhash:
 

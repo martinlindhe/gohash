@@ -8,6 +8,7 @@ import (
 	"encoding/binary"
 	"hash/adler32"
 	"hash/crc32"
+	"hash/crc64"
 	"hash/fnv"
 	"sort"
 
@@ -58,6 +59,8 @@ var (
 		"crc32-ieee":        32,
 		"crc32-castagnoli":  32,
 		"crc32-koopman":     32,
+		"crc64-iso":         64,
+		"crc64-ecma":        64,
 		"gost":              256,
 		"md2":               128,
 		"md4":               128,
@@ -99,6 +102,8 @@ var (
 		"crc32-ieee":        crc32IEEESum,
 		"crc32-castagnoli":  crc32CastagnoliSum,
 		"crc32-koopman":     crc32KoopmanSum,
+		"crc64-iso":         crc64ISOSum,
+		"crc64-ecma":        crc64ECMASum,
 		"fnv1-32":           fnv1_32Sum,
 		"fnv1a-32":          fnv1a_32Sum,
 		"fnv1-64":           fnv1_64Sum,
@@ -285,6 +290,22 @@ func crc32KoopmanSum(b *[]byte) *[]byte {
 	i := crc32.Checksum(*b, tbl)
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
+	return &bs
+}
+
+func crc64ISOSum(b *[]byte) *[]byte {
+	tbl := crc64.MakeTable(crc64.ISO)
+	i := crc64.Checksum(*b, tbl)
+	bs := make([]byte, 8)
+	binary.BigEndian.PutUint64(bs, i)
+	return &bs
+}
+
+func crc64ECMASum(b *[]byte) *[]byte {
+	tbl := crc64.MakeTable(crc64.ECMA)
+	i := crc64.Checksum(*b, tbl)
+	bs := make([]byte, 8)
+	binary.BigEndian.PutUint64(bs, i)
 	return &bs
 }
 
