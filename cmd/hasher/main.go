@@ -2,21 +2,12 @@ package main
 
 import (
 	"bufio"
-	"encoding/ascii85"
-	"encoding/base32"
-	"encoding/base64"
-	"encoding/hex"
 	"fmt"
 	"os"
-	"strings"
 
-	"gopkg.in/alecthomas/kingpin.v2"
-
-	b58 "github.com/jbenet/go-base58"
-	"github.com/martinlindhe/bubblebabble"
 	"github.com/martinlindhe/gohash"
-	"github.com/tilinna/z85"
 	"golang.org/x/crypto/ssh/terminal"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 import "io/ioutil"
@@ -77,87 +68,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	encodedHash := ""
-	switch *encoding {
-	case "ascii85", "base85":
-		buf := make([]byte, ascii85.MaxEncodedLen(len(*hash)))
-		n := ascii85.Encode(buf, *hash)
-		buf = buf[0:n]
-		encodedHash = string(buf)
-
-	case "base16", "hex":
-		encodedHash = hex.EncodeToString(*hash)
-
-	case "base32":
-		encodedHash = base32.StdEncoding.EncodeToString(*hash)
-
-	case "base36":
-		encodedHash = "XXX" // FIXME finish base36 lib
-
-	case "base58":
-		encodedHash = b58.Encode(*hash)
-
-	case "base64":
-		encodedHash = base64.StdEncoding.EncodeToString(*hash)
-
-	case "bb", "bubblebabble":
-		encodedHash = bubblebabble.EncodeToString(*hash)
-
-	case "bin", "binary":
-		encodedHash = toBinaryString(*hash, " ")
-
-	case "dec", "decimal":
-		encodedHash = toDecimalString(*hash, " ")
-
-	case "hexup":
-		encodedHash = hex.EncodeToString(*hash)
-		encodedHash = strings.ToUpper(encodedHash)
-
-	case "oct", "octal":
-		encodedHash = toOctalString(*hash, " ")
-
-	case "z85":
-		b85 := make([]byte, z85.EncodedLen(len(*hash)))
-		z85.Encode(b85, *hash)
-		encodedHash = string(b85)
-
-	default:
-		fmt.Println("error: unknown --encoding", *encoding)
+	coder := gohash.NewCoder(*encoding)
+	encodedHash, err := coder.Encode(*hash)
+	if err != nil {
+		fmt.Println("error", err)
 		os.Exit(1)
 	}
 
 	fmt.Printf("%s  %s", encodedHash, *fileName)
 	fmt.Println("")
-}
-
-func toBinaryString(src []byte, separator string) string {
-
-	res := ""
-	for _, b := range src {
-		res += fmt.Sprintf("%08b", b) + separator
-	}
-
-	return res
-}
-
-func toOctalString(src []byte, separator string) string {
-
-	res := ""
-	for _, b := range src {
-		res += fmt.Sprintf("%#o", b) + separator
-	}
-
-	return res
-}
-
-func toDecimalString(src []byte, separator string) string {
-
-	res := ""
-	for _, b := range src {
-		res += fmt.Sprintf("%d", b) + separator
-	}
-
-	return res
 }
 
 func readBinaryFile(filename string) ([]byte, error) {

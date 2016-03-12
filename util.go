@@ -6,8 +6,17 @@ import (
 	"sort"
 )
 
+// used in tests
+type expectedForms map[string]string
+
+// strings used in tests
+var (
+	blank = ""
+	fox   = "The quick brown fox jumps over the lazy dog"
+)
+
 // return byte array from hex string
-func hexStringToBytes(s string) []byte {
+func hexStringToBytes(s string) []byte { // XXX decoder from hex
 
 	res, err := hex.DecodeString(s)
 	if err != nil {

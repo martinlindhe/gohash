@@ -14,7 +14,6 @@ encodings:
     XXEncoded   https://en.wikipedia.org/wiki/Xxencoding
 
 
-    8BITMIME  (super old SMTP stuff, exists https://golang.org/src/net/smtp/smtp.go?s=8766:8844#L290 somewhere)
 
 
 encodings: move to encoding.go  and add a struct usage pattern

@@ -7,12 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type expectedForms map[string]string
-
 var (
-	blank    = ""
-	fox      = "The quick brown fox jumps over the lazy dog"
-	testData = map[string]expectedForms{
+	expectedHashes = map[string]expectedForms{
 		"adler32": expectedForms{
 			fox:   "5bdc0fda",
 			blank: "00000001"},
@@ -153,9 +149,9 @@ var (
 	}
 )
 
-func TestCalcExpectedForms(t *testing.T) {
+func TestCalcExpectedHashes(t *testing.T) {
 
-	for algo, forms := range testData {
+	for algo, forms := range expectedHashes {
 		for form, hash := range forms {
 			calc := NewCalculator([]byte(form))
 			res := calc.Sum(algo)
