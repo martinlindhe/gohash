@@ -34,6 +34,18 @@ var (
 		"blake2s-256": expectedForms{
 			fox:   "606beeec743ccbeff6cbcdf5d5302aa855c256c29b88c8ed331ea1a6bf3c8812",
 			blank: "69217a3079908094e11121d042354a7c1f55b6482ca1a51e1b250dfd1ed0eef9"},
+		"crc16-ccitt": expectedForms{
+			fox:   "9358",
+			blank: "0000"},
+		"crc16-ccitt-false": expectedForms{
+			fox:   "8fdd",
+			blank: "ffff"},
+		"crc16-ibm": expectedForms{
+			fox:   "5763",
+			blank: "0000"},
+		"crc16-scsi": expectedForms{
+			fox:   "b32b",
+			blank: "0000"},
 		"crc32": expectedForms{
 			// NOTE: php's hash() calls this "crc32b"
 			// NOTE: none of these crc32 hashes seem to correspond to the one php calls "crc32"
@@ -135,7 +147,11 @@ func TestCalcExpectedForms(t *testing.T) {
 	for algo, forms := range testData {
 		for form, hash := range forms {
 			calc := NewCalculator([]byte(form))
-			assert.Equal(t, hash, hex.EncodeToString(*calc.Sum(algo)), algo)
+			res := calc.Sum(algo)
+			if res == nil {
+				t.Fatalf("ERROR algo fail %s", algo)
+			}
+			assert.Equal(t, hash, hex.EncodeToString(*res), algo)
 		}
 	}
 }

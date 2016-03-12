@@ -18,6 +18,7 @@ import (
 	"github.com/dchest/blake512"
 	"github.com/dchest/siphash"
 	"github.com/dchest/skein"
+	"github.com/howeyc/crc16"
 	"github.com/htruong/go-md2"
 	"github.com/jzelinskie/whirlpool"
 	"github.com/stargrave/gogost/gost341194"
@@ -41,79 +42,87 @@ func NewCalculator(data []byte) *Calculator {
 
 var (
 	algos = map[string]int{
-		"adler32":      32,
-		"blake224":     224,
-		"blake256":     256,
-		"blake384":     384,
-		"blake512":     512,
-		"blake2b-512":  512,
-		"blake2s-256":  256,
-		"crc32":        32,
-		"crc32c":       32,
-		"crc32k":       32,
-		"gost":         256,
-		"md2":          128,
-		"md4":          128,
-		"md5":          128,
-		"ripemd160":    160,
-		"sha1":         160,
-		"sha224":       224,
-		"sha256":       256,
-		"sha384":       384,
-		"sha512":       512,
-		"sha512-224":   224,
-		"sha512-256":   256,
-		"sha3-224":     224,
-		"sha3-256":     256,
-		"sha3-384":     384,
-		"sha3-512":     512,
-		"shake128-256": 256,
-		"shake256-512": 512,
-		"siphash-2-4":  64,
-		"skein512-256": 256,
-		"skein512-512": 512,
-		"tiger192":     192,
-		"whirlpool":    512,
+		"adler32":           32,
+		"blake224":          224,
+		"blake256":          256,
+		"blake384":          384,
+		"blake512":          512,
+		"blake2b-512":       512,
+		"blake2s-256":       256,
+		"crc16-ccitt":       16,
+		"crc16-ccitt-false": 16,
+		"crc16-ibm":         16,
+		"crc16-scsi":        16,
+		"crc32":             32,
+		"crc32c":            32,
+		"crc32k":            32,
+		"gost":              256,
+		"md2":               128,
+		"md4":               128,
+		"md5":               128,
+		"ripemd160":         160,
+		"sha1":              160,
+		"sha224":            224,
+		"sha256":            256,
+		"sha384":            384,
+		"sha512":            512,
+		"sha512-224":        224,
+		"sha512-256":        256,
+		"sha3-224":          224,
+		"sha3-256":          256,
+		"sha3-384":          384,
+		"sha3-512":          512,
+		"shake128-256":      256,
+		"shake256-512":      512,
+		"siphash-2-4":       64,
+		"skein512-256":      256,
+		"skein512-512":      512,
+		"tiger192":          192,
+		"whirlpool":         512,
 	}
 
 	checksummers = map[string]func(*[]byte) *[]byte{
-		"adler32":      adler32Sum,
-		"blake224":     blake224Sum,
-		"blake256":     blake256Sum,
-		"blake384":     blake384Sum,
-		"blake512":     blake512Sum,
-		"blake2b-512":  blake2b_512Sum,
-		"blake2s-256":  blake2s_256Sum,
-		"crc32":        crc32Sum,
-		"crc32c":       crc32cSum,
-		"crc32k":       crc32kSum,
-		"fnv1-32":      fnv1_32Sum,
-		"fnv1a-32":     fnv1a_32Sum,
-		"fnv1-64":      fnv1_64Sum,
-		"fnv1a-64":     fnv1a_64Sum,
-		"gost":         gostSum,
-		"md2":          md2Sum,
-		"md4":          md4Sum,
-		"md5":          md5Sum,
-		"ripemd160":    ripemd160Sum,
-		"sha1":         sha1Sum,
-		"sha224":       sha224Sum,
-		"sha256":       sha256Sum,
-		"sha384":       sha384Sum,
-		"sha512":       sha512Sum,
-		"sha512-224":   sha512_224Sum,
-		"sha512-256":   sha512_256Sum,
-		"sha3-224":     sha3_224Sum,
-		"sha3-256":     sha3_256Sum,
-		"sha3-384":     sha3_384Sum,
-		"sha3-512":     sha3_512Sum,
-		"shake128-256": shake128_256Sum,
-		"shake256-512": shake256_512Sum,
-		"siphash-2-4":  siphash2_4Sum,
-		"skein512-256": skein512_256Sum,
-		"skein512-512": skein512_512Sum,
-		"tiger192":     tiger192Sum,
-		"whirlpool":    whirlpoolSum,
+		"adler32":           adler32Sum,
+		"blake224":          blake224Sum,
+		"blake256":          blake256Sum,
+		"blake384":          blake384Sum,
+		"blake512":          blake512Sum,
+		"blake2b-512":       blake2b_512Sum,
+		"blake2s-256":       blake2s_256Sum,
+		"crc16-ccitt":       crc16CcittSum,
+		"crc16-ccitt-false": crc16CcittFalseSum,
+		"crc16-ibm":         crc16IbmSum,
+		"crc16-scsi":        crc16ScsiSum,
+		"crc32":             crc32Sum,
+		"crc32c":            crc32cSum,
+		"crc32k":            crc32kSum,
+		"fnv1-32":           fnv1_32Sum,
+		"fnv1a-32":          fnv1a_32Sum,
+		"fnv1-64":           fnv1_64Sum,
+		"fnv1a-64":          fnv1a_64Sum,
+		"gost":              gostSum,
+		"md2":               md2Sum,
+		"md4":               md4Sum,
+		"md5":               md5Sum,
+		"ripemd160":         ripemd160Sum,
+		"sha1":              sha1Sum,
+		"sha224":            sha224Sum,
+		"sha256":            sha256Sum,
+		"sha384":            sha384Sum,
+		"sha512":            sha512Sum,
+		"sha512-224":        sha512_224Sum,
+		"sha512-256":        sha512_256Sum,
+		"sha3-224":          sha3_224Sum,
+		"sha3-256":          sha3_256Sum,
+		"sha3-384":          sha3_384Sum,
+		"sha3-512":          sha3_512Sum,
+		"shake128-256":      shake128_256Sum,
+		"shake256-512":      shake256_512Sum,
+		"siphash-2-4":       siphash2_4Sum,
+		"skein512-256":      skein512_256Sum,
+		"skein512-512":      skein512_512Sum,
+		"tiger192":          tiger192Sum,
+		"whirlpool":         whirlpoolSum,
 	}
 )
 
@@ -206,6 +215,34 @@ func blake2s_256Sum(b *[]byte) *[]byte {
 	x := blake2s.Sum256(*b)
 	res := x[:]
 	return &res
+}
+
+func crc16CcittSum(b *[]byte) *[]byte {
+	i := crc16.ChecksumCCITT(*b)
+	bs := make([]byte, 2)
+	binary.BigEndian.PutUint16(bs, i)
+	return &bs
+}
+
+func crc16CcittFalseSum(b *[]byte) *[]byte {
+	i := crc16.ChecksumCCITTFalse(*b)
+	bs := make([]byte, 2)
+	binary.BigEndian.PutUint16(bs, i)
+	return &bs
+}
+
+func crc16IbmSum(b *[]byte) *[]byte {
+	i := crc16.ChecksumIBM(*b)
+	bs := make([]byte, 2)
+	binary.BigEndian.PutUint16(bs, i)
+	return &bs
+}
+
+func crc16ScsiSum(b *[]byte) *[]byte {
+	i := crc16.ChecksumSCSI(*b)
+	bs := make([]byte, 2)
+	binary.BigEndian.PutUint16(bs, i)
+	return &bs
 }
 
 func crc32Sum(b *[]byte) *[]byte {
