@@ -3,6 +3,7 @@ package gohash
 import (
 	"fmt"
 	"io/ioutil"
+	"sort"
 	"strings"
 )
 
@@ -92,6 +93,8 @@ func (d *Dictionary) decidePossibleAlgos() error {
 	if len(d.possibleAlgos) == 0 {
 		return fmt.Errorf("No known hashes uses a bitsize of %d", bitSize)
 	}
+
+	sort.Strings(d.possibleAlgos)
 
 	return nil
 }

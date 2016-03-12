@@ -108,9 +108,6 @@ var (
 		"siphash-2-4": expectedForms{
 			fox:   "0de4702506520059",
 			blank: "d70077739d4b921e"},
-		/*"skein256-256": expectedForms{ // xxx
-		fox:   "xx",
-		blank: "c8877087da56e072870daa843f176e9453115929094c3a40c463a196c29bf7ba"},*/
 		"skein512-256": expectedForms{
 			fox:   "b3250457e05d3060b1a4bbc1428bc75a3f525ca389aeab96cfa34638d96e492a",
 			blank: "39ccc4554a8b31853b9de7a1fe638a24cce6b35a55f2431009e18780335d2621"},

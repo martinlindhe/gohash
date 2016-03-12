@@ -18,7 +18,7 @@ import (
 	"github.com/dchest/skein"
 	"github.com/htruong/go-md2"
 	"github.com/jzelinskie/whirlpool"
-	"github.com/stargrave/gogost/gost341194"
+	"github.com/martinlindhe/gogost/gost341194"
 	"golang.org/x/crypto/md4"
 	"golang.org/x/crypto/ripemd160"
 	"golang.org/x/crypto/sha3"
@@ -38,6 +38,40 @@ func NewCalculator(data []byte) *Calculator {
 }
 
 var (
+	algos = map[string]int{
+		"adler32":      32,
+		"blake224":     224,
+		"blake256":     256,
+		"blake384":     384,
+		"blake512":     512,
+		"crc32":        32,
+		"crc32c":       32,
+		"crc32k":       32,
+		"gost":         256,
+		"md2":          128,
+		"md4":          128,
+		"md5":          128,
+		"ripemd160":    160,
+		"sha1":         160,
+		"sha224":       224,
+		"sha256":       256,
+		"sha384":       384,
+		"sha512":       512,
+		"sha512-224":   224,
+		"sha512-256":   256,
+		"sha3-224":     224,
+		"sha3-256":     256,
+		"sha3-384":     384,
+		"sha3-512":     512,
+		"shake128-256": 256,
+		"shake256-512": 512,
+		"siphash-2-4":  64,
+		"skein512-256": 256,
+		"skein512-512": 512,
+		"tiger192":     192,
+		"whirlpool":    512,
+	}
+
 	checksummers = map[string]func(*[]byte) *[]byte{
 		"adler32":      adler32Sum,
 		"blake224":     blake224Sum,
@@ -70,7 +104,6 @@ var (
 		"shake128-256": shake128_256Sum,
 		"shake256-512": shake256_512Sum,
 		"siphash-2-4":  siphash2_4Sum,
-		// "skein256-256": skein256_256Sum, // XXX
 		"skein512-256": skein512_256Sum,
 		"skein512-512": skein512_512Sum,
 		"tiger192":     tiger192Sum,
@@ -328,19 +361,11 @@ func siphash2_4Sum(b *[]byte) *[]byte {
 	return &res
 }
 
-func skein256_256Sum(b *[]byte) *[]byte { // XXX
+func skein512_256Sum(b *[]byte) *[]byte {
 	w := skein.NewHash(32)
 	w.Write(*b)
 	res := w.Sum(nil)
 	return &res
-}
-
-func skein512_256Sum(b *[]byte) *[]byte { // XXX
-	w := skein.NewHash(32)
-	w.Write(*b)
-	res := w.Sum(nil)
-	return &res
-
 }
 
 func skein512_512Sum(b *[]byte) *[]byte {

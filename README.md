@@ -70,14 +70,10 @@ sha3-512      SHA3-512            512 bit  64 byte
 shake128-256  SHA3-SHAKE128       256 bit  32 byte
 shake256-512  SHA3-SHAKE256       512 bit  64 byte
 siphash-2-4   SipHash-2-4         64 bit   8 byte
+skein512-256  Skein-512-256       256 bit  32 byte
+skein512-512  Skein-512-512       512 bit  64 byte
 tiger192      Tiger               192 bit  24 byte
 whirlpool     Whirlpool           512 bit  64 byte
-
-TODO skein:
-skein256-256  Skein-256-256       256 bit  32 byte      XXX
-skein512-256  Skein-512-256       256 bit  32 byte      XXX
-skein512-512  Skein-512-512       512 bit  64 byte      XXX
-
 
 
 NOTE no golang impl for these ripemd forms:
@@ -113,6 +109,12 @@ tiger192,3
 tiger128,4
 tiger160,4
 tiger192,4
+
+TODO later, skein:
+skein256-256  Skein-256-256       256 bit  32 byte
+    not available in github.com/dchest/skein
+    also Skein-1024-384, and more forms
+
 
 
 TODO never(?), snefru (from php), https://en.wikipedia.org/wiki/Snefru
