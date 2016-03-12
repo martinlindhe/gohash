@@ -1,34 +1,20 @@
 # TODO XXX
 
+0: coder: do a separate cli that encodes/decodes input stream / file
+
+
+
 hasher_test.go: rewrite to use a table like calc_test.go
 
 
-# TODO hasher:
+# TODO cmd/hasher
 
-encodings:
-    Base36      WIP egen impl
-
-    UUEncoded   https://en.wikipedia.org/wiki/Uuencoding
-        The program uudecode reverses the effect of uuencode, recreating the original binary file exactly
-
-    XXEncoded   https://en.wikipedia.org/wiki/Xxencoding
+--algo.  Algorithms can be combinded by the plus  character,  e.  g.
+      "sha1+crc32",  "bsd+crc24+xor8".
 
 
 
-
-encodings: move to encoding.go  and add a struct usage pattern
-
-encode: do a separate cli that encodes input stream / file
-
-
-
-
-    --algo.  Algorithms can be combinded by the plus  character,  e.  g.
-          "sha1+crc32",  "bsd+crc24+xor8".
-
-
-
-# TODO findhash:
+# TODO cmd/findhash
 
 
 --min-length  + --max-length   if not equal, brute force different lengths
@@ -49,7 +35,17 @@ more benchmarks
 
 
 
-# TODO - unsupported hashes
+# TODO encodings
+
+Base36      WIP egen impl
+
+UUEncoded   https://en.wikipedia.org/wiki/Uuencoding
+    The program uudecode reverses the effect of uuencode, recreating the original binary file exactly
+
+XXEncoded   https://en.wikipedia.org/wiki/Xxencoding
+
+
+# TODO - hashes
 
 NOTE no golang impl for these ripemd forms:
 ripemd128     RIPEMD-128          128 bit  16 byte

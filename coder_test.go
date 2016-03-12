@@ -6,6 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// TODO decoding + test decodings
+
 var (
 	expectedEncodings = map[string]expectedForms{
 		"ascii85": expectedForms{
@@ -59,4 +61,10 @@ func TestCalcExpectedEncodings(t *testing.T) {
 			assert.Equal(t, hash, res, algo)
 		}
 	}
+}
+
+func TestEncodeZ85(t *testing.T) {
+
+	res, _ := encodeZ85([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B})
+	assert.Equal(t, "HelloWorld", res)
 }
