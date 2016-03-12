@@ -32,9 +32,9 @@ crc16-ccitt       Crc-16 (CCITT)       16 bit   2 byte
 crc16-ccitt-false Crc-16 (CCITT-False) 16 bit   2 byte
 crc16-ibm         Crc-16 (IBM)         16 bit   2 byte
 crc16-scsi        Crc-16 (SCSI)        16 bit   2 byte
-crc32             Crc-32 (IEEE)        32 bit   4 byte
-crc32c            Crc-32 (Castagnoli)  32 bit   4 byte
-crc32k            Crc-32 (Koopman)     32 bit   4 byte
+crc32-ieee        Crc-32 (IEEE)        32 bit   4 byte
+crc32-castagnoli  Crc-32 (Castagnoli)  32 bit   4 byte
+crc32-koopman     Crc-32 (Koopman)     32 bit   4 byte
 fnv1-32           FNV-1 32             32 bit   4 byte
 fnv1a-32          FNV-1a 32            32 bit   4 byte
 fnv1-64           FNV-1 64             64 bit   8 byte

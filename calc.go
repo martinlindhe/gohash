@@ -55,9 +55,9 @@ var (
 		"crc16-ccitt-false": 16,
 		"crc16-ibm":         16,
 		"crc16-scsi":        16,
-		"crc32":             32,
-		"crc32c":            32,
-		"crc32k":            32,
+		"crc32-ieee":        32,
+		"crc32-castagnoli":  32,
+		"crc32-koopman":     32,
 		"gost":              256,
 		"md2":               128,
 		"md4":               128,
@@ -96,9 +96,9 @@ var (
 		"crc16-ccitt-false": crc16CcittFalseSum,
 		"crc16-ibm":         crc16IbmSum,
 		"crc16-scsi":        crc16ScsiSum,
-		"crc32":             crc32Sum,
-		"crc32c":            crc32cSum,
-		"crc32k":            crc32kSum,
+		"crc32-ieee":        crc32IEEESum,
+		"crc32-castagnoli":  crc32CastagnoliSum,
+		"crc32-koopman":     crc32KoopmanSum,
 		"fnv1-32":           fnv1_32Sum,
 		"fnv1a-32":          fnv1a_32Sum,
 		"fnv1-64":           fnv1_64Sum,
@@ -155,9 +155,14 @@ func AvailableHashes() []string {
 
 func resolveAlgoAliases(s string) string {
 
-	// "tiger" is used by rhash, sphsum
-	if s == "tiger" {
-		return "tiger192"
+	if s == "crc32" {
+		return "crc32-ieee"
+	}
+	if s == "crc32c" {
+		return "crc32-castagnoli"
+	}
+	if s == "crc32k" {
+		return "crc32-koopman"
 	}
 
 	// "skein256" is used in sphsum
@@ -168,6 +173,11 @@ func resolveAlgoAliases(s string) string {
 	// "skein512" is used in sphsum
 	if s == "skein512" {
 		return "skein512-256"
+	}
+
+	// "tiger" is used by rhash, sphsum
+	if s == "tiger" {
+		return "tiger192"
 	}
 
 	return s
@@ -255,14 +265,14 @@ func crc16ScsiSum(b *[]byte) *[]byte {
 	return &bs
 }
 
-func crc32Sum(b *[]byte) *[]byte {
+func crc32IEEESum(b *[]byte) *[]byte {
 	i := crc32.ChecksumIEEE(*b)
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
 	return &bs
 }
 
-func crc32cSum(b *[]byte) *[]byte {
+func crc32CastagnoliSum(b *[]byte) *[]byte {
 	tbl := crc32.MakeTable(crc32.Castagnoli)
 	i := crc32.Checksum(*b, tbl)
 	bs := make([]byte, 4)
@@ -270,7 +280,7 @@ func crc32cSum(b *[]byte) *[]byte {
 	return &bs
 }
 
-func crc32kSum(b *[]byte) *[]byte {
+func crc32KoopmanSum(b *[]byte) *[]byte {
 	tbl := crc32.MakeTable(crc32.Koopman)
 	i := crc32.Checksum(*b, tbl)
 	bs := make([]byte, 4)

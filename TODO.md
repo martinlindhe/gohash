@@ -2,6 +2,11 @@
 
 hasher_test.go: rewrite to use a table like calc_test.go
 
+XXX none of the supported crc32 hashes seem to correspond to the one php calls "crc32"
+    find seed and add....
+
+
+
 # TODO findhash:
 
 

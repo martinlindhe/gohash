@@ -49,15 +49,14 @@ var (
 		"crc16-scsi": expectedForms{
 			fox:   "b32b",
 			blank: "0000"},
-		"crc32": expectedForms{
+		"crc32-ieee": expectedForms{
 			// NOTE: php's hash() calls this "crc32b"
-			// NOTE: none of these crc32 hashes seem to correspond to the one php calls "crc32"
 			fox:   "414fa339",
 			blank: "00000000"},
-		"crc32c": expectedForms{
+		"crc32-castagnoli": expectedForms{
 			fox:   "22620404",
 			blank: "00000000"},
-		"crc32k": expectedForms{
+		"crc32-koopman": expectedForms{
 			fox:   "e021db90",
 			blank: "00000000"},
 		"fnv1-32": expectedForms{

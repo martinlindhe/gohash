@@ -77,10 +77,10 @@ func TestHashBlake512(t *testing.T) {
 	assert.Equal(t, "hej", string(res))
 }
 
-func TestHashCrc32(t *testing.T) {
+func TestHashCrc32IEEE(t *testing.T) {
 
 	hasher := NewHasher()
-	hasher.Algo("crc32")
+	hasher.Algo("crc32-ieee")
 	hasher.AllowedKeys("holej")
 	hasher.ExpectedHash("0C68542E") // verify uppercase hex works
 	hasher.Length(3)
