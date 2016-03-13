@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -24,6 +25,10 @@ type Dictionary struct {
 	buffer []byte
 	algo   string
 }
+
+var (
+	mutex = &sync.Mutex{}
+)
 
 // NewDictionary creates a new Dictionary
 func NewDictionary(dictFileName string) (*Dictionary, error) {
@@ -63,6 +68,8 @@ func (d *Dictionary) Find() (string, string, error) {
 
 	fmt.Println("Trying with", d.possibleAlgos)
 
+	buf := make([]byte, 256)
+
 	go d.statusReport()
 
 	for _, line := range d.lines {
@@ -70,11 +77,11 @@ func (d *Dictionary) Find() (string, string, error) {
 			continue
 		}
 
-		d.buffer = []byte(d.prefix + line + d.suffix)
+		buf = []byte(d.prefix + line + d.suffix)
 
 		guesses := [][]byte{
-			d.buffer,
-			reverse(d.buffer),
+			buf,
+			reverse(buf),
 		}
 
 		for _, algo := range d.possibleAlgos {
@@ -86,7 +93,11 @@ func (d *Dictionary) Find() (string, string, error) {
 				}
 			}
 		}
+
+		mutex.Lock()
+		copy(d.buffer, buf)
 		d.try++
+		mutex.Unlock()
 	}
 
 	return "", "", nil
@@ -96,10 +107,12 @@ func (d *Dictionary) statusReport() {
 
 	for {
 		time.Sleep(1 * time.Second)
+
+		mutex.Lock()
 		d.tick++
 		avg := d.try / d.tick
-
 		fmt.Printf("%s ~%d/s %s\n", d.algo, avg, string(d.buffer))
+		mutex.Unlock()
 	}
 }
 

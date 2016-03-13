@@ -1,3 +1,6 @@
+* revisit benchmarks
+
+
 # TODO cmd/coder
 
 XXX encodings can be combined:
@@ -25,8 +28,6 @@ XXX encodings can be combined:
 
 * performance: if ran in seq mode, save snapshots to ~/.config/gohash.yml regularry
 
-
-more benchmarks
 
 
 

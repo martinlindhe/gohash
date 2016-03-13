@@ -105,33 +105,40 @@ func (h *Hasher) FindSequential() (string, error) {
 
 	go h.statusReport()
 
+	buf := make([]byte, len(h.buffer))
+	copy(buf, h.buffer)
+
 	for {
 
 		if h.equals() {
-			return string(h.buffer), nil
+			return string(buf), nil
 		}
 
 		// update mutation
 		for roller := h.minLength - 1; roller >= 0; roller-- {
 			if h.reverse {
-				if h.buffer[roller] == firstAllowedKey {
-					h.buffer[roller] = lastAllowedKey
+				if buf[roller] == firstAllowedKey {
+					buf[roller] = lastAllowedKey
 					continue
 				} else {
-					h.buffer[roller] = h.prevValueFor(h.buffer[roller])
+					buf[roller] = h.prevValueFor(buf[roller])
 					break
 				}
 			} else {
-				if h.buffer[roller] == lastAllowedKey {
-					h.buffer[roller] = firstAllowedKey
+				if buf[roller] == lastAllowedKey {
+					buf[roller] = firstAllowedKey
 					continue
 				} else {
-					h.buffer[roller] = h.nextValueFor(h.buffer[roller])
+					buf[roller] = h.nextValueFor(buf[roller])
 					break
 				}
 			}
 		}
+
+		mutex.Lock()
+		copy(h.buffer, buf)
 		h.try++
+		mutex.Unlock()
 	}
 }
 
@@ -158,18 +165,25 @@ func (h *Hasher) FindRandom() (string, error) {
 
 	h.buffer = append(h.buffer, h.suffix...)
 
+	buf := make([]byte, len(h.buffer))
+	copy(buf, h.buffer)
+
 	go h.statusReport()
 
 	for {
 		if h.equals() {
-			return string(h.buffer), nil
+			return string(buf), nil
 		}
 
 		// update mutation of first letters
 		for roller := 0; roller < h.minLength; roller++ {
-			h.buffer[roller] = h.allowedKeys[rand.Intn(allowedKeysLen)]
+			buf[roller] = h.allowedKeys[rand.Intn(allowedKeysLen)]
 		}
+
+		mutex.Lock()
+		copy(h.buffer, buf)
 		h.try++
+		mutex.Unlock()
 	}
 }
 
@@ -212,10 +226,12 @@ func (h *Hasher) statusReport() {
 
 	for {
 		time.Sleep(1 * time.Second)
+
+		mutex.Lock()
 		h.tick++
 		avg := h.try / h.tick
-
 		fmt.Printf("%s ~%d/s %s\n", h.algo, avg, string(h.buffer))
+		mutex.Unlock()
 	}
 }
 
