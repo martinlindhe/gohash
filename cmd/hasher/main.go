@@ -1,23 +1,26 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 
+	"github.com/aybabtme/color/brush"
 	"github.com/martinlindhe/gohash"
-	"golang.org/x/crypto/ssh/terminal"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-import "io/ioutil"
-
 var (
-	fileName      = kingpin.Flag("file", "File to read").Short('i').String()
-	algo          = kingpin.Arg("algo", "Hash algorithm to use. sha1, sha512 etc").String()
-	listAlgos     = kingpin.Flag("list-algos", "List available hash algorithms").Bool()
+	fileName = kingpin.Flag("file", "File to read").Short('i').String()
+
+	algo      = kingpin.Arg("algo", "Hash algorithm to use. sha1, sha512 etc").String()
+	listAlgos = kingpin.Flag("list-algos", "List available hash algorithms").Short('A').Bool()
+
 	encoding      = kingpin.Flag("encoding", "Output encoding. hex is default").Short('e').String()
-	listEncodings = kingpin.Flag("list-encodings", "List available encodings").Bool()
+	listEncodings = kingpin.Flag("list-encodings", "List available encodings").Short('E').Bool()
+
+	// adjust output
+	skipNewline  = kingpin.Flag("skip-newline", "Don't output newline").Short('n').Bool()
+	skipFilename = kingpin.Flag("skip-filename", "Don't output filename").Bool()
 )
 
 func main() {
@@ -36,39 +39,22 @@ func main() {
 		os.Exit(0)
 	}
 
-	if *encoding == "" {
-		*encoding = "hex"
-	}
-
 	if *algo == "" {
 		fmt.Println("error: required flag --algo not provided, try --help")
 		os.Exit(1)
 	}
 
-	var b []byte
-	var err error
-
-	if !terminal.IsTerminal(0) {
-		b, _ = ioutil.ReadAll(os.Stdin)
-		*fileName = "-"
-	} else {
-
-		if *fileName == "" {
-			fmt.Println("error: no piped data and no --file provided")
-			os.Exit(1)
-		}
-
-		b, err = readBinaryFile(*fileName)
-		if err != nil {
-			panic(err)
-		}
+	appInputData, err := gohash.ReadPipeOrFile(*fileName)
+	if err != nil {
+		fmt.Println("error:", err)
+		os.Exit(1)
 	}
 
-	calc := gohash.NewCalculator(b)
+	calc := gohash.NewCalculator(appInputData.Data)
 
 	hash := calc.Sum(*algo)
 	if hash == nil {
-		fmt.Println("error: --algo", *algo, "is unknown")
+		fmt.Println("error: unknown algo", *algo)
 		os.Exit(1)
 	}
 
@@ -79,28 +65,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("%s  %s", encodedHash, *fileName)
-	fmt.Println("")
-}
-
-func readBinaryFile(filename string) ([]byte, error) {
-	file, err := os.Open(filename)
-
-	if err != nil {
-		return nil, err
+	fmt.Printf("%s", brush.Yellow(encodedHash))
+	if !*skipFilename {
+		if appInputData.IsPipe {
+			*fileName = "-"
+		}
+		fmt.Printf("  %s", brush.White(*fileName))
 	}
-	defer file.Close()
-
-	stats, statsErr := file.Stat()
-	if statsErr != nil {
-		return nil, statsErr
+	if !*skipNewline {
+		fmt.Println()
 	}
-
-	size := stats.Size()
-	bytes := make([]byte, size)
-
-	bufr := bufio.NewReader(file)
-	_, err = bufr.Read(bytes)
-
-	return bytes, err
 }

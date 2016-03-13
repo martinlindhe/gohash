@@ -1,8 +1,7 @@
-# TODO XXX
+# TODO cmd/coder
 
-coder: do a separate cli that encodes/decodes input stream / file
-
-
+XXX encodings can be combined:
+    base64+ascii85
 
 
 # TODO cmd/hasher
@@ -52,10 +51,10 @@ ripemd256     RIPEMD-256          256 bit  32 byte
 ripemd320     RIPEMD-320          320 bit  40 byte
 
 TODO later, sha0:
-sha0          SHA0                160 bit  20 byte      XXX no golang impl found
+sha0          SHA0                160 bit  20 byte      no golang impl found
 
 TODO later, md6:
-md6           MD6                   --variable--        XXX no golang impl found
+md6           MD6                   --variable--        no golang impl found
 
 
 
@@ -65,15 +64,7 @@ TODO JH, sha3-finalist, https://en.wikipedia.org/wiki/JH_(hash_function)
 TODO Grøstl, sha3-finalist, https://en.wikipedia.org/wiki/Gr%C3%B8stl
     https://github.com/ctz/groestl/blob/master/groestl.py
 
-TODO never(?), panama, https://en.wikipedia.org/wiki/Panama_(cryptography)
-
-TODO never(?), ECOH, sha3-disqualified, https://en.wikipedia.org/wiki/Elliptic_curve_only_hash
-
-
-TODO later, MDC-2, https://en.wikipedia.org/wiki/MDC-2
-
-
-TODO later, tiger variants (from php):
+TODO later(?), tiger variants (from php):
 tiger128,3
 tiger160,3
 tiger192,3
@@ -87,6 +78,11 @@ skein256-256  Skein-256-256       256 bit  32 byte
     also Skein-1024-384, and more forms
 
 
+TODO never(?), panama, https://en.wikipedia.org/wiki/Panama_(cryptography)
+
+TODO never(?), ECOH, sha3-disqualified, https://en.wikipedia.org/wiki/Elliptic_curve_only_hash
+
+TODO never(?), MDC-2, https://en.wikipedia.org/wiki/MDC-2
 
 TODO never(?), snefru (from php), https://en.wikipedia.org/wiki/Snefru
 snefru

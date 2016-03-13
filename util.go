@@ -1,6 +1,14 @@
 package gohash
 
-import "sort"
+import (
+	"bufio"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"sort"
+
+	"golang.org/x/crypto/ssh/terminal"
+)
 
 // used in tests
 type expectedForms map[string]string
@@ -59,3 +67,51 @@ type byteSlice []byte
 func (a byteSlice) Len() int           { return len(a) }
 func (a byteSlice) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a byteSlice) Less(i, j int) bool { return a[i] < a[j] }
+
+// AppInputData is the captured input to the app, either from a pipe or a file
+type AppInputData struct {
+	Data   []byte
+	IsPipe bool
+}
+
+func ReadPipeOrFile(fileName string) (*AppInputData, error) {
+
+	res := AppInputData{}
+
+	if !terminal.IsTerminal(0) {
+		res.Data, _ = ioutil.ReadAll(os.Stdin)
+		res.IsPipe = true
+	} else {
+		if fileName == "" {
+			return nil, fmt.Errorf("no piped data and no file provided")
+		}
+		var err error
+		res.Data, err = readBinaryFile(fileName)
+		if err != nil {
+			return &res, err
+		}
+	}
+	return &res, nil
+}
+
+func readBinaryFile(filename string) ([]byte, error) {
+	file, err := os.Open(filename)
+
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	stats, statsErr := file.Stat()
+	if statsErr != nil {
+		return nil, statsErr
+	}
+
+	size := stats.Size()
+	bytes := make([]byte, size)
+
+	bufr := bufio.NewReader(file)
+	_, err = bufr.Read(bytes)
+
+	return bytes, err
+}

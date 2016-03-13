@@ -6,13 +6,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TODO decoding + test decodings
-
 var (
 	expectedEncodings = map[string]expectedForms{
 		"ascii85": expectedForms{
-			// XXX "A4(9GAKYMp@rGmhF!*bI6V0j/2#"
-			// XXX enl http://www.dcode.fr/ascii-85-encoding
 			fox:   "<+ohcEHPu*CER),Dg-(AAoDo:C3=B4F!,CEATAo8BOr<&@=!2AA8c)",
 			blank: ""},
 		"base32": expectedForms{
@@ -84,13 +80,9 @@ func TestEncodeZ85(t *testing.T) {
 	assert.Equal(t, "HelloWorld", res)
 }
 
-func TestDecodeHex(t *testing.T) {
+func TestDecodeHexWithSpaces(t *testing.T) {
 
-	res, err := decodeHex("484f2a")
-	assert.Equal(t, nil, err)
-	assert.Equal(t, []byte{0x48, 0x4f, 0x2a}, res)
-
-	res, err = decodeHex("48 4f 2a")
+	res, err := decodeHex("48 4f 2a")
 	assert.Equal(t, nil, err)
 	assert.Equal(t, []byte{0x48, 0x4f, 0x2a}, res)
 }

@@ -272,9 +272,13 @@ func decodeZ85(s string) ([]byte, error) {
 	return dst[0:n], err
 }
 
+// defaults to "hex" if encoding is unspecified
 func resolveEncodingAliases(s string) string {
 
 	s = strings.ToLower(s)
+	if s == "" {
+		return "hex"
+	}
 	if s == "base85" {
 		return "ascii85"
 	}
