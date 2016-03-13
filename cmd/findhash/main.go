@@ -13,13 +13,13 @@ import (
 
 var (
 	hash        = kingpin.Arg("hash", "Hash to crack, in hex string").Required().String()
-	algo        = kingpin.Flag("algo", "Hash algorithm to use. sha1, sha512 etc").String()
+	algo        = kingpin.Flag("algo", "Hash algorithm to use.").String()
 	allowedKeys = kingpin.Flag("allowed", "Allowed keys to use.").String()
 	minLength   = kingpin.Flag("min-length", "Minimum length.").Int()
 	prefix      = kingpin.Flag("prefix", "Prefix.").String()
 	suffix      = kingpin.Flag("suffix", "Suffix.").String()
 	random      = kingpin.Flag("random", "Random mutation mode.").Bool()
-	reverse     = kingpin.Flag("reverse", "Reverse order (if not random mode)").Bool()
+	reverse     = kingpin.Flag("reverse", "Reverse order (if not random mode).").Bool()
 	dictionary  = kingpin.Flag("dictionary", "Dictionary file.").String()
 	startTime   = time.Now()
 	result      = ""

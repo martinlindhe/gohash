@@ -9,12 +9,13 @@ import (
 )
 
 var (
-	encoding      = kingpin.Arg("encoding", "Output encoding. hex is default").Required().String()
-	listEncodings = kingpin.Flag("list-encodings", "List available encodings").Short('E').Bool()
+	encoding      = kingpin.Arg("encoding", "Output encoding.").String()
+	listEncodings = kingpin.Flag("list-encodings", "List available encodings.").Short('E').Bool()
 
-	fileName = kingpin.Arg("file", "File to read").String()
+	fileName = kingpin.Arg("file", "Input file to read.").String()
 
-	decode = kingpin.Flag("decode", "Decode").Short('d').Bool()
+	encode = kingpin.Flag("encode", "Encode input (default).").Short('e').Bool()
+	decode = kingpin.Flag("decode", "Decode input.").Short('d').Bool()
 )
 
 func main() {
@@ -26,6 +27,16 @@ func main() {
 	if *listEncodings {
 		fmt.Println(gohash.AvailableEncodings())
 		os.Exit(0)
+	}
+
+	if *encoding == "" {
+		fmt.Println("coder: error: required argument 'encoding' not provided, try --help")
+		os.Exit(1)
+	}
+
+	if *decode && *encode {
+		fmt.Println("coder: error: --decode and --encode don't mix")
+		os.Exit(1)
 	}
 
 	appInputData, err := gohash.ReadPipeOrFile(*fileName)

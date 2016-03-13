@@ -1,11 +1,12 @@
-# About
+## About
 
 hasher is a command line tool to calculate hashes from stdin or files
 
 
-# Usage
+## Usage
 
-Hash from stdin
+
+### Hash from stdin
 
 ```
 $ printf "hello" | hasher sha1
@@ -13,7 +14,7 @@ aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d  -
 ```
 
 
-Hash a file
+### Hash a file
 
 ```
 $ hasher -i file.dat sha1
@@ -21,7 +22,7 @@ $ hasher -i file.dat sha1
 ```
 
 
-Available hash algorithms
+### Available hash algorithms
 ```
 $ hasher --list-algos
 [adler32 blake224 blake256 blake2b-512 blake2s-256
@@ -35,7 +36,7 @@ $ hasher --list-algos
  skein512-512 tiger192 whirlpool]
 ```
 
-Available encodings
+### Available encodings
 
 ```
 $ hasher --list-encodings

@@ -10,17 +10,17 @@ import (
 )
 
 var (
-	fileName = kingpin.Flag("file", "File to read").Short('i').String()
+	fileName = kingpin.Flag("file", "Input file to read.").Short('i').String()
 
-	algo      = kingpin.Arg("algo", "Hash algorithm to use. sha1, sha512 etc").String()
-	listAlgos = kingpin.Flag("list-algos", "List available hash algorithms").Short('A').Bool()
+	algo      = kingpin.Arg("algo", "Hash algorithm to use.").String()
+	listAlgos = kingpin.Flag("list-algos", "List available hash algorithms.").Short('A').Bool()
 
-	encoding      = kingpin.Flag("encoding", "Output encoding. hex is default").Short('e').String()
-	listEncodings = kingpin.Flag("list-encodings", "List available encodings").Short('E').Bool()
+	encoding      = kingpin.Flag("encoding", "Output encoding. Default is hex.").Short('e').String()
+	listEncodings = kingpin.Flag("list-encodings", "List available encodings.").Short('E').Bool()
 
 	// adjust output
-	skipNewline  = kingpin.Flag("skip-newline", "Don't output newline").Short('n').Bool()
-	skipFilename = kingpin.Flag("skip-filename", "Don't output filename").Bool()
+	skipNewline  = kingpin.Flag("skip-newline", "Don't output newline.").Short('n').Bool()
+	skipFilename = kingpin.Flag("skip-filename", "Don't output filename.").Bool()
 )
 
 func main() {

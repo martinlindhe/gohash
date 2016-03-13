@@ -79,15 +79,15 @@ func TestHashRandom(t *testing.T) {
 	rand.Seed(123)
 
 	hasher := NewHasher()
-	hasher.Algo("sha512")
+	hasher.Algo("sha1")
 	hasher.AllowedKeys(allowedOnion)
-	hasher.Suffix(".onion")
-	hasher.ExpectedHash("bbc3581fa536cf90d95b60d226495d38257d73e971b3193cc3fd532338caba7710966c5c91eddc8c1193e9cf401db94cb7c16205f064b6c45e3320d8c5d0b5f3")
+	hasher.Suffix(".xxx")
+	hasher.ExpectedHash("58d16ee2c8214cad052194d68d31384c9f2e4e57")
 	hasher.Length(16)
 
 	res, err := hasher.FindRandom()
 	assert.Equal(t, nil, err)
-	assert.Equal(t, "2gl57brnwcjqmaua.onion", string(res))
+	assert.Equal(t, "aawiioowvgzolbqa.xxx", string(res))
 }
 
 func TestHashReverse(t *testing.T) {
