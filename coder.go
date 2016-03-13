@@ -11,6 +11,7 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/bproctor/base91"
 	b58 "github.com/jbenet/go-base58"
 	"github.com/martinlindhe/bubblebabble"
 	"github.com/tilinna/z85"
@@ -29,6 +30,7 @@ var (
 		"base36":       encodeBase36,
 		"base58":       encodeBase58,
 		"base64":       encodeBase64,
+		"base91":       encodeBase91,
 		"bubblebabble": encodeBubbleBabble,
 		"binary":       encodeBinary,
 		"decimal":      encodeDecimal,
@@ -44,6 +46,7 @@ var (
 		"base36":       decodeBase36,
 		"base58":       decodeBase58,
 		"base64":       decodeBase64,
+		"base91":       decodeBase91,
 		"binary":       decodeBinary,
 		"bubblebabble": decodeBubbleBabble,
 		"decimal":      decodeDecimal,
@@ -133,8 +136,17 @@ func decodeBase58(s string) ([]byte, error) {
 func encodeBase64(src []byte) (string, error) {
 	return base64.StdEncoding.EncodeToString(src), nil
 }
+
 func decodeBase64(s string) ([]byte, error) {
 	return base64.StdEncoding.DecodeString(s)
+}
+
+func encodeBase91(src []byte) (string, error) {
+	return base91.Encode(string(src)), nil
+}
+
+func decodeBase91(s string) ([]byte, error) {
+	return []byte(base91.Decode(s)), nil
 }
 
 func encodeBinary(src []byte) (string, error) {
@@ -292,6 +304,9 @@ func resolveEncodingAliases(s string) string {
 		return "decimal"
 	}
 	if s == "base16" {
+		return "hex"
+	}
+	if s == "hexadecimal" {
 		return "hex"
 	}
 	if s == "oct" {

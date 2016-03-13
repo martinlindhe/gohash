@@ -26,6 +26,9 @@ var (
 		"base64": expectedForms{
 			fox:   "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
 			blank: ""},
+		"base91": expectedForms{
+			fox:   "nX^Iz?T1s!2t:aRn#o>vf>6C9#`##mlLK#_1:Wzv;RG!,a%q3Lc=Z",
+			blank: ""},
 		"bubblebabble": expectedForms{
 			fox:   "xihak-minod-besol-hopak-fypad-bumal-daril-lurad-binik-zovad-bepyl-hirol-bysod-barel-konal-domel-gipuk-hamok-somyl-pivad-bonuk-zanox",
 			blank: "xexax"},

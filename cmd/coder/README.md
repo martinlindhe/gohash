@@ -19,6 +19,6 @@ Decode:
 
 ```
 $ hasher --list-encodings
-[ascii85 base32 base36 base58 base64 binary bubblebabble
- decimal hex hexup octal z85]
+[ascii85 base32 base36 base58 base64 base91 binary
+ bubblebabble decimal hex hexup octal z85]
 ```
