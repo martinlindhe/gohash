@@ -30,12 +30,12 @@ func main() {
 	}
 
 	if *encoding == "" {
-		fmt.Println("coder: error: required argument 'encoding' not provided, try --help")
+		fmt.Println("error: required argument 'encoding' not provided, try --help")
 		os.Exit(1)
 	}
 
 	if *decode && *encode {
-		fmt.Println("coder: error: --decode and --encode don't mix")
+		fmt.Println("error: --decode and --encode don't mix")
 		os.Exit(1)
 	}
 

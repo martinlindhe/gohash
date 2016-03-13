@@ -3,10 +3,13 @@ package gohash
 import (
 	"testing"
 
+	"github.com/google/gofuzz"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
+	f                 = fuzz.New()
+	iterationsPerAlgo = 100
 	expectedEncodings = map[string]expectedForms{
 		"ascii85": expectedForms{
 			fox:   "<+ohcEHPu*CER),Dg-(AAoDo:C3=B4F!,CEATAo8BOr<&@=!2AA8c)",
@@ -69,6 +72,30 @@ func TestCalcExpectedDecodings(t *testing.T) {
 				assert.Equal(t, nil, err, algo)
 				assert.Equal(t, []byte(clear), res, algo)
 			}
+		}
+	}
+}
+
+func TestFuzzEncoders(t *testing.T) {
+
+	for algo := range expectedEncodings {
+		for i := 0; i < iterationsPerAlgo; i++ {
+			var rnd []byte
+			f.Fuzz(&rnd)
+			coder := NewCoder(algo)
+			coder.Encode(rnd)
+		}
+	}
+}
+
+func TestFuzzDecoders(t *testing.T) {
+
+	for algo := range expectedEncodings {
+		for i := 0; i < iterationsPerAlgo; i++ {
+			rnd := ""
+			f.Fuzz(&rnd)
+			coder := NewCoder(algo)
+			coder.Decode(rnd)
 		}
 	}
 }
