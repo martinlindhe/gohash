@@ -162,3 +162,15 @@ func TestCalcExpectedHashes(t *testing.T) {
 		}
 	}
 }
+
+func TestFuzzHashes(t *testing.T) {
+
+	for algo := range expectedHashes {
+		for i := 0; i < iterationsPerAlgo; i++ {
+			var rnd []byte
+			f.Fuzz(&rnd)
+			calc := NewCalculator(rnd)
+			calc.Sum(algo)
+		}
+	}
+}

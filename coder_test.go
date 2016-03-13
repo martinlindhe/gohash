@@ -9,7 +9,7 @@ import (
 
 var (
 	f                 = fuzz.New()
-	iterationsPerAlgo = 100
+	iterationsPerAlgo = 10 // increase to fuzz properly, slows down tests
 	expectedEncodings = map[string]expectedForms{
 		"ascii85": expectedForms{
 			fox:   "<+ohcEHPu*CER),Dg-(AAoDo:C3=B4F!,CEATAo8BOr<&@=!2AA8c)",
