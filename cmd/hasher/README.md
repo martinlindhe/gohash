@@ -1,9 +1,11 @@
-## About
+# About
 
-hasher is a command line tool to calculate hashes from stdin or files
+`hasher` is a command line tool to calculate hashes from stdin or files
 
 
-## Usage
+## Installation
+
+    go get -u github.com/martinlindhe/gohash/cmd/hasher
 
 
 ### Hash from stdin

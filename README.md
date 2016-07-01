@@ -3,23 +3,23 @@
 Command line tools and library to work with hashes and various encodings.
 
 
-# Commands
+### Commands
 
 [coder](cmd/coder)        encode / decode pipes or files between various encodings
+
 [hasher](cmd/hasher)      calculate hashes from stdin or files
+
 [findhash](cmd/findhash)  search for plaintext matching known hashes
 
 
-# Installation
+### Install all commands
 
-	go get -u github.com/martinlindhe/coder/cmd/coder
-	go get -u github.com/martinlindhe/coder/cmd/findhash
-	go get -u github.com/martinlindhe/coder/cmd/hasher
+	go get -u github.com/martinlindhe/gohash/...
 
 
-# Library example
+### Library example
 
-```
+```go
 import "github.com/martinlindhe/coder"
 
 // pretend to be hash() from PHP
@@ -31,7 +31,7 @@ func hash(algo string, b *[]byte) string {
 ```
 
 
-# Hash algorithms
+### Hash algorithms
 
 Set algo with `hasher --algo=<id>`, list all supported hashes
 with `hasher --list-hashes`
@@ -85,7 +85,7 @@ with `hasher --list-hashes`
 | whirlpool         | Whirlpool            | 512 bit  | 64 byte  | 2000 |
 
 
-# Binary-to-text encodings
+### Binary-to-text encodings
 
 Set algo with `hasher --encoding=<id>`, list all supported encodings
 with `hasher --list-encodings`
@@ -107,6 +107,6 @@ with `hasher --list-encodings`
 | z85               | Z85                    |
 
 
-## License
+### License
 
 Under [MIT](LICENSE)

@@ -1,18 +1,22 @@
-## About
+# About
 
 coder is a command line tool to encode / decode pipes or files
 between various binary-to-text encodings.
 
 
-## Usage
+## Installation
 
-Encode:
+    go get -u github.com/martinlindhe/gohash/cmd/coder
 
-`printf "hello" | coder base64`
 
-Decode:
+### Encode
 
-`cat file.base64 | coder base64 -d`
+    printf "hello" | coder base64
+
+
+### Decode
+
+    cat file.base64 | coder base64 -d
 
 
 ## Available encodings
