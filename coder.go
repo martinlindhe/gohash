@@ -13,6 +13,7 @@ import (
 
 	"github.com/bproctor/base91"
 	b58 "github.com/jbenet/go-base58"
+	"github.com/martinlindhe/base36"
 	"github.com/martinlindhe/bubblebabble"
 	"github.com/tilinna/z85"
 )
@@ -118,11 +119,11 @@ func decodeBase32(s string) ([]byte, error) {
 }
 
 func encodeBase36(src []byte) (string, error) {
-	return "", fmt.Errorf("FIXME finish base36 lib")
+	return base36.EncodeBytes(src), nil
 }
 
 func decodeBase36(s string) ([]byte, error) {
-	return nil, fmt.Errorf("FIXME finish base36 lib")
+	return base36.DecodeToBytes(s), nil
 }
 
 func encodeBase58(src []byte) (string, error) {

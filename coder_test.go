@@ -17,9 +17,9 @@ var (
 		"base32": expectedForms{
 			fox:   "KRUGKIDROVUWG2ZAMJZG653OEBTG66BANJ2W24DTEBXXMZLSEB2GQZJANRQXU6JAMRXWO===",
 			blank: ""},
-		/*"base36": expectedForms{
-		fox:   "xx",
-		blank: ""},*/
+		"base36": expectedForms{
+			fox:   "29T3UBYZNHH32O9X3PZVLJP1QA22WUN2QUO35NAEMPN0GTX0LXIYRF3QWWI0LZU165J",
+			blank: ""},
 		"base58": expectedForms{
 			fox:   "7DdiPPYtxLjCD3wA1po2rvZHTDYjkZYiEtazrfiwJcwnKCizhGFhBGHeRdx",
 			blank: ""},
