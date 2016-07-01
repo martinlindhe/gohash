@@ -49,7 +49,6 @@ var (
 			fox:   "3e7e22",
 			blank: "000000"},
 		"crc32-ieee": expectedForms{
-			// NOTE: php's hash() calls this "crc32b"
 			fox:   "414fa339",
 			blank: "00000000"},
 		"crc32-castagnoli": expectedForms{
@@ -77,8 +76,8 @@ var (
 			fox:   "f3f9b7f5e7e47110",
 			blank: "cbf29ce484222325"},
 		"gost": expectedForms{
-			fox:   "77b7fa410c9ac58a25f49bca7d0468c9296529315eaca76bd1a10f376d1f4294",
-			blank: "ce85b99cc46752fffee35cab9a7b0278abb4c2d2055cff685af4912c49490f8d"},
+			fox:   "94421f6d370fa1d16ba7ac5e31296529c968047dca9bf4258ac59a0c41fab777",
+			blank: "8d0f49492c91f45a68ff5c05d2c2b4ab78027b9aab5ce3feff5267c49cb985ce"},
 		"md2": expectedForms{
 			fox:   "03d85a0d629d2c442e987525319fc471",
 			blank: "8350e5a3e24c153df2275c9f80692773"},
@@ -140,7 +139,6 @@ var (
 			fox:   "94c2ae036dba8783d0b3f7d6cc111ff810702f5c77707999be7e1c9486ff238a7044de734293147359b4ac7e1d09cd247c351d69826b78dcddd951f0ef912713",
 			blank: "bc5b4c50925519c290cc634277ae3d6257212395cba733bbad37a4af0fa06af41fca7903d06564fea7a2d3730dbdb80c1f85562dfcc070334ea4d1d9e72cba7a"},
 		"tiger192": expectedForms{
-			// NOTE: php's hash() calls this "tiger192,3"
 			fox:   "6d12a41e72e644f017b6f0e2f7b44c6285f06dd5d2c5b075",
 			blank: "3293ac630c13f0245f92bbb1766e16167a4e58492dde73f3"},
 		"whirlpool": expectedForms{

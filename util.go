@@ -95,8 +95,8 @@ func ReadPipeOrFile(fileName string) (*AppInputData, error) {
 }
 
 func readBinaryFile(filename string) ([]byte, error) {
-	file, err := os.Open(filename)
 
+	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
