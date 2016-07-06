@@ -1,5 +1,8 @@
 # About
 
+[![GoDoc](https://godoc.org/github.com/martinlindhe/gohash?status.svg)](https://godoc.org/github.com/martinlindhe/gohash)
+[![Go Report Card](https://goreportcard.com/badge/github.com/martinlindhe/gohash)](https://goreportcard.com/report/github.com/martinlindhe/gohash)
+
 Command line tools and library to work with hashes and various encodings.
 
 
@@ -12,7 +15,7 @@ Command line tools and library to work with hashes and various encodings.
 [findhash](cmd/findhash)  search for plaintext matching known hashes
 
 
-### Install all commands
+### Install everything
 
 	go get -u github.com/martinlindhe/gohash/...
 

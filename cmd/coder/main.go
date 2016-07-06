@@ -11,11 +11,9 @@ import (
 var (
 	encoding      = kingpin.Arg("encoding", "Output encoding.").String()
 	listEncodings = kingpin.Flag("list-encodings", "List available encodings.").Short('E').Bool()
-
-	fileName = kingpin.Arg("file", "Input file to read.").String()
-
-	encode = kingpin.Flag("encode", "Encode input (default).").Short('e').Bool()
-	decode = kingpin.Flag("decode", "Decode input.").Short('d').Bool()
+	fileName      = kingpin.Arg("file", "Input file to read.").String()
+	encode        = kingpin.Flag("encode", "Encode input (default).").Short('e').Bool()
+	decode        = kingpin.Flag("decode", "Decode input.").Short('d').Bool()
 )
 
 func main() {

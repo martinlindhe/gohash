@@ -304,10 +304,7 @@ func resolveEncodingAliases(s string) string {
 	if s == "dec" {
 		return "decimal"
 	}
-	if s == "base16" {
-		return "hex"
-	}
-	if s == "hexadecimal" {
+	if s == "base16" || s == "hexadecimal" {
 		return "hex"
 	}
 	if s == "oct" {

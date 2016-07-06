@@ -94,8 +94,8 @@ var (
 		"blake256":          blake256Sum,
 		"blake384":          blake384Sum,
 		"blake512":          blake512Sum,
-		"blake2b-512":       blake2b_512Sum,
-		"blake2s-256":       blake2s_256Sum,
+		"blake2b-512":       blake2b512Sum,
+		"blake2s-256":       blake2s256Sum,
 		"crc8-atm":          crc8AtmSum,
 		"crc16-ccitt":       crc16CcittSum,
 		"crc16-ccitt-false": crc16CcittFalseSum,
@@ -108,9 +108,9 @@ var (
 		"crc64-iso":         crc64ISOSum,
 		"crc64-ecma":        crc64ECMASum,
 		"fnv1-32":           fnv1_32Sum,
-		"fnv1a-32":          fnv1a_32Sum,
+		"fnv1a-32":          fnv1a32Sum,
 		"fnv1-64":           fnv1_64Sum,
-		"fnv1a-64":          fnv1a_64Sum,
+		"fnv1a-64":          fnv1a64Sum,
 		"gost":              gostSum,
 		"md2":               md2Sum,
 		"md4":               md4Sum,
@@ -226,13 +226,13 @@ func blake512Sum(b *[]byte) *[]byte {
 	return &res
 }
 
-func blake2b_512Sum(b *[]byte) *[]byte {
+func blake2b512Sum(b *[]byte) *[]byte {
 	x := blake2b.Sum512(*b)
 	res := x[:]
 	return &res
 }
 
-func blake2s_256Sum(b *[]byte) *[]byte {
+func blake2s256Sum(b *[]byte) *[]byte {
 	x := blake2s.Sum256(*b)
 	res := x[:]
 	return &res
@@ -327,7 +327,7 @@ func fnv1_32Sum(b *[]byte) *[]byte {
 	return &res
 }
 
-func fnv1a_32Sum(b *[]byte) *[]byte {
+func fnv1a32Sum(b *[]byte) *[]byte {
 	w := fnv.New32a()
 	w.Write(*b)
 	res := w.Sum(nil)
@@ -341,7 +341,7 @@ func fnv1_64Sum(b *[]byte) *[]byte {
 	return &res
 }
 
-func fnv1a_64Sum(b *[]byte) *[]byte {
+func fnv1a64Sum(b *[]byte) *[]byte {
 	w := fnv.New64a()
 	w.Write(*b)
 	res := w.Sum(nil)

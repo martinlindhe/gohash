@@ -94,7 +94,8 @@ func runDictionary() {
 	dict.Suffix(*suffix)
 	dict.ExpectedHash(*hash)
 
-	result, algo, err := dict.Find()
+	res, algo, err := dict.Find()
+	result = res
 
 	if err != nil {
 		fmt.Println("ERROR", err)
