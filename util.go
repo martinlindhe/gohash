@@ -7,7 +7,7 @@ import (
 	"os"
 	"sort"
 
-	"golang.org/x/crypto/ssh/terminal"
+	termutil "github.com/andrew-d/go-termutil"
 )
 
 // used in tests
@@ -74,11 +74,12 @@ type AppInputData struct {
 	IsPipe bool
 }
 
+// ReadPipeOrFile reads from stdin if pipe exists, else from provided file
 func ReadPipeOrFile(fileName string) (*AppInputData, error) {
 
 	res := AppInputData{}
 
-	if !terminal.IsTerminal(0) {
+	if !termutil.Isatty(os.Stdin.Fd()) {
 		res.Data, _ = ioutil.ReadAll(os.Stdin)
 		res.IsPipe = true
 	} else {
