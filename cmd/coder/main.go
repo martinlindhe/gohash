@@ -14,6 +14,7 @@ var (
 	fileName      = kingpin.Arg("file", "Input file to read.").String()
 	encode        = kingpin.Flag("encode", "Encode input (default).").Short('e').Bool()
 	decode        = kingpin.Flag("decode", "Decode input.").Short('d').Bool()
+	outFileName   = kingpin.Flag("output", "Write output to file.").Short('o').String()
 )
 
 func main() {
@@ -59,5 +60,19 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Print(res)
+	if *outFileName != "" {
+		f, err := os.Create(*outFileName)
+		if err != nil {
+			fmt.Println("error:", err)
+			os.Exit(1)
+		}
+		defer f.Close()
+		_, err = f.WriteString(res)
+		if err != nil {
+			fmt.Println("error:", err)
+			os.Exit(1)
+		}
+	} else {
+		fmt.Print(res)
+	}
 }
