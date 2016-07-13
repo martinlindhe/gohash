@@ -50,7 +50,7 @@ func main() {
 	res, err := processInput(encodings, appInputData.Data, *decode)
 	if err != nil {
 		fmt.Println("error:", err)
-		if res != "" {
+		if len(res) > 0 {
 			fmt.Println(string(res))
 		}
 		os.Exit(1)
@@ -71,7 +71,6 @@ func main() {
 	} else {
 		fmt.Println(string(res))
 	}
-
 }
 
 // XXX put in function with a test

@@ -60,7 +60,7 @@ func TestCalcExpectedEncodings(t *testing.T) {
 			coder := NewCoder(algo)
 			res, err := coder.Encode([]byte(form))
 			assert.Equal(t, nil, err, algo)
-			assert.Equal(t, hash, res, algo)
+			assert.Equal(t, hash, string(res), algo)
 		}
 	}
 }
@@ -107,7 +107,7 @@ func TestEncodeZ85(t *testing.T) {
 
 	res, err := encodeZ85([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B})
 	assert.Equal(t, nil, err)
-	assert.Equal(t, "HelloWorld", res)
+	assert.Equal(t, "HelloWorld", string(res))
 }
 
 func TestDecodeHexWithSpaces(t *testing.T) {
