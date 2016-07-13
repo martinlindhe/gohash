@@ -19,6 +19,16 @@ between various binary-to-text encodings.
     cat file.base64 | coder base64 -d
 
 
+### Chained encodings
+
+This should work on Linux
+    $ echo "hello" | base64 | xxd -p
+    614756736247384b0a
+
+Decode
+    $ echo "614756736247384b0a" | xxd -r -p | base64 -d
+    hello
+
 ## Available encodings
 
 ```

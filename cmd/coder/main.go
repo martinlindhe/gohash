@@ -56,7 +56,9 @@ func main() {
 	}
 	if err != nil {
 		fmt.Println("error:", err)
-		fmt.Println(res)
+		if res != "" {
+			fmt.Println(res)
+		}
 		os.Exit(1)
 	}
 
