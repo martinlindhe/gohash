@@ -1,5 +1,7 @@
 # About
 
+[![Travis-CI](https://api.travis-ci.org/martinlindhe/gohash.svg)](https://travis-ci.org/martinlindhe/gohash)
+[![codecov.io](https://codecov.io/github/martinlindhe/gohash/coverage.svg?branch=master)](https://codecov.io/github/martinlindhe/gohash?branch=master)
 [![GoDoc](https://godoc.org/github.com/martinlindhe/gohash?status.svg)](https://godoc.org/github.com/martinlindhe/gohash)
 [![Go Report Card](https://goreportcard.com/badge/github.com/martinlindhe/gohash)](https://goreportcard.com/report/github.com/martinlindhe/gohash)
 
