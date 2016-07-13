@@ -11,23 +11,31 @@ between various binary-to-text encodings.
 
 ### Encode
 
-    printf "hello" | coder base64
+    echo "hello" | coder base64
 
 
 ### Decode
 
-    cat file.base64 | coder base64 -d
+    cat file.base64 | coder -d base64
 
 
-### Chained encodings
+### Chained encode
 
-This should work on Linux
-    $ echo "hello" | base64 | xxd -p
-    614756736247384b0a
+    echo "hello" | coder -e base64+hex
 
-Decode
-    $ echo "614756736247384b0a" | xxd -r -p | base64 -d
-    hello
+This is equivalent to the following:
+
+    echo "hello" | base64 | xxd -p
+
+
+### Chained decode
+
+    echo "614756736247384b0a" | coder -d hex+base64
+
+This is equivalent to the following:
+
+    echo "614756736247384b0a" | xxd -r -p | base64 -d
+
 
 ## Available encodings
 

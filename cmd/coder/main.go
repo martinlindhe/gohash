@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/martinlindhe/gohash"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -28,7 +29,9 @@ func main() {
 		os.Exit(0)
 	}
 
-	if *encoding == "" {
+	encodings := strings.Split(*encoding, "+")
+
+	if len(encodings) == 0 {
 		fmt.Println("error: required argument 'encoding' not provided, try --help")
 		os.Exit(1)
 	}
@@ -44,20 +47,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	coder := gohash.NewCoder(*encoding)
-
-	res := ""
-	if *decode {
-		var decoded []byte
-		decoded, err = coder.Decode(string(appInputData.Data))
-		res = string(decoded)
-	} else {
-		res, err = coder.Encode(appInputData.Data)
-	}
+	res, err := processInput(encodings, appInputData.Data, *decode)
 	if err != nil {
 		fmt.Println("error:", err)
 		if res != "" {
-			fmt.Println(res)
+			fmt.Println(string(res))
 		}
 		os.Exit(1)
 	}
@@ -69,12 +63,35 @@ func main() {
 			os.Exit(1)
 		}
 		defer f.Close()
-		_, err = f.WriteString(res)
+		_, err = f.Write(res)
 		if err != nil {
 			fmt.Println("error:", err)
 			os.Exit(1)
 		}
 	} else {
-		fmt.Print(res)
+		fmt.Println(string(res))
 	}
+
+}
+
+// XXX put in function with a test
+func processInput(encodings []string, data []byte, decode bool) ([]byte, error) {
+
+	//	res := make([]byte, len(encodings)*len(data)*2)
+	var err error
+
+	for _, enc := range encodings {
+
+		coder := gohash.NewCoder(enc)
+
+		if decode {
+			data, err = coder.Decode(string(data))
+		} else {
+			data, err = coder.Encode(data)
+		}
+		if err != nil {
+			return nil, err
+		}
+	}
+	return data, nil
 }
