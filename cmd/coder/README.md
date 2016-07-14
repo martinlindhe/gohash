@@ -23,20 +23,20 @@ between various binary-to-text encodings.
 
 Combine multiple encodings in one step:
 
-    echo "hello" | coder -e base64+hex
+    echo -n "hello" | coder -e base64+hex
 
 This is equivalent to the following:
 
-    echo "hello" | base64 -w 0 | xxd -p
+    echo -n "hello" | base64 -w 0 | xxd -p
 
 
 ### Chained decode
 
-    echo "614756736247383d" | coder -d -n hex+base64
+    echo -n "614756736247383d" | coder -d -n hex+base64
 
 This is equivalent to the following:
 
-    echo "614756736247383d" | xxd -r -p | base64 -d
+    echo -n "614756736247383d" | xxd -r -p | base64 -d
 
 
 ## Available encodings
