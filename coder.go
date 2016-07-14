@@ -43,7 +43,7 @@ var (
 		"z85":          encodeZ85,
 	}
 
-	decoders = map[string]func(string) ([]byte, error){
+	decoders = map[string]func([]byte) ([]byte, error){
 		"ascii85":      decodeASCII85,
 		"base32":       decodeBase32,
 		"base36":       decodeBase36,
@@ -79,7 +79,7 @@ func (c *Coder) Encode(src []byte) ([]byte, error) {
 }
 
 // Decode decodes src from some encoding
-func (c *Coder) Decode(src string) ([]byte, error) {
+func (c *Coder) Decode(src []byte) ([]byte, error) {
 
 	if coder, ok := decoders[c.encoding]; ok {
 		return coder(src)
@@ -110,7 +110,7 @@ func RecodeInput(encodings []string, data []byte, decode bool) ([]byte, error) {
 		coder := NewCoder(enc)
 
 		if decode {
-			data, err = coder.Decode(string(data))
+			data, err = coder.Decode(data)
 		} else {
 			data, err = coder.Encode(data)
 		}
@@ -128,9 +128,9 @@ func encodeASCII85(src []byte) ([]byte, error) {
 	return buf, nil
 }
 
-func decodeASCII85(s string) ([]byte, error) {
-	dst := make([]byte, 4*len(s))
-	ndst, _, err := ascii85.Decode(dst, []byte(s), true)
+func decodeASCII85(src []byte) ([]byte, error) {
+	dst := make([]byte, len(src))
+	ndst, _, err := ascii85.Decode(dst, src, true)
 	return dst[0:ndst], err
 }
 
@@ -140,24 +140,24 @@ func encodeBase32(src []byte) ([]byte, error) {
 	return dst, nil
 }
 
-func decodeBase32(s string) ([]byte, error) {
-	return base32.StdEncoding.DecodeString(s)
+func decodeBase32(src []byte) ([]byte, error) {
+	return base32.StdEncoding.DecodeString(string(src))
 }
 
 func encodeBase36(src []byte) ([]byte, error) {
 	return base36.EncodeBytesAsBytes(src), nil
 }
 
-func decodeBase36(s string) ([]byte, error) {
-	return base36.DecodeToBytes(s), nil
+func decodeBase36(src []byte) ([]byte, error) {
+	return base36.DecodeToBytes(string(src)), nil
 }
 
 func encodeBase58(src []byte) ([]byte, error) {
 	return []byte(b58.Encode(src)), nil
 }
 
-func decodeBase58(s string) ([]byte, error) {
-	return b58.Decode(s), nil
+func decodeBase58(src []byte) ([]byte, error) {
+	return b58.Decode(string(src)), nil
 }
 
 func encodeBase64(src []byte) ([]byte, error) {
@@ -166,16 +166,16 @@ func encodeBase64(src []byte) ([]byte, error) {
 	return dst, nil
 }
 
-func decodeBase64(s string) ([]byte, error) {
-	return base64.StdEncoding.DecodeString(s)
+func decodeBase64(src []byte) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(string(src))
 }
 
 func encodeBase91(src []byte) ([]byte, error) {
 	return []byte(base91.Encode(string(src))), nil
 }
 
-func decodeBase91(s string) ([]byte, error) {
-	return []byte(base91.Decode(s)), nil
+func decodeBase91(src []byte) ([]byte, error) {
+	return []byte(base91.Decode(string(src))), nil
 }
 
 func encodeBinary(src []byte) ([]byte, error) {
@@ -188,13 +188,13 @@ func encodeBinary(src []byte) ([]byte, error) {
 	return []byte(strings.TrimRight(res, separator)), nil
 }
 
-func decodeBinary(s string) ([]byte, error) {
+func decodeBinary(src []byte) ([]byte, error) {
 
-	if len(s) == 0 {
+	if len(src) == 0 {
 		return []byte{}, nil
 	}
 
-	parts := strings.Split(s, separator)
+	parts := strings.Split(string(src), separator)
 	res := make([]byte, len(parts))
 
 	for i, part := range parts {
@@ -208,8 +208,8 @@ func encodeBubbleBabble(src []byte) ([]byte, error) {
 	return []byte(bubblebabble.EncodeToString(src)), nil
 }
 
-func decodeBubbleBabble(s string) ([]byte, error) {
-	return bubblebabble.DecodeString(s)
+func decodeBubbleBabble(src []byte) ([]byte, error) {
+	return bubblebabble.DecodeString(string(src))
 }
 
 func encodeDecimal(src []byte) ([]byte, error) {
@@ -222,13 +222,13 @@ func encodeDecimal(src []byte) ([]byte, error) {
 	return []byte(strings.TrimRight(res, separator)), nil
 }
 
-func decodeDecimal(s string) ([]byte, error) {
+func decodeDecimal(src []byte) ([]byte, error) {
 
-	if len(s) == 0 {
+	if len(src) == 0 {
 		return []byte{}, nil
 	}
 
-	parts := strings.Split(s, separator)
+	parts := strings.Split(string(src), separator)
 	res := make([]byte, len(parts))
 
 	for i, part := range parts {
@@ -248,9 +248,9 @@ func encodeHexUpper(src []byte) ([]byte, error) {
 	return []byte(strings.ToUpper(hex.EncodeToString(src))), nil
 }
 
-func decodeHex(s string) ([]byte, error) {
+func decodeHex(src []byte) ([]byte, error) {
 
-	s = stripSpaces(s)
+	s := stripSpaces(string(src))
 	res, err := hex.DecodeString(s)
 	return res, err
 }
@@ -265,13 +265,13 @@ func encodeOctal(src []byte) ([]byte, error) {
 	return []byte(strings.TrimRight(res, separator)), nil
 }
 
-func decodeOctal(s string) ([]byte, error) {
+func decodeOctal(src []byte) ([]byte, error) {
 
-	if len(s) == 0 {
+	if len(src) == 0 {
 		return []byte{}, nil
 	}
 
-	parts := strings.Split(s, separator)
+	parts := strings.Split(string(src), separator)
 	res := make([]byte, len(parts))
 
 	for i, part := range parts {
@@ -286,8 +286,8 @@ func encodeUU(src []byte) ([]byte, error) {
 	return res, nil
 }
 
-func decodeUU(s string) ([]byte, error) {
-	return uu.DecodeLine([]byte(s))
+func decodeUU(src []byte) ([]byte, error) {
+	return uu.DecodeLine(src)
 }
 
 func encodeZ85(src []byte) ([]byte, error) {
@@ -307,10 +307,10 @@ func encodeZ85(src []byte) ([]byte, error) {
 	return b85, err
 }
 
-func decodeZ85(s string) ([]byte, error) {
+func decodeZ85(src []byte) ([]byte, error) {
 
-	dst := make([]byte, z85.DecodedLen(len(s)))
-	n, err := z85.Decode(dst, []byte(s))
+	dst := make([]byte, z85.DecodedLen(len(src)))
+	n, err := z85.Decode(dst, src)
 
 	// strip padding
 	for ; n > 0; n-- {

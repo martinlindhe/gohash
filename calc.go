@@ -88,7 +88,7 @@ var (
 		"whirlpool":         512,
 	}
 
-	checksummers = map[string]func(*[]byte) *[]byte{
+	hashers = map[string]func(*[]byte) *[]byte{
 		"adler32":           adler32Sum,
 		"blake224":          blake224Sum,
 		"blake256":          blake256Sum,
@@ -142,7 +142,7 @@ func (c *Calculator) Sum(algo string) *[]byte {
 
 	algo = resolveAlgoAliases(algo)
 
-	if checksum, ok := checksummers[algo]; ok {
+	if checksum, ok := hashers[algo]; ok {
 		return checksum(&c.data)
 	}
 	return nil
@@ -153,7 +153,7 @@ func AvailableHashes() []string {
 
 	res := []string{}
 
-	for key := range checksummers {
+	for key := range hashers {
 		res = append(res, key)
 	}
 

@@ -71,7 +71,7 @@ func TestCalcExpectedDecodings(t *testing.T) {
 		if forms, ok := expectedEncodings[algo]; ok {
 			for clear, coded := range forms {
 				coder := NewCoder(algo)
-				res, err := coder.Decode(coded)
+				res, err := coder.Decode([]byte(coded))
 				assert.Equal(t, nil, err, algo)
 				assert.Equal(t, []byte(clear), res, algo)
 			}
@@ -98,7 +98,7 @@ func TestFuzzDecoders(t *testing.T) {
 			rnd := ""
 			f.Fuzz(&rnd)
 			coder := NewCoder(algo)
-			coder.Decode(rnd)
+			coder.Decode([]byte(rnd))
 		}
 	}
 }
@@ -112,7 +112,7 @@ func TestEncodeZ85(t *testing.T) {
 
 func TestDecodeHexWithSpaces(t *testing.T) {
 
-	res, err := decodeHex("48 4f 2a")
+	res, err := decodeHex([]byte("48 4f 2a"))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, []byte{0x48, 0x4f, 0x2a}, res)
 }
