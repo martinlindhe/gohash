@@ -15,6 +15,7 @@ import (
 	b58 "github.com/jbenet/go-base58"
 	"github.com/martinlindhe/base36"
 	"github.com/martinlindhe/bubblebabble"
+	"github.com/tejainece/uu"
 	"github.com/tilinna/z85"
 )
 
@@ -38,6 +39,7 @@ var (
 		"hex":          encodeHex,
 		"hexup":        encodeHexUpper,
 		"octal":        encodeOctal,
+		"uu":           encodeUU,
 		"z85":          encodeZ85,
 	}
 
@@ -54,6 +56,7 @@ var (
 		"hex":          decodeHex,
 		"hexup":        decodeHex,
 		"octal":        decodeOctal,
+		"uu":           decodeUU,
 		"z85":          decodeZ85,
 	}
 )
@@ -276,6 +279,15 @@ func decodeOctal(s string) ([]byte, error) {
 		res[i] = byte(b)
 	}
 	return res, nil
+}
+
+func encodeUU(src []byte) ([]byte, error) {
+	res := uu.EncodeLine(src)
+	return res, nil
+}
+
+func decodeUU(s string) ([]byte, error) {
+	return uu.DecodeLine([]byte(s))
 }
 
 func encodeZ85(src []byte) ([]byte, error) {
