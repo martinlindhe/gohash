@@ -32,11 +32,11 @@ This is equivalent to the following:
 
 ### Chained decode
 
-    echo "614756736247384b0a" | coder -d hex+base64
+    echo "614756736247384b" | coder -d -n hex+base64
 
 This is equivalent to the following:
 
-    echo "614756736247384b0a" | xxd -r -p | base64 -d
+    echo "614756736247384b" | xxd -r -p | base64 -d
 
 
 ## Available encodings

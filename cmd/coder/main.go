@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -10,12 +11,13 @@ import (
 )
 
 var (
-	encoding      = kingpin.Arg("encoding", "Output encoding.").String()
-	listEncodings = kingpin.Flag("list-encodings", "List available encodings.").Short('E').Bool()
-	fileName      = kingpin.Arg("file", "Input file to read.").String()
-	encode        = kingpin.Flag("encode", "Encode input (default).").Short('e').Bool()
-	decode        = kingpin.Flag("decode", "Decode input.").Short('d').Bool()
-	outFileName   = kingpin.Flag("output", "Write output to file.").Short('o').String()
+	encoding          = kingpin.Arg("encoding", "Output encoding.").String()
+	listEncodings     = kingpin.Flag("list-encodings", "List available encodings.").Short('E').Bool()
+	fileName          = kingpin.Arg("file", "Input file to read.").String()
+	encode            = kingpin.Flag("encode", "Encode input (default).").Short('e').Bool()
+	decode            = kingpin.Flag("decode", "Decode input.").Short('d').Bool()
+	outFileName       = kingpin.Flag("output", "Write output to file.").Short('o').String()
+	noTrailingNewline = kingpin.Flag("no-newline", "Do not output the trailing newline.").Short('n').Bool()
 )
 
 func main() {
@@ -49,26 +51,24 @@ func main() {
 
 	res, err := gohash.RecodeInput(encodings, appInputData.Data, *decode)
 	if err != nil {
-		fmt.Println("error:", err)
-		if len(res) > 0 {
-			fmt.Println(string(res))
-		}
-		os.Exit(1)
+		log.Fatal("error:", err)
 	}
 
 	if *outFileName != "" {
 		f, err := os.Create(*outFileName)
 		if err != nil {
-			fmt.Println("error:", err)
-			os.Exit(1)
+			log.Fatal("error:", err)
 		}
 		defer f.Close()
 		_, err = f.Write(res)
 		if err != nil {
-			fmt.Println("error:", err)
-			os.Exit(1)
+			log.Fatal("error:", err)
 		}
 	} else {
-		fmt.Println(string(res))
+		if *noTrailingNewline {
+			fmt.Print(string(res))
+		} else {
+			fmt.Println(string(res))
+		}
 	}
 }
