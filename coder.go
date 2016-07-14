@@ -97,6 +97,27 @@ func AvailableEncodings() []string {
 	return res
 }
 
+// RecodeInput processes input `data` according to encodings, used by cmd/coder
+func RecodeInput(encodings []string, data []byte, decode bool) ([]byte, error) {
+
+	var err error
+
+	for _, enc := range encodings {
+
+		coder := NewCoder(enc)
+
+		if decode {
+			data, err = coder.Decode(string(data))
+		} else {
+			data, err = coder.Encode(data)
+		}
+		if err != nil {
+			break
+		}
+	}
+	return data, err
+}
+
 func encodeASCII85(src []byte) ([]byte, error) {
 	buf := make([]byte, ascii85.MaxEncodedLen(len(src)))
 	n := ascii85.Encode(buf, src)

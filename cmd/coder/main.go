@@ -47,7 +47,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	res, err := processInput(encodings, appInputData.Data, *decode)
+	res, err := gohash.RecodeInput(encodings, appInputData.Data, *decode)
 	if err != nil {
 		fmt.Println("error:", err)
 		if len(res) > 0 {
@@ -71,26 +71,4 @@ func main() {
 	} else {
 		fmt.Println(string(res))
 	}
-}
-
-// XXX put in function with a test
-func processInput(encodings []string, data []byte, decode bool) ([]byte, error) {
-
-	//	res := make([]byte, len(encodings)*len(data)*2)
-	var err error
-
-	for _, enc := range encodings {
-
-		coder := gohash.NewCoder(enc)
-
-		if decode {
-			data, err = coder.Decode(string(data))
-		} else {
-			data, err = coder.Encode(data)
-		}
-		if err != nil {
-			return nil, err
-		}
-	}
-	return data, nil
 }

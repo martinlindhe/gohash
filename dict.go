@@ -66,7 +66,7 @@ func (d *Dictionary) Find() (string, string, error) {
 		return "", "", err
 	}
 
-	fmt.Println("Trying with", d.possibleAlgos)
+	// fmt.Println("Trying with", d.possibleAlgos)
 
 	buf := make([]byte, 256)
 

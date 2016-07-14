@@ -116,3 +116,24 @@ func TestDecodeHexWithSpaces(t *testing.T) {
 	assert.Equal(t, nil, err)
 	assert.Equal(t, []byte{0x48, 0x4f, 0x2a}, res)
 }
+
+func TestRecodeInputEncodeSingle(t *testing.T) {
+
+	res, err := RecodeInput([]string{"base64"}, []byte("hello"), false)
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "aGVsbG8=", string(res))
+}
+
+func TestRecodeInputDecodeSingle(t *testing.T) {
+
+	res, err := RecodeInput([]string{"base64"}, []byte("aGVsbG8="), true)
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hello", string(res))
+}
+
+func TestRecodeInputDecodeChain(t *testing.T) {
+
+	res, err := RecodeInput([]string{"hex", "base64"}, []byte("614756736247383d"), true)
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hello", string(res))
+}

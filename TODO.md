@@ -1,9 +1,3 @@
-# TODO cmd/coder
-
-* ability to combine encodings:
-    base64+ascii85
-
-
 # TODO cmd/hasher
 
 * --algo.  Ability to combine algorithms can be combinded by the plus character, e.g:
@@ -28,4 +22,3 @@ UUEncoded   https://en.wikipedia.org/wiki/Uuencoding
     The program uudecode reverses the effect of uuencode, recreating the original binary file exactly
 
 XXEncoded   https://en.wikipedia.org/wiki/Xxencoding
-

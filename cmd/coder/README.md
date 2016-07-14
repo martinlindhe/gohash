@@ -21,11 +21,13 @@ between various binary-to-text encodings.
 
 ### Chained encode
 
+Combine multiple encodings in one step:
+
     echo "hello" | coder -e base64+hex
 
 This is equivalent to the following:
 
-    echo "hello" | base64 | xxd -p
+    echo "hello" | base64 -w 0 | xxd -p
 
 
 ### Chained decode
