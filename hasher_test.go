@@ -7,6 +7,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	allowedOnion = "abcdefghijklmnopqrstuvwxyz234567"
+)
+
 type expectedSeqRev struct {
 	length      int
 	allowedKeys string

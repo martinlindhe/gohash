@@ -7,7 +7,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type expectedForms map[string]string
+
 var (
+	blank = ""
+	fox   = "The quick brown fox jumps over the lazy dog"
+
 	f                 = fuzz.New()
 	iterationsPerAlgo = 10 // increase to fuzz properly, slows down tests
 	expectedEncodings = map[string]expectedForms{

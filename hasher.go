@@ -7,10 +7,6 @@ import (
 	"time"
 )
 
-const (
-	allowedOnion = "abcdefghijklmnopqrstuvwxyz234567"
-)
-
 // Hasher is used to find cleartext for checksum in `expected`, using algorithm in `algo`
 type Hasher struct {
 	algo        string

@@ -1,22 +1,12 @@
 package gohash
 
 import (
-	"bufio"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"sort"
 
 	termutil "github.com/andrew-d/go-termutil"
-)
-
-// used in tests
-type expectedForms map[string]string
-
-// strings used in tests
-var (
-	blank = ""
-	fox   = "The quick brown fox jumps over the lazy dog"
 )
 
 func byteArrayEquals(a []byte, b []byte) bool {
@@ -87,32 +77,10 @@ func ReadPipeOrFile(fileName string) (*AppInputData, error) {
 			return nil, fmt.Errorf("no piped data and no file provided")
 		}
 		var err error
-		res.Data, err = readBinaryFile(fileName)
+		res.Data, err = ioutil.ReadFile(fileName)
 		if err != nil {
 			return &res, err
 		}
 	}
 	return &res, nil
-}
-
-func readBinaryFile(filename string) ([]byte, error) {
-
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	stats, statsErr := file.Stat()
-	if statsErr != nil {
-		return nil, statsErr
-	}
-
-	size := stats.Size()
-	bytes := make([]byte, size)
-
-	bufr := bufio.NewReader(file)
-	_, err = bufr.Read(bytes)
-
-	return bytes, err
 }
