@@ -36,7 +36,7 @@ func main() {
 	}
 
 	if *algo == "" {
-		fmt.Println("error: required flag --algo not provided, try --help")
+		fmt.Println("error: required algorithm not provided, try --help")
 		os.Exit(1)
 	}
 
@@ -50,7 +50,7 @@ func main() {
 
 	hash := calc.Sum(*algo)
 	if hash == nil {
-		fmt.Println("error: unknown algo", *algo)
+		fmt.Println("error: unknown algorithm", *algo)
 		os.Exit(1)
 	}
 
