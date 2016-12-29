@@ -50,6 +50,7 @@ var (
 		"blake256":          256,
 		"blake384":          384,
 		"blake512":          512,
+		"blake2b-256":       256,
 		"blake2b-512":       512,
 		"blake2s-256":       256,
 		"crc8-atm":          8,
@@ -94,6 +95,7 @@ var (
 		"blake256":          blake256Sum,
 		"blake384":          blake384Sum,
 		"blake512":          blake512Sum,
+		"blake2b-256":       blake2b256Sum,
 		"blake2b-512":       blake2b512Sum,
 		"blake2s-256":       blake2s256Sum,
 		"crc8-atm":          crc8AtmSum,
@@ -223,6 +225,12 @@ func blake512Sum(b *[]byte) *[]byte {
 	w := blake512.New()
 	w.Write(*b)
 	res := w.Sum(nil)
+	return &res
+}
+
+func blake2b256Sum(b *[]byte) *[]byte {
+	x := blake2b.Sum256(*b)
+	res := x[:]
 	return &res
 }
 
