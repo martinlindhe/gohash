@@ -38,7 +38,7 @@ func hash(algo string, b *[]byte) string {
 
 ### Hash algorithms
 
-Set algo with `hasher --algo=<id>`, list all supported hashes
+Set algo with `hasher <id>`, list all supported hashes
 with `hasher --list-hashes`
 
 | id                | Algorithm            | key size | key size | year |
