@@ -235,7 +235,7 @@ func (h *Hasher) nextValueFor(b byte) byte {
 
 	next := false
 	for _, x := range h.allowedKeys {
-		if next == true {
+		if next {
 			return x
 		}
 		if x == b {

@@ -171,14 +171,14 @@ func decodeBase64(src []byte) ([]byte, error) {
 }
 
 func encodeBase91(src []byte) ([]byte, error) {
-	return []byte(base91.Encode(src)), nil
+	return base91.Encode(src), nil
 }
 
 func decodeBase91(src []byte) ([]byte, error) {
 	if len(src) == 0 {
 		return []byte{}, nil
 	}
-	return []byte(base91.Decode(src)), nil
+	return base91.Decode(src), nil
 }
 
 func encodeBinary(src []byte) ([]byte, error) {
