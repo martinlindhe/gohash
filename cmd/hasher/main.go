@@ -13,10 +13,11 @@ var (
 	fileName      = kingpin.Flag("file", "Input file to read.").Short('i').String()
 	algo          = kingpin.Arg("algo", "Hash algorithm to use.").String()
 	listAlgos     = kingpin.Flag("list-algos", "List available hash algorithms.").Short('A').Bool()
-	encoding      = kingpin.Flag("encoding", "Output encoding. Default is hex.").Short('e').String()
+	encoding      = kingpin.Flag("encoding", "Output encoding.").Short('e').Default("hex").String()
 	listEncodings = kingpin.Flag("list-encodings", "List available encodings.").Short('E').Bool()
 	skipNewline   = kingpin.Flag("skip-newline", "Don't output newline.").Short('n').Bool()
 	skipFilename  = kingpin.Flag("skip-filename", "Don't output filename.").Bool()
+	reverseBytes  = kingpin.Flag("reverse-bytes", "Reverse byte order of displayed hex value.").Bool()
 )
 
 func main() {
@@ -54,8 +55,16 @@ func main() {
 		os.Exit(1)
 	}
 
+	if *reverseBytes {
+		rev := []byte{}
+		for i := len(hash) - 1; i >= 0; i-- {
+			rev = append(rev, hash[i])
+		}
+		hash = rev
+	}
+
 	coder := gohash.NewCoder(*encoding)
-	encodedHash, err := coder.Encode(*hash)
+	encodedHash, err := coder.Encode(hash)
 	if err != nil {
 		fmt.Println("error", err)
 		os.Exit(1)

@@ -63,7 +63,6 @@ var (
 
 // NewCoder creates a new Coder
 func NewCoder(encoding string) *Coder {
-
 	return &Coder{
 		encoding: resolveEncodingAliases(encoding),
 	}
@@ -71,7 +70,6 @@ func NewCoder(encoding string) *Coder {
 
 // Encode encodes src into some encoding
 func (c *Coder) Encode(src []byte) ([]byte, error) {
-
 	if coder, ok := encoders[c.encoding]; ok {
 		return coder(src)
 	}
@@ -80,7 +78,6 @@ func (c *Coder) Encode(src []byte) ([]byte, error) {
 
 // Decode decodes src from some encoding
 func (c *Coder) Decode(src []byte) ([]byte, error) {
-
 	if coder, ok := decoders[c.encoding]; ok {
 		return coder(src)
 	}
@@ -89,26 +86,19 @@ func (c *Coder) Decode(src []byte) ([]byte, error) {
 
 // AvailableEncodings returns the available encoding id's
 func AvailableEncodings() []string {
-
 	res := []string{}
-
 	for key := range encoders {
 		res = append(res, key)
 	}
-
 	sort.Strings(res)
 	return res
 }
 
 // RecodeInput processes input `data` according to encodings, used by cmd/coder
 func RecodeInput(encodings []string, data []byte, decode bool) ([]byte, error) {
-
 	var err error
-
 	for _, enc := range encodings {
-
 		coder := NewCoder(enc)
-
 		if decode {
 			data, err = coder.Decode(data)
 		} else {
@@ -182,21 +172,17 @@ func decodeBase91(src []byte) ([]byte, error) {
 }
 
 func encodeBinary(src []byte) ([]byte, error) {
-
 	res := ""
 	for _, b := range src {
 		res += fmt.Sprintf("%08b", b) + separator
 	}
-
 	return []byte(strings.TrimRight(res, separator)), nil
 }
 
 func decodeBinary(src []byte) ([]byte, error) {
-
 	if len(src) == 0 {
 		return []byte{}, nil
 	}
-
 	parts := strings.Split(string(src), separator)
 	res := make([]byte, len(parts))
 
@@ -216,21 +202,17 @@ func decodeBubbleBabble(src []byte) ([]byte, error) {
 }
 
 func encodeDecimal(src []byte) ([]byte, error) {
-
 	res := ""
 	for _, b := range src {
 		res += fmt.Sprintf("%d", b) + separator
 	}
-
 	return []byte(strings.TrimRight(res, separator)), nil
 }
 
 func decodeDecimal(src []byte) ([]byte, error) {
-
 	if len(src) == 0 {
 		return []byte{}, nil
 	}
-
 	parts := strings.Split(string(src), separator)
 	res := make([]byte, len(parts))
 
@@ -326,11 +308,7 @@ func decodeZ85(src []byte) ([]byte, error) {
 
 // defaults to "hex" if encoding is unspecified
 func resolveEncodingAliases(s string) string {
-
 	s = strings.ToLower(s)
-	if s == "" {
-		return "hex"
-	}
 	if s == "base85" {
 		return "ascii85"
 	}

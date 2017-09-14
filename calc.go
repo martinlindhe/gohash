@@ -101,7 +101,7 @@ var (
 		"whirlpool":         512,
 	}
 
-	hashers = map[string]func(*[]byte) *[]byte{
+	hashers = map[string]func(*[]byte) []byte{
 		"adler32":           adler32Sum,
 		"blake224":          blake224Sum,
 		"blake256":          blake256Sum,
@@ -155,7 +155,7 @@ var (
 )
 
 // Sum returns the checksum
-func (c *Calculator) Sum(algo string) *[]byte {
+func (c *Calculator) Sum(algo string) []byte {
 	algo = resolveAlgoAliases(algo)
 	if checksum, ok := hashers[algo]; ok {
 		return checksum(&c.data)
@@ -206,7 +206,7 @@ func resolveAlgoAliases(s string) string {
 
 	// "gost" is used by rhash
 	if s == "gost" {
-		return "gost-94"
+		return "gost94"
 	}
 
 	// streebog is sometimes refered to as GOST-2012
@@ -220,334 +220,334 @@ func resolveAlgoAliases(s string) string {
 	return s
 }
 
-func adler32Sum(b *[]byte) *[]byte {
+func adler32Sum(b *[]byte) []byte {
 	i := adler32.Checksum(*b)
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
-	return &bs
+	return bs
 }
 
-func blake224Sum(b *[]byte) *[]byte {
+func blake224Sum(b *[]byte) []byte {
 	w := blake256.New224()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func blake256Sum(b *[]byte) *[]byte {
+func blake256Sum(b *[]byte) []byte {
 	w := blake256.New()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func blake384Sum(b *[]byte) *[]byte {
+func blake384Sum(b *[]byte) []byte {
 	w := blake512.New384()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func blake512Sum(b *[]byte) *[]byte {
+func blake512Sum(b *[]byte) []byte {
 	w := blake512.New()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func blake2b256Sum(b *[]byte) *[]byte {
+func blake2b256Sum(b *[]byte) []byte {
 	x := blake2b.Sum256(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func blake2b512Sum(b *[]byte) *[]byte {
+func blake2b512Sum(b *[]byte) []byte {
 	x := blake2b.Sum512(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func blake2s256Sum(b *[]byte) *[]byte {
+func blake2s256Sum(b *[]byte) []byte {
 	x := blake2s.Sum256(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func crc8AtmSum(b *[]byte) *[]byte {
+func crc8AtmSum(b *[]byte) []byte {
 	i := crc8.ChecksumATM(*b)
 	bs := make([]byte, 1)
 	bs[0] = i
-	return &bs
+	return bs
 }
 
-func crc16CcittSum(b *[]byte) *[]byte {
+func crc16CcittSum(b *[]byte) []byte {
 	i := crc16.ChecksumCCITT(*b)
 	bs := make([]byte, 2)
 	binary.BigEndian.PutUint16(bs, i)
-	return &bs
+	return bs
 }
 
-func crc16CcittFalseSum(b *[]byte) *[]byte {
+func crc16CcittFalseSum(b *[]byte) []byte {
 	i := crc16.ChecksumCCITTFalse(*b)
 	bs := make([]byte, 2)
 	binary.BigEndian.PutUint16(bs, i)
-	return &bs
+	return bs
 }
 
-func crc16IbmSum(b *[]byte) *[]byte {
+func crc16IbmSum(b *[]byte) []byte {
 	i := crc16.ChecksumIBM(*b)
 	bs := make([]byte, 2)
 	binary.BigEndian.PutUint16(bs, i)
-	return &bs
+	return bs
 }
 
-func crc16ScsiSum(b *[]byte) *[]byte {
+func crc16ScsiSum(b *[]byte) []byte {
 	i := crc16.ChecksumSCSI(*b)
 	bs := make([]byte, 2)
 	binary.BigEndian.PutUint16(bs, i)
-	return &bs
+	return bs
 }
 
-func crc24OpenPGPSum(b *[]byte) *[]byte {
+func crc24OpenPGPSum(b *[]byte) []byte {
 	i := crc24.ChecksumOpenPGP(*b)
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
 	bs = bs[1:4]
-	return &bs
+	return bs
 }
 
-func crc32IEEESum(b *[]byte) *[]byte {
+func crc32IEEESum(b *[]byte) []byte {
 	i := crc32.ChecksumIEEE(*b)
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
-	return &bs
+	return bs
 }
 
-func crc32CastagnoliSum(b *[]byte) *[]byte {
+func crc32CastagnoliSum(b *[]byte) []byte {
 	tbl := crc32.MakeTable(crc32.Castagnoli)
 	i := crc32.Checksum(*b, tbl)
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
-	return &bs
+	return bs
 }
 
-func crc32KoopmanSum(b *[]byte) *[]byte {
+func crc32KoopmanSum(b *[]byte) []byte {
 	tbl := crc32.MakeTable(crc32.Koopman)
 	i := crc32.Checksum(*b, tbl)
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
-	return &bs
+	return bs
 }
 
-func crc64ISOSum(b *[]byte) *[]byte {
+func crc64ISOSum(b *[]byte) []byte {
 	tbl := crc64.MakeTable(crc64.ISO)
 	i := crc64.Checksum(*b, tbl)
 	bs := make([]byte, 8)
 	binary.BigEndian.PutUint64(bs, i)
-	return &bs
+	return bs
 }
 
-func crc64ECMASum(b *[]byte) *[]byte {
+func crc64ECMASum(b *[]byte) []byte {
 	tbl := crc64.MakeTable(crc64.ECMA)
 	i := crc64.Checksum(*b, tbl)
 	bs := make([]byte, 8)
 	binary.BigEndian.PutUint64(bs, i)
-	return &bs
+	return bs
 }
 
-func fnv1_32Sum(b *[]byte) *[]byte {
+func fnv1_32Sum(b *[]byte) []byte {
 	w := fnv.New32()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func fnv1a32Sum(b *[]byte) *[]byte {
+func fnv1a32Sum(b *[]byte) []byte {
 	w := fnv.New32a()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func fnv1_64Sum(b *[]byte) *[]byte {
+func fnv1_64Sum(b *[]byte) []byte {
 	w := fnv.New64()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func fnv1a64Sum(b *[]byte) *[]byte {
+func fnv1a64Sum(b *[]byte) []byte {
 	w := fnv.New64a()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func gost94Sum(b *[]byte) *[]byte {
+func gost94Sum(b *[]byte) []byte {
 	h := gost341194.New(gost341194.SboxDefault)
 	h.Write(*b)
 	res := h.Sum(nil)
-	return &res
+	return res
 }
 
-func gost94CryptoproSum(b *[]byte) *[]byte {
+func gost94CryptoproSum(b *[]byte) []byte {
 	h := gost341194.New(&gost28147.GostR3411_94_CryptoProParamSet)
 	h.Write(*b)
 	res := h.Sum(nil)
-	return &res
+	return res
 }
 
-func streebog256Sum(b *[]byte) *[]byte {
+func streebog256Sum(b *[]byte) []byte {
 	h := gost34112012256.New()
 	h.Write(*b)
 	res := h.Sum(nil)
-	return &res
+	return res
 }
 
-func streebog512Sum(b *[]byte) *[]byte {
+func streebog512Sum(b *[]byte) []byte {
 	h := gost34112012512.New()
 	h.Write(*b)
 	res := h.Sum(nil)
-	return &res
+	return res
 }
 
-func md2Sum(b *[]byte) *[]byte {
+func md2Sum(b *[]byte) []byte {
 	w := md2.New()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func md4Sum(b *[]byte) *[]byte {
+func md4Sum(b *[]byte) []byte {
 	w := md4.New()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func md5Sum(b *[]byte) *[]byte {
+func md5Sum(b *[]byte) []byte {
 	x := md5.Sum(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func ripemd160Sum(b *[]byte) *[]byte {
+func ripemd160Sum(b *[]byte) []byte {
 	w := ripemd160.New()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func sha1Sum(b *[]byte) *[]byte {
+func sha1Sum(b *[]byte) []byte {
 	x := sha1.Sum(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func sha224Sum(b *[]byte) *[]byte {
+func sha224Sum(b *[]byte) []byte {
 	x := sha256.Sum224(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func sha256Sum(b *[]byte) *[]byte {
+func sha256Sum(b *[]byte) []byte {
 	x := sha256.Sum256(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func sha384Sum(b *[]byte) *[]byte {
+func sha384Sum(b *[]byte) []byte {
 	x := sha512.Sum384(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func sha512Sum(b *[]byte) *[]byte {
+func sha512Sum(b *[]byte) []byte {
 	x := sha512.Sum512(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func sha512_224Sum(b *[]byte) *[]byte {
+func sha512_224Sum(b *[]byte) []byte {
 	x := sha512.Sum512_224(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func sha512_256Sum(b *[]byte) *[]byte {
+func sha512_256Sum(b *[]byte) []byte {
 	x := sha512.Sum512_256(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func sha3_224Sum(b *[]byte) *[]byte {
+func sha3_224Sum(b *[]byte) []byte {
 	x := sha3.Sum224(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func sha3_256Sum(b *[]byte) *[]byte {
+func sha3_256Sum(b *[]byte) []byte {
 	x := sha3.Sum256(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func sha3_384Sum(b *[]byte) *[]byte {
+func sha3_384Sum(b *[]byte) []byte {
 	x := sha3.Sum384(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func sha3_512Sum(b *[]byte) *[]byte {
+func sha3_512Sum(b *[]byte) []byte {
 	x := sha3.Sum512(*b)
 	res := x[:]
-	return &res
+	return res
 }
 
-func shake128_256Sum(b *[]byte) *[]byte {
+func shake128_256Sum(b *[]byte) []byte {
 	res := make([]byte, 32)
 	sha3.ShakeSum128(res, *b)
-	return &res
+	return res
 }
 
-func shake256_512Sum(b *[]byte) *[]byte {
+func shake256_512Sum(b *[]byte) []byte {
 	res := make([]byte, 64)
 	sha3.ShakeSum256(res, *b)
-	return &res
+	return res
 }
 
-func siphash2_4Sum(b *[]byte) *[]byte {
+func siphash2_4Sum(b *[]byte) []byte {
 	key := make([]byte, 16) // NOTE using empty key
 	w := siphash.New(key)
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func skein512_256Sum(b *[]byte) *[]byte {
+func skein512_256Sum(b *[]byte) []byte {
 	w := skein.NewHash(32)
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func skein512_512Sum(b *[]byte) *[]byte {
+func skein512_512Sum(b *[]byte) []byte {
 	w := skein.NewHash(64)
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func tiger192Sum(b *[]byte) *[]byte {
+func tiger192Sum(b *[]byte) []byte {
 	w := tiger.New()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }
 
-func whirlpoolSum(b *[]byte) *[]byte {
+func whirlpoolSum(b *[]byte) []byte {
 	w := whirlpool.New()
 	w.Write(*b)
 	res := w.Sum(nil)
-	return &res
+	return res
 }

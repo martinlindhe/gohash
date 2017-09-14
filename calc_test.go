@@ -167,7 +167,7 @@ func TestCalcExpectedHashes(t *testing.T) {
 			if res == nil {
 				t.Error("FATAL algo", algo, "returned nil")
 			} else {
-				assert.Equal(t, hash, hex.EncodeToString(*res), algo+" '"+form+"'")
+				assert.Equal(t, hash, hex.EncodeToString(res), algo+" '"+form+"'")
 			}
 		}
 	}

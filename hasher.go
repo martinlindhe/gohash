@@ -213,9 +213,8 @@ func (h *Hasher) verify() error {
 }
 
 func (h *Hasher) equals() bool {
-
 	calc := NewCalculator(h.buffer)
-	return byteArrayEquals(*calc.Sum(h.algo), h.expected)
+	return byteArrayEquals(calc.Sum(h.algo), h.expected)
 }
 
 func (h *Hasher) statusReport() {

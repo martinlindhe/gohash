@@ -129,9 +129,8 @@ func reverse(b []byte) []byte {
 }
 
 func (d *Dictionary) equals(algo string, buffer *[]byte) bool {
-
 	calc := NewCalculator(*buffer)
-	return byteArrayEquals(*calc.Sum(algo), d.expected)
+	return byteArrayEquals(calc.Sum(algo), d.expected)
 }
 
 // derive possible hashes from bitsize
