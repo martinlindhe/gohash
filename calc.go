@@ -10,6 +10,7 @@ import (
 	"hash/crc32"
 	"hash/crc64"
 	"hash/fnv"
+	"log"
 	"sort"
 
 	"github.com/cxmcc/tiger"
@@ -23,6 +24,7 @@ import (
 	"github.com/jzelinskie/whirlpool"
 	"github.com/martinlindhe/crc24"
 	"github.com/martinlindhe/go-md2"
+	"github.com/martinlindhe/gogost/gost28147"
 	"github.com/martinlindhe/gogost/gost341194"
 	"github.com/mewpkg/hashutil/crc8"
 	"golang.org/x/crypto/md4"
@@ -70,6 +72,7 @@ var (
 		"fnv1-64":           64,
 		"fnv1a-64":          64,
 		"gost94":            256,
+		"gost94-cryptopro":  256,
 		"md2":               128,
 		"md4":               128,
 		"md5":               128,
@@ -119,6 +122,7 @@ var (
 		"fnv1-64":           fnv1_64Sum,
 		"fnv1a-64":          fnv1a64Sum,
 		"gost94":            gost94Sum,
+		"gost94-cryptopro":  gost94CryptoproSum,
 		"md2":               md2Sum,
 		"md4":               md4Sum,
 		"md5":               md5Sum,
@@ -146,12 +150,11 @@ var (
 
 // Sum returns the checksum
 func (c *Calculator) Sum(algo string) *[]byte {
-
 	algo = resolveAlgoAliases(algo)
-
 	if checksum, ok := hashers[algo]; ok {
 		return checksum(&c.data)
 	}
+	log.Println("FATAL: unknown algo", algo)
 	return nil
 }
 
@@ -180,12 +183,12 @@ func resolveAlgoAliases(s string) string {
 		return "crc32-koopman"
 	}
 
-	// "skein256" is used in sphsum
+	// "skein256" is used by sphsum
 	if s == "skein256" {
 		return "skein512-256"
 	}
 
-	// "skein512" is used in sphsum
+	// "skein512" is used by sphsum
 	if s == "skein512" {
 		return "skein512-256"
 	}
@@ -193,6 +196,11 @@ func resolveAlgoAliases(s string) string {
 	// "tiger" is used by rhash, sphsum
 	if s == "tiger" {
 		return "tiger192"
+	}
+
+	// "gost" is used by rhash
+	if s == "gost" {
+		return "gost-94"
 	}
 
 	return s
@@ -367,6 +375,29 @@ func gost94Sum(b *[]byte) *[]byte {
 	res := h.Sum(nil)
 	return &res
 }
+
+func gost94CryptoproSum(b *[]byte) *[]byte {
+	h := gost341194.New(&gost28147.GostR3411_94_CryptoProParamSet)
+	h.Write(*b)
+	res := h.Sum(nil)
+	return &res
+}
+
+/*
+func gost2012_256Sum(b *[]byte) *[]byte {
+	h := gost34112012256.New()
+	h.Write(*b)
+	res := h.Sum(nil)
+	return &res
+}
+
+func gost2012_512Sum(b *[]byte) *[]byte {
+	h := gost34112012512.New()
+	h.Write(*b)
+	res := h.Sum(nil)
+	return &res
+}
+*/
 
 func md2Sum(b *[]byte) *[]byte {
 	w := md2.New()

@@ -24,6 +24,9 @@ var (
 		"blake512": {
 			fox:   "1f7e26f63b6ad25a0896fd978fd050a1766391d2fd0471a77afb975e5034b7ad2d9ccf8dfb47abbbe656e1b82fbc634ba42ce186e8dc5e1ce09a885d41f43451",
 			blank: "a8cfbbd73726062df0c6864dda65defe58ef0cc52a5625090fa17601e1eecd1b628e94f396ae402a00acc9eab77b4d4c2e852aaaa25a636d80af3fc7913ef5b8"},
+		"blake2b-256": {
+			fox:   "01718cec35cd3d796dd00020e0bfecb473ad23457d063b75eff29c0ffa2e58a9",
+			blank: "0e5751c026e543b2e8ab2eb06099daa1d1e5df47778f7787faab45cdf12fe3a8"},
 		"blake2b-512": {
 			fox:   "a8add4bdddfd93e4877d2746e62817b116364a1fa7bc148d95090bc7333b3673f82401cf7aa2e4cb1ecd90296e3f14cb5413f8ed77be73045b13914cdcd6a918",
 			blank: "786a02f742015903c6c6fd852552d272912f4740e15847618a86e217f71f5419d25e1031afee585313896444934eb04b903a685b1448b755d56f701afe9be2ce"},
@@ -78,6 +81,15 @@ var (
 		"gost94": {
 			fox:   "77b7fa410c9ac58a25f49bca7d0468c9296529315eaca76bd1a10f376d1f4294",
 			blank: "ce85b99cc46752fffee35cab9a7b0278abb4c2d2055cff685af4912c49490f8d"},
+		"gost94-cryptopro": {
+			fox:   "9004294a361a508c586fe53d1f1b02746765e71b765472786e4770d565830a76",
+			blank: "981e5f3ca30c841487830f84fb433e13ac1101569b9c13584ac483234cd656c0"},
+		//"gost2012-256": {
+		//	fox:   "xx",
+		//	blank: "xx"},
+		//"gost2012-512": {
+		//	fox:   "xx",
+		//	blank: "xx"},
 		"md2": {
 			fox:   "03d85a0d629d2c442e987525319fc471",
 			blank: "8350e5a3e24c153df2275c9f80692773"},
@@ -153,9 +165,10 @@ func TestCalcExpectedHashes(t *testing.T) {
 			calc := NewCalculator([]byte(form))
 			res := calc.Sum(algo)
 			if res == nil {
-				t.Fatalf("ERROR algo fail %s", algo)
+				t.Error("FATAL algo", algo, "returned nil")
+			} else {
+				assert.Equal(t, hash, hex.EncodeToString(*res), algo+" '"+form+"'")
 			}
-			assert.Equal(t, hash, hex.EncodeToString(*res), algo+" '"+form+"'")
 		}
 	}
 }
@@ -175,6 +188,9 @@ func TestHashersAndAlgosDefines(t *testing.T) {
 	for algo := range algos {
 		if _, ok := hashers[algo]; !ok {
 			t.Error("algo not defined in hashers map", algo)
+		}
+		if _, ok := expectedHashes[algo]; !ok {
+			t.Error("algo lacks testcase in expectedHashes map", algo)
 		}
 	}
 	for algo := range hashers {
