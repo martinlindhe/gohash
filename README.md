@@ -88,6 +88,8 @@ with `hasher --list-hashes`
 | siphash-2-4       | SipHash-2-4               | 64 bit   | 8 byte   | 2012 |
 | skein512-256      | Skein-512-256             | 256 bit  | 32 byte  | 2008? |
 | skein512-512      | Skein-512-512             | 512 bit  | 64 byte  | 2008? |
+| streebog-256      | GOST R 34.11-2012-256     | 256 bit  | 32 byte  | 2012 |
+| streebog-512      | GOST R 34.11-2012-512     | 512 bit  | 64 byte  | 2012 |
 | tiger192          | Tiger                     | 192 bit  | 24 byte  | 1996 |
 | whirlpool         | Whirlpool                 | 512 bit  | 64 byte  | 2000 |
 

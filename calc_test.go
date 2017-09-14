@@ -84,12 +84,12 @@ var (
 		"gost94-cryptopro": {
 			fox:   "9004294a361a508c586fe53d1f1b02746765e71b765472786e4770d565830a76",
 			blank: "981e5f3ca30c841487830f84fb433e13ac1101569b9c13584ac483234cd656c0"},
-		//"gost2012-256": {
-		//	fox:   "xx",
-		//	blank: "xx"},
-		//"gost2012-512": {
-		//	fox:   "xx",
-		//	blank: "xx"},
+		"streebog-256": {
+			fox:   "3e7dea7f2384b6c5a3d0e24aaa29c05e89ddd762145030ec22c71a6db8b2c1f4",
+			blank: "3f539a213e97c802cc229d474c6aa32a825a360b2a933a949fd925208d9ce1bb"},
+		"streebog-512": {
+			fox:   "d2b793a0bb6cb5904828b5b6dcfb443bb8f33efc06ad09368878ae4cdc8245b97e60802469bed1e7c21a64ff0b179a6a1e0bb74d92965450a0adab69162c00fe",
+			blank: "8e945da209aa869f0455928529bcae4679e9873ab707b55315f56ceb98bef0a7362f715528356ee83cda5f2aac4c6ad2ba3a715c1bcd81cb8e9f90bf4c1c1a8a"},
 		"md2": {
 			fox:   "03d85a0d629d2c442e987525319fc471",
 			blank: "8350e5a3e24c153df2275c9f80692773"},

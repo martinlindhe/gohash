@@ -25,6 +25,8 @@ import (
 	"github.com/martinlindhe/crc24"
 	"github.com/martinlindhe/go-md2"
 	"github.com/martinlindhe/gogost/gost28147"
+	"github.com/martinlindhe/gogost/gost34112012256"
+	"github.com/martinlindhe/gogost/gost34112012512"
 	"github.com/martinlindhe/gogost/gost341194"
 	"github.com/mewpkg/hashutil/crc8"
 	"golang.org/x/crypto/md4"
@@ -93,6 +95,8 @@ var (
 		"siphash-2-4":       64,
 		"skein512-256":      256,
 		"skein512-512":      512,
+		"streebog-256":      256,
+		"streebog-512":      512,
 		"tiger192":          192,
 		"whirlpool":         512,
 	}
@@ -143,6 +147,8 @@ var (
 		"siphash-2-4":       siphash2_4Sum,
 		"skein512-256":      skein512_256Sum,
 		"skein512-512":      skein512_512Sum,
+		"streebog-256":      streebog256Sum,
+		"streebog-512":      streebog512Sum,
 		"tiger192":          tiger192Sum,
 		"whirlpool":         whirlpoolSum,
 	}
@@ -201,6 +207,14 @@ func resolveAlgoAliases(s string) string {
 	// "gost" is used by rhash
 	if s == "gost" {
 		return "gost-94"
+	}
+
+	// streebog is sometimes refered to as GOST-2012
+	if s == "gost2012-256" {
+		return "streebog-256"
+	}
+	if s == "gost2012-512" {
+		return "streebog-512"
 	}
 
 	return s
@@ -383,21 +397,19 @@ func gost94CryptoproSum(b *[]byte) *[]byte {
 	return &res
 }
 
-/*
-func gost2012_256Sum(b *[]byte) *[]byte {
+func streebog256Sum(b *[]byte) *[]byte {
 	h := gost34112012256.New()
 	h.Write(*b)
 	res := h.Sum(nil)
 	return &res
 }
 
-func gost2012_512Sum(b *[]byte) *[]byte {
+func streebog512Sum(b *[]byte) *[]byte {
 	h := gost34112012512.New()
 	h.Write(*b)
 	res := h.Sum(nil)
 	return &res
 }
-*/
 
 func md2Sum(b *[]byte) *[]byte {
 	w := md2.New()
