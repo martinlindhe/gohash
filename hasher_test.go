@@ -49,9 +49,7 @@ var (
 )
 
 func TestSequentialHasher(t *testing.T) {
-
 	for algo, rev := range sequentialHasherTest {
-
 		hasher := NewHasher()
 		hasher.Algo(algo)
 		hasher.Length(rev.length)
@@ -65,7 +63,6 @@ func TestSequentialHasher(t *testing.T) {
 }
 
 func TestHashSequential(t *testing.T) {
-
 	hasher := NewHasher()
 	hasher.Algo("sha512")
 	hasher.AllowedKeys(allowedOnion)
@@ -79,7 +76,6 @@ func TestHashSequential(t *testing.T) {
 }
 
 func TestHashRandom(t *testing.T) {
-
 	rand.Seed(123)
 
 	hasher := NewHasher()

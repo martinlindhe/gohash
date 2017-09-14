@@ -6,7 +6,6 @@ import (
 	"sort"
 	"strings"
 	"sync"
-	"time"
 )
 
 // Dictionary is used to find cleartext for checksum in `expected`,
@@ -70,8 +69,6 @@ func (d *Dictionary) Find() (string, string, error) {
 
 	buf := make([]byte, 256)
 
-	go d.statusReport()
-
 	for _, line := range d.lines {
 		if line == "" {
 			continue
@@ -103,19 +100,6 @@ func (d *Dictionary) Find() (string, string, error) {
 	return "", "", nil
 }
 
-func (d *Dictionary) statusReport() {
-
-	for {
-		time.Sleep(1 * time.Second)
-
-		mutex.Lock()
-		d.tick++
-		avg := d.try / d.tick
-		fmt.Printf("%s ~%d/s %s\n", d.algo, avg, string(d.buffer))
-		mutex.Unlock()
-	}
-}
-
 func reverse(b []byte) []byte {
 
 	len := len(b)
@@ -130,7 +114,8 @@ func reverse(b []byte) []byte {
 
 func (d *Dictionary) equals(algo string, buffer *[]byte) bool {
 	calc := NewCalculator(*buffer)
-	return byteArrayEquals(calc.Sum(algo), d.expected)
+	sum, _ := calc.Sum(algo)
+	return byteArrayEquals(sum, d.expected)
 }
 
 // derive possible hashes from bitsize

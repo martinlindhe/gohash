@@ -48,10 +48,9 @@ func main() {
 	}
 
 	calc := gohash.NewCalculator(appInputData.Data)
-
-	hash := calc.Sum(*algo)
-	if hash == nil {
-		fmt.Println("error: unknown algorithm", *algo)
+	hash, err := calc.Sum(*algo)
+	if err != nil {
+		fmt.Println("error: ", err)
 		os.Exit(1)
 	}
 

@@ -6,11 +6,11 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/binary"
+	"fmt"
 	"hash/adler32"
 	"hash/crc32"
 	"hash/crc64"
 	"hash/fnv"
-	"log"
 	"sort"
 
 	"github.com/cxmcc/tiger"
@@ -41,7 +41,6 @@ type Calculator struct {
 
 // NewCalculator creates a new Calculator
 func NewCalculator(data []byte) *Calculator {
-
 	return &Calculator{
 		data: data,
 	}
@@ -155,13 +154,12 @@ var (
 )
 
 // Sum returns the checksum
-func (c *Calculator) Sum(algo string) []byte {
+func (c *Calculator) Sum(algo string) ([]byte, error) {
 	algo = resolveAlgoAliases(algo)
 	if checksum, ok := hashers[algo]; ok {
-		return checksum(&c.data)
+		return checksum(&c.data), nil
 	}
-	log.Println("FATAL: unknown algo", algo)
-	return nil
+	return nil, fmt.Errorf("%s", "FATAL: unknown algo "+algo)
 }
 
 // AvailableHashes returns the available hash id's

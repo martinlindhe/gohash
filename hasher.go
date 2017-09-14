@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"strings"
-	"time"
 )
 
 // Hasher is used to find cleartext for checksum in `expected`, using algorithm in `algo`
@@ -99,8 +98,6 @@ func (h *Hasher) FindSequential() (string, error) {
 
 	h.buffer = append(h.buffer, h.suffix...)
 
-	go h.statusReport()
-
 	buf := make([]byte, len(h.buffer))
 	copy(buf, h.buffer)
 
@@ -164,8 +161,6 @@ func (h *Hasher) FindRandom() (string, error) {
 	buf := make([]byte, len(h.buffer))
 	copy(buf, h.buffer)
 
-	go h.statusReport()
-
 	for {
 		if h.equals() {
 			return string(buf), nil
@@ -214,20 +209,8 @@ func (h *Hasher) verify() error {
 
 func (h *Hasher) equals() bool {
 	calc := NewCalculator(h.buffer)
-	return byteArrayEquals(calc.Sum(h.algo), h.expected)
-}
-
-func (h *Hasher) statusReport() {
-
-	for {
-		time.Sleep(1 * time.Second)
-
-		mutex.Lock()
-		h.tick++
-		avg := h.try / h.tick
-		fmt.Printf("%s ~%d/s %s\n", h.algo, avg, string(h.buffer))
-		mutex.Unlock()
-	}
+	sum, _ := calc.Sum(h.algo)
+	return byteArrayEquals(sum, h.expected)
 }
 
 func (h *Hasher) nextValueFor(b byte) byte {

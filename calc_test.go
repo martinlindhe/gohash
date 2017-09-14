@@ -163,9 +163,9 @@ func TestCalcExpectedHashes(t *testing.T) {
 	for algo, forms := range expectedHashes {
 		for form, hash := range forms {
 			calc := NewCalculator([]byte(form))
-			res := calc.Sum(algo)
-			if res == nil {
-				t.Error("FATAL algo", algo, "returned nil")
+			res, err := calc.Sum(algo)
+			if err != nil {
+				t.Error("FATAL algo", algo, "failed with", err)
 			} else {
 				assert.Equal(t, hash, hex.EncodeToString(res), algo+" '"+form+"'")
 			}
@@ -196,6 +196,19 @@ func TestHashersAndAlgosDefines(t *testing.T) {
 	for algo := range hashers {
 		if _, ok := algos[algo]; !ok {
 			t.Error("algo not defined in algos map", algo)
+		}
+	}
+}
+
+func BenchmarkHashes(b *testing.B) {
+	for algo, forms := range expectedHashes {
+		for form := range forms {
+			b.Run(algo+" "+form, func(b *testing.B) {
+				for i := 0; i < b.N; i++ {
+					calc := NewCalculator([]byte(form))
+					calc.Sum(algo)
+				}
+			})
 		}
 	}
 }
