@@ -21,9 +21,9 @@ import (
 	"github.com/dchest/siphash"
 	"github.com/dchest/skein"
 	"github.com/howeyc/crc16"
+	"github.com/htruong/go-md2"
 	"github.com/jzelinskie/whirlpool"
 	"github.com/martinlindhe/crc24"
-	"github.com/martinlindhe/go-md2"
 	"github.com/martinlindhe/gogost/gost28147"
 	"github.com/martinlindhe/gogost/gost34112012256"
 	"github.com/martinlindhe/gogost/gost34112012512"
@@ -209,7 +209,7 @@ func resolveAlgoAliases(s string) string {
 		return "gost94"
 	}
 
-	// streebog is sometimes refered to as GOST-2012
+	// streebog is sometimes referred to as GOST-2012
 	if s == "gost2012-256" {
 		return "streebog-256"
 	}

@@ -92,6 +92,12 @@
   revision = "96a97a1abb579c7ff1a8ffa77f2e72d1c314b57f"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/htruong/go-md2"
+  packages = ["."]
+  revision = "c69905b63f6f975561782d98caf92063200b6fb6"
+
+[[projects]]
   name = "github.com/jbenet/go-base58"
   packages = ["."]
   revision = "6237cf65f3a6f7111cd8a42be3590df99a66bc7d"
@@ -123,14 +129,8 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/martinlindhe/go-md2"
-  packages = ["."]
-  revision = "1fc4c3ee461950713ac0657d746f9c8fbb24fd8c"
-
-[[projects]]
-  branch = "master"
   name = "github.com/martinlindhe/gogost"
-  packages = ["gost28147","gost341194"]
+  packages = ["gost28147","gost34112012256","gost34112012512","gost341194","internal/gost34112012"]
   revision = "31862914ae2006dd114c1224522d8fe6bd91b295"
 
 [[projects]]
@@ -190,6 +190,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "08f3bc51d51f0b653df7cdcd5e2a4ddf61db8451b5b3ab10ac8a889e23418ffa"
+  inputs-digest = "6bee466e3f1d82d9a38519f5a106ce3b2e195bcc083ae649bd5f00578f05d835"
   solver-name = "gps-cdcl"
   solver-version = 1
