@@ -76,8 +76,8 @@ var (
 			fox:   "f3f9b7f5e7e47110",
 			blank: "cbf29ce484222325"},
 		"gost94": {
-			fox:   "94421f6d370fa1d16ba7ac5e31296529c968047dca9bf4258ac59a0c41fab777",
-			blank: "8d0f49492c91f45a68ff5c05d2c2b4ab78027b9aab5ce3feff5267c49cb985ce"},
+			fox:   "77b7fa410c9ac58a25f49bca7d0468c9296529315eaca76bd1a10f376d1f4294",
+			blank: "ce85b99cc46752fffee35cab9a7b0278abb4c2d2055cff685af4912c49490f8d"},
 		"md2": {
 			fox:   "03d85a0d629d2c442e987525319fc471",
 			blank: "8350e5a3e24c153df2275c9f80692773"},
@@ -155,7 +155,7 @@ func TestCalcExpectedHashes(t *testing.T) {
 			if res == nil {
 				t.Fatalf("ERROR algo fail %s", algo)
 			}
-			assert.Equal(t, hash, hex.EncodeToString(*res), algo)
+			assert.Equal(t, hash, hex.EncodeToString(*res), algo+" '"+form+"'")
 		}
 	}
 }

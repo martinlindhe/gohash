@@ -1,0 +1,122 @@
+
+# Gopkg.toml example
+#
+# Refer to https://github.com/golang/dep/blob/master/docs/Gopkg.toml.md
+# for detailed Gopkg.toml documentation.
+#
+# required = ["github.com/user/thing/cmd/thing"]
+# ignored = ["github.com/user/project/pkgX", "bitbucket.org/user/project/pkgA/pkgY"]
+#
+# [[constraint]]
+#   name = "github.com/user/project"
+#   version = "1.0.0"
+#
+# [[constraint]]
+#   name = "github.com/user/project2"
+#   branch = "dev"
+#   source = "github.com/myfork/project2"
+#
+# [[override]]
+#  name = "github.com/x/y"
+#  version = "2.4.0"
+
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/andrew-d/go-termutil"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/aybabtme/color"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/bproctor/base91"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/cxmcc/tiger"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/dchest/blake256"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/dchest/blake2b"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/dchest/blake2s"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/dchest/blake512"
+
+[[constraint]]
+  name = "github.com/dchest/siphash"
+  version = "1.0.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/dchest/skein"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/google/gofuzz"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/howeyc/crc16"
+
+[[constraint]]
+  name = "github.com/jbenet/go-base58"
+  version = "1.0.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/jzelinskie/whirlpool"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/martinlindhe/base36"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/martinlindhe/bubblebabble"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/martinlindhe/crc24"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/martinlindhe/go-md2"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/martinlindhe/gogost"
+
+[[constraint]]
+  name = "github.com/mewpkg/hashutil"
+  version = "1.0.1"
+
+[[constraint]]
+  name = "github.com/stretchr/testify"
+  version = "1.1.4"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/tejainece/uu"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/tilinna/z85"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+
+[[constraint]]
+  name = "gopkg.in/alecthomas/kingpin.v2"
+  version = "2.2.5"
