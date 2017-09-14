@@ -75,7 +75,7 @@ var (
 		"fnv1a-64": {
 			fox:   "f3f9b7f5e7e47110",
 			blank: "cbf29ce484222325"},
-		"gost": {
+		"gost94": {
 			fox:   "94421f6d370fa1d16ba7ac5e31296529c968047dca9bf4258ac59a0c41fab777",
 			blank: "8d0f49492c91f45a68ff5c05d2c2b4ab78027b9aab5ce3feff5267c49cb985ce"},
 		"md2": {
@@ -148,7 +148,6 @@ var (
 )
 
 func TestCalcExpectedHashes(t *testing.T) {
-
 	for algo, forms := range expectedHashes {
 		for form, hash := range forms {
 			calc := NewCalculator([]byte(form))
@@ -162,13 +161,25 @@ func TestCalcExpectedHashes(t *testing.T) {
 }
 
 func TestFuzzHashes(t *testing.T) {
-
 	for algo := range expectedHashes {
 		for i := 0; i < iterationsPerAlgo; i++ {
 			var rnd []byte
 			f.Fuzz(&rnd)
 			calc := NewCalculator(rnd)
 			calc.Sum(algo)
+		}
+	}
+}
+
+func TestHashersAndAlgosDefines(t *testing.T) {
+	for algo := range algos {
+		if _, ok := hashers[algo]; !ok {
+			t.Error("algo not defined in hashers map", algo)
+		}
+	}
+	for algo := range hashers {
+		if _, ok := algos[algo]; !ok {
+			t.Error("algo not defined in algos map", algo)
 		}
 	}
 }

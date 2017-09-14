@@ -45,6 +45,7 @@ func NewCalculator(data []byte) *Calculator {
 
 var (
 	algos = map[string]int{
+		// name, key size in bits
 		"adler32":           32,
 		"blake224":          224,
 		"blake256":          256,
@@ -64,6 +65,10 @@ var (
 		"crc32-koopman":     32,
 		"crc64-iso":         64,
 		"crc64-ecma":        64,
+		"fnv1-32":           32,
+		"fnv1a-32":          32,
+		"fnv1-64":           64,
+		"fnv1a-64":          64,
 		"gost":              256,
 		"md2":               128,
 		"md4":               128,

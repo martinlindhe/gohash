@@ -65,7 +65,7 @@ with `hasher --list-hashes`
 | fnv1a-32          | FNV-1a 32            | 32 bit   | 4 byte   | 1991 |
 | fnv1-64           | FNV-1 64             | 64 bit   | 8 byte   | 1991 |
 | fnv1a-64          | FNV-1a 64            | 64 bit   | 8 byte   | 1991 |
-| gost              | GOST                 | 256 bit  | 32 byte  | 1994 |
+| gost              | GOST R 34.11-94      | 256 bit  | 32 byte  | 1994 |
 | md2               | MD2                  | 128 bit  | 16 byte  | 1989 |
 | md4               | MD4                  | 128 bit  | 16 byte  | 1990 |
 | md5               | MD5                  | 128 bit  | 16 byte  | 1992 |
