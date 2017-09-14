@@ -69,7 +69,7 @@ var (
 		"fnv1a-32":          32,
 		"fnv1-64":           64,
 		"fnv1a-64":          64,
-		"gost":              256,
+		"gost94":            256,
 		"md2":               128,
 		"md4":               128,
 		"md5":               128,
@@ -118,7 +118,7 @@ var (
 		"fnv1a-32":          fnv1a32Sum,
 		"fnv1-64":           fnv1_64Sum,
 		"fnv1a-64":          fnv1a64Sum,
-		"gost":              gostSum,
+		"gost94":            gost94Sum,
 		"md2":               md2Sum,
 		"md4":               md4Sum,
 		"md5":               md5Sum,
@@ -361,7 +361,7 @@ func fnv1a64Sum(b *[]byte) *[]byte {
 	return &res
 }
 
-func gostSum(b *[]byte) *[]byte {
+func gost94Sum(b *[]byte) *[]byte {
 	h := gost341194.New(gost341194.SboxDefault)
 	h.Write(*b)
 	res := h.Sum(nil)
