@@ -134,6 +134,12 @@
   revision = "31862914ae2006dd114c1224522d8fe6bd91b295"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/martinlindhe/uu"
+  packages = ["."]
+  revision = "c74240da66832d8cd73ce9d27439debae7d6ca08"
+
+[[projects]]
   name = "github.com/mewpkg/hashutil"
   packages = ["crc8"]
   revision = "576638dc68739d767ffde05d1b4f62e3c0659639"
@@ -153,18 +159,6 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/tejainece/hexutils"
-  packages = ["."]
-  revision = "f865a37ec9c1ca12e4dc4696e79e930f893fe99c"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/tejainece/uu"
-  packages = ["."]
-  revision = "afdda8302cdf17f7e86b3ddd296d3f0ed74abdbe"
-
-[[projects]]
-  branch = "master"
   name = "github.com/tilinna/z85"
   packages = ["."]
   revision = "5caf146023ad64452767a53d9f5a9e40bddcdc6d"
@@ -173,7 +167,7 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["md4","ripemd160","sha3"]
-  revision = "faadfbdc035307d901e69eea569f5dda451a3ee3"
+  revision = "b0c9c05bfe149df95eb1d25642162cca051e0466"
 
 [[projects]]
   name = "gopkg.in/alecthomas/kingpin.v2"
@@ -190,6 +184,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6bee466e3f1d82d9a38519f5a106ce3b2e195bcc083ae649bd5f00578f05d835"
+  inputs-digest = "6dc5abe32fe3598ae3d99e0f02d3c668cf2ffcd26ba849588e73c8e817655698"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -15,7 +15,7 @@ import (
 	b58 "github.com/jbenet/go-base58"
 	"github.com/martinlindhe/base36"
 	"github.com/martinlindhe/bubblebabble"
-	"github.com/tejainece/uu"
+	"github.com/martinlindhe/uu"
 	"github.com/tilinna/z85"
 )
 
@@ -267,12 +267,12 @@ func decodeOctal(src []byte) ([]byte, error) {
 }
 
 func encodeUU(src []byte) ([]byte, error) {
-	res := uu.EncodeLine(src)
-	return res, nil
+	return uu.Encode(src, "file.txt", "644")
 }
 
 func decodeUU(src []byte) ([]byte, error) {
-	return uu.DecodeLine(src)
+	dec, err := uu.Decode(src)
+	return dec.Data, err
 }
 
 func encodeZ85(src []byte) ([]byte, error) {

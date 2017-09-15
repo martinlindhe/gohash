@@ -113,6 +113,7 @@ with `hasher --list-encodings`
 | hex               | Hex "3f997a"           |
 | hexup             | Hex "3F997A"           |
 | octal             | Octal "0129 0226 0120" |
+| uu                | Uuencoded "%:&5L;&\"   |
 | z85               | Z85                    |
 
 

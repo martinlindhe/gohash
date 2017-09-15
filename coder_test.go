@@ -57,14 +57,33 @@ var (
 			fox: "0124 0150 0145 040 0161 0165 0151 0143 0153 040 0142 0162 0157 0167 0156 040 0146 0157 0170 040" +
 				" 0152 0165 0155 0160 0163 040 0157 0166 0145 0162 040 0164 0150 0145 040 0154 0141 0172 0171 040 0144 0157 0147",
 			blank: ""},
+		"uu": {
+			fox:   "begin 644 file.txt\nK5&AE('%U:6-K(&)R;W=N(&9O>\"!J=6UP<R!O=F5R('1H92!L87IY(&1O9P  \n`\nend\n",
+			blank: "begin 644 file.txt\n`\nend\n",
+		},
 		"z85": {
 			fox:   "ra]?=ADL#9yAN8bz*c7ww]z]pyisxjB0byAwPw]nxK@r5vs0hwwn=8X",
 			blank: ""},
 	}
 )
 
-func TestCalcExpectedEncodings(t *testing.T) {
+func TestEncodingDefines(t *testing.T) {
+	for algo := range encoders {
+		if _, ok := decoders[algo]; !ok {
+			t.Error("algo not defined in decoders map", algo)
+		}
+		if _, ok := expectedEncodings[algo]; !ok {
+			t.Error("algo lacks testcase in expectedEncodings map", algo)
+		}
+	}
+	for algo := range decoders {
+		if _, ok := encoders[algo]; !ok {
+			t.Error("algo not defined in encoders map", algo)
+		}
+	}
+}
 
+func TestCalcExpectedEncodings(t *testing.T) {
 	for algo, forms := range expectedEncodings {
 		for form, hash := range forms {
 			coder := NewCoder(algo)
@@ -76,21 +95,22 @@ func TestCalcExpectedEncodings(t *testing.T) {
 }
 
 func TestCalcExpectedDecodings(t *testing.T) {
-
 	for algo := range decoders {
 		if forms, ok := expectedEncodings[algo]; ok {
 			for clear, coded := range forms {
 				coder := NewCoder(algo)
 				res, err := coder.Decode([]byte(coded))
-				assert.Equal(t, nil, err, algo)
-				assert.Equal(t, []byte(clear), res, algo)
+				if err != nil {
+					t.Error(algo, coded, err)
+				} else {
+					assert.Equal(t, []byte(clear), res, algo)
+				}
 			}
 		}
 	}
 }
 
 func TestFuzzEncoders(t *testing.T) {
-
 	for algo := range expectedEncodings {
 		for i := 0; i < iterationsPerAlgo; i++ {
 			var rnd []byte
@@ -102,7 +122,6 @@ func TestFuzzEncoders(t *testing.T) {
 }
 
 func TestFuzzDecoders(t *testing.T) {
-
 	for algo := range expectedEncodings {
 		for i := 0; i < iterationsPerAlgo; i++ {
 			rnd := ""
@@ -114,35 +133,30 @@ func TestFuzzDecoders(t *testing.T) {
 }
 
 func TestEncodeZ85(t *testing.T) {
-
 	res, err := encodeZ85([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B})
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "HelloWorld", string(res))
 }
 
 func TestDecodeHexWithSpaces(t *testing.T) {
-
 	res, err := decodeHex([]byte("48 4f 2a"))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, []byte{0x48, 0x4f, 0x2a}, res)
 }
 
 func TestRecodeInputEncodeSingle(t *testing.T) {
-
 	res, err := RecodeInput([]string{"base64"}, []byte("hello"), false)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "aGVsbG8=", string(res))
 }
 
 func TestRecodeInputDecodeSingle(t *testing.T) {
-
 	res, err := RecodeInput([]string{"base64"}, []byte("aGVsbG8="), true)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "hello", string(res))
 }
 
 func TestRecodeInputDecodeChain(t *testing.T) {
-
 	res, err := RecodeInput([]string{"hex", "base64"}, []byte("614756736247383d"), true)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "hello", string(res))
