@@ -2,7 +2,6 @@ package uu
 
 import (
 	"bytes"
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"io"
@@ -16,7 +15,7 @@ const (
 )
 
 var (
-	encoding = base64.NewEncoding(UUAlphabet)
+	encoding = NewEncoding(UUAlphabet)
 )
 
 // Decoded holds result from uuencoded decode

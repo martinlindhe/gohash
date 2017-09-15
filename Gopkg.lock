@@ -137,7 +137,7 @@
   branch = "master"
   name = "github.com/martinlindhe/uu"
   packages = ["."]
-  revision = "c74240da66832d8cd73ce9d27439debae7d6ca08"
+  revision = "09dbe06d0c0b786419d4a61d67b261902bdc18ad"
 
 [[projects]]
   name = "github.com/mewpkg/hashutil"
