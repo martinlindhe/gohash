@@ -187,7 +187,7 @@ func decodeBinary(src []byte) ([]byte, error) {
 	res := make([]byte, len(parts))
 
 	for i, part := range parts {
-		b, _ := strconv.ParseInt(part, 2, 8)
+		b, _ := strconv.ParseUint(part, 2, 8)
 		res[i] = byte(b)
 	}
 	return res, nil
@@ -217,7 +217,7 @@ func decodeDecimal(src []byte) ([]byte, error) {
 	res := make([]byte, len(parts))
 
 	for i, part := range parts {
-		b, _ := strconv.ParseInt(part, 10, 8)
+		b, _ := strconv.ParseUint(part, 10, 8)
 		res[i] = byte(b)
 	}
 	return res, nil
@@ -234,14 +234,12 @@ func encodeHexUpper(src []byte) ([]byte, error) {
 }
 
 func decodeHex(src []byte) ([]byte, error) {
-
 	s := stripSpaces(string(src))
 	res, err := hex.DecodeString(s)
 	return res, err
 }
 
 func encodeOctal(src []byte) ([]byte, error) {
-
 	res := ""
 	for _, b := range src {
 		res += fmt.Sprintf("%#o", b) + separator
@@ -251,7 +249,6 @@ func encodeOctal(src []byte) ([]byte, error) {
 }
 
 func decodeOctal(src []byte) ([]byte, error) {
-
 	if len(src) == 0 {
 		return []byte{}, nil
 	}
@@ -260,7 +257,7 @@ func decodeOctal(src []byte) ([]byte, error) {
 	res := make([]byte, len(parts))
 
 	for i, part := range parts {
-		b, _ := strconv.ParseInt(part, 8, 8)
+		b, _ := strconv.ParseUint(part, 8, 8)
 		res[i] = byte(b)
 	}
 	return res, nil

@@ -111,6 +111,7 @@ func TestCalcExpectedDecodings(t *testing.T) {
 }
 
 func TestFuzzEncoders(t *testing.T) {
+	// feed encoders with random data and decoding it, making sure we always get the same result back
 	for algo := range expectedEncodings {
 		for i := 0; i < iterationsPerAlgo; i++ {
 			var rnd []byte
@@ -122,6 +123,7 @@ func TestFuzzEncoders(t *testing.T) {
 }
 
 func TestFuzzDecoders(t *testing.T) {
+	// feed decoders with random data, looking for crashes
 	for algo := range expectedEncodings {
 		for i := 0; i < iterationsPerAlgo; i++ {
 			rnd := ""
@@ -160,4 +162,34 @@ func TestRecodeInputDecodeChain(t *testing.T) {
 	res, err := RecodeInput([]string{"hex", "base64"}, []byte("614756736247383d"), true)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "hello", string(res))
+}
+
+func TestDecodeOctal(t *testing.T) {
+	res, err := decodeOctal([]byte{})
+	assert.Equal(t, nil, err)
+	assert.Equal(t, []byte{}, res)
+
+	res, err = decodeOctal([]byte("0377"))
+	assert.Equal(t, nil, err)
+	assert.Equal(t, []byte{0xff}, res)
+}
+
+func TestDecodeBinary(t *testing.T) {
+	res, err := decodeBinary([]byte{})
+	assert.Equal(t, nil, err)
+	assert.Equal(t, []byte{}, res)
+
+	res, err = decodeBinary([]byte("11111111"))
+	assert.Equal(t, nil, err)
+	assert.Equal(t, []byte{0xff}, res)
+}
+
+func TestDecodeDecimal(t *testing.T) {
+	res, err := decodeDecimal([]byte{})
+	assert.Equal(t, nil, err)
+	assert.Equal(t, []byte{}, res)
+
+	res, err = decodeDecimal([]byte("255"))
+	assert.Equal(t, nil, err)
+	assert.Equal(t, []byte{0xff}, res)
 }
