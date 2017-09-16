@@ -1,11 +1,13 @@
 package gohash
 
 import (
+	"bytes"
 	"encoding/ascii85"
 	"encoding/base32"
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"io/ioutil"
 	"sort"
 	"strconv"
 	"strings"
@@ -112,16 +114,22 @@ func RecodeInput(encodings []string, data []byte, decode bool) ([]byte, error) {
 }
 
 func encodeASCII85(src []byte) ([]byte, error) {
-	buf := make([]byte, ascii85.MaxEncodedLen(len(src)))
-	n := ascii85.Encode(buf, src)
-	buf = buf[0:n]
-	return buf, nil
+	var b bytes.Buffer
+	enc := ascii85.NewEncoder(&b)
+	enc.Write(src)
+	err := enc.Close()
+	return b.Bytes(), err
 }
 
 func decodeASCII85(src []byte) ([]byte, error) {
-	dst := make([]byte, len(src))
-	ndst, _, err := ascii85.Decode(dst, src, true)
-	return dst[0:ndst], err
+	// Often, ascii85-encoded data is wrapped in <~ and ~> symbols. Decode() expects these to have been stripped by the caller.
+	if len(src) >= 4 && src[0] == '<' && src[1] == '~' && src[len(src)-2] == '~' && src[len(src)-1] == '>' {
+		src = src[2 : len(src)-2]
+	}
+	r := bytes.NewBuffer(src)
+	dec := ascii85.NewDecoder(r)
+	res, err := ioutil.ReadAll(dec)
+	return res, err
 }
 
 func encodeBase32(src []byte) ([]byte, error) {

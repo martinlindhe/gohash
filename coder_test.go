@@ -117,7 +117,16 @@ func TestFuzzEncoders(t *testing.T) {
 			var rnd []byte
 			f.Fuzz(&rnd)
 			coder := NewCoder(algo)
-			coder.Encode(rnd)
+			enc, err := coder.Encode(rnd)
+			assert.Equal(t, nil, err, algo)
+
+			if err == nil {
+				dec, err := coder.Decode(enc)
+				assert.Equal(t, nil, err, algo)
+				if err == nil {
+					assert.Equal(t, string(rnd), string(dec), algo+" decode of "+string(enc))
+				}
+			}
 		}
 	}
 }
@@ -192,4 +201,12 @@ func TestDecodeDecimal(t *testing.T) {
 	res, err = decodeDecimal([]byte("255"))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, []byte{0xff}, res)
+}
+
+func TestDecodeASCII85(t *testing.T) {
+	s := "<~BOu!rDZ~>"
+
+	res, err := decodeASCII85([]byte(s))
+	assert.Equal(t, nil, err)
+	assert.Equal(t, "hello", string(res))
 }
