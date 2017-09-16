@@ -13,7 +13,7 @@ import (
 var (
 	encoding          = kingpin.Arg("encoding", "Output encoding.").String()
 	listEncodings     = kingpin.Flag("list-encodings", "List available encodings.").Short('E').Bool()
-	fileName          = kingpin.Arg("file", "Input file to read.").String()
+	fileName          = kingpin.Arg("file", "Input file to read (optional).").String()
 	encode            = kingpin.Flag("encode", "Encode input (default).").Short('e').Bool()
 	decode            = kingpin.Flag("decode", "Decode input.").Short('d').Bool()
 	outFileName       = kingpin.Flag("output", "Write output to file.").Short('o').String()

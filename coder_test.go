@@ -14,7 +14,7 @@ var (
 	fox   = "The quick brown fox jumps over the lazy dog"
 
 	f                 = fuzz.New()
-	iterationsPerAlgo = 10 // increase to fuzz properly, slows down tests
+	iterationsPerAlgo = 500 // increase to fuzz properly, slows down tests
 	expectedEncodings = map[string]expectedForms{
 		"ascii85": {
 			fox:   "<+ohcEHPu*CER),Dg-(AAoDo:C3=B4F!,CEATAo8BOr<&@=!2AA8c)",
@@ -116,6 +116,18 @@ func TestFuzzEncoders(t *testing.T) {
 		for i := 0; i < iterationsPerAlgo; i++ {
 			var rnd []byte
 			f.Fuzz(&rnd)
+			if algo == "z85" {
+				// NOTE: trim trailing 0:s for z85, because "The binary frame SHALL have a length that is
+				// divisible by 4 with no remainder.", and trailing 0:s will not remain in the decode of
+				// such sequence. see https://rfc.zeromq.org/spec:32/Z85/
+				n := len(rnd)
+				for ; n > 0; n-- {
+					if rnd[n-1] != 0 {
+						break
+					}
+				}
+				rnd = rnd[0:n]
+			}
 			coder := NewCoder(algo)
 			enc, err := coder.Encode(rnd)
 			assert.Equal(t, nil, err, algo)

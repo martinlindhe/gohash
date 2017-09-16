@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	fileName      = kingpin.Flag("file", "Input file to read.").Short('i').String()
+	fileName      = kingpin.Flag("file", "Input file to read (optional).").Short('i').String()
 	algo          = kingpin.Arg("algo", "Hash algorithm to use.").String()
 	listAlgos     = kingpin.Flag("list-algos", "List available hash algorithms.").Short('A').Bool()
 	encoding      = kingpin.Flag("encoding", "Output encoding.").Short('e').Default("hex").String()

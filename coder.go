@@ -298,7 +298,6 @@ func encodeZ85(src []byte) ([]byte, error) {
 }
 
 func decodeZ85(src []byte) ([]byte, error) {
-
 	dst := make([]byte, z85.DecodedLen(len(src)))
 	n, err := z85.Decode(dst, src)
 
