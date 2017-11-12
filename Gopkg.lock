@@ -77,7 +77,7 @@
   branch = "master"
   name = "github.com/dchest/skein"
   packages = ["."]
-  revision = "00ede9849c61c956a846cef0d28a5b16655fd63c"
+  revision = "d7f1022db3907c43a432c6ed55bb0e23e644d415"
 
 [[projects]]
   branch = "master"
@@ -167,7 +167,7 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["md4","ripemd160","sha3"]
-  revision = "b0c9c05bfe149df95eb1d25642162cca051e0466"
+  revision = "6a293f2d4b14b8e6d3f0539e383f6d0d30fce3fd"
 
 [[projects]]
   name = "gopkg.in/alecthomas/kingpin.v2"

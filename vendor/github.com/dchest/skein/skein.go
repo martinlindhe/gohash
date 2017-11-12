@@ -8,6 +8,7 @@ package skein
 
 import (
 	"crypto/cipher"
+	"errors"
 	"hash"
 	"io"
 )
@@ -22,7 +23,7 @@ type Hash struct {
 	nx int      // number of bytes in buffer
 
 	outLen uint64 // output length in bytes
-	hasMsg bool   // true if message block argument has been used
+	noMsg  bool   // true if message block argument should not be used
 
 	ik [8]uint64 // copy of initial chain value
 }
@@ -30,14 +31,33 @@ type Hash struct {
 // Args can be used to configure hash function for different purposes.
 // All fields are optional: if a field is nil, it will not be used.
 type Args struct {
-	Key       []byte // secret key for MAC, KDF, or stream cipher
-	Person    []byte // personalization string
-	PublicKey []byte // public key for signature hashing
-	KeyId     []byte // key identifier for KDF
-	Nonce     []byte // nonce for stream cipher or randomized hashing
+	// Key is a secret key for MAC, KDF, or stream cipher
+	Key []byte
+	// Person is a personalization string
+	Person []byte
+	// PublicKey is a public key for signature hashing
+	PublicKey []byte
+	// KeyId is a key identifier for KDF
+	KeyId []byte
+	// Nonce for stream cipher or randomized hashing
+	Nonce []byte
+	// NoMsg indicates whether message input is used by the function.
+	//
+	// If false (default), message input it used, and thus if zero-length
+	// message is supplied to Write or if Write was not called, it will be
+	// assumed that the message input is zero-length, and thus will be
+	// processed as such (padded with zeroes). This is the normal way Skein
+	// hash and MAC are used.
+	//
+	// If true, message input is not used, so any call to Write will
+	// return an error. This is useful for constructions such as a
+	// that skip message input, such as a stream cipher.
+	//
+	// The name is negative to preserve backward compatibility.
+	NoMsg bool
 }
 
-// The block size of Skein-512 in bytes.
+// BlockSize is the block size of Skein-512 in bytes.
 const BlockSize = 64
 
 // Argument types (in the order they must be used).
@@ -172,8 +192,10 @@ func (h *Hash) update(b []byte) {
 // Write adds more data to the running hash.
 // It never returns an error.
 func (h *Hash) Write(b []byte) (n int, err error) {
+	if h.noMsg {
+		return 0, errors.New("Skein: can't write to a function configured with NoMsg")
+	}
 	h.update(b)
-	h.hasMsg = true
 	return len(b), nil
 }
 
@@ -184,7 +206,7 @@ func (h0 *Hash) Sum(in []byte) []byte {
 	h := new(Hash)
 	*h = *h0
 
-	if h.hasMsg {
+	if !h.noMsg {
 		// Finalize message.
 		h.hashLastBlock()
 	}
@@ -200,7 +222,7 @@ func (h *Hash) BlockSize() int { return BlockSize }
 // size of int, the result is undefined.
 func (h *Hash) Size() int { return int(h.outLen) }
 
-// Resets resets hash to its state after initialization.
+// Reset resets hash to its state after initialization.
 // If hash was initialized with arguments, such as key,
 // these arguments are preserved.
 func (h *Hash) Reset() {
@@ -208,7 +230,6 @@ func (h *Hash) Reset() {
 	h.k = h.ik
 	// Reset buffer.
 	h.nx = 0
-	h.hasMsg = false
 	// Init tweak to first message block.
 	h.t[0] = 0
 	h.t[1] = messageArg<<56 | firstBlockFlag
@@ -233,7 +254,7 @@ type outputReader struct {
 func newOutputReader(h *Hash) *outputReader {
 	// Initialize with the copy of h.
 	r := &outputReader{Hash: *h}
-	if r.hasMsg {
+	if !r.noMsg {
 		// Finalize message.
 		r.hashLastBlock()
 	}
@@ -365,6 +386,8 @@ func New(outLen uint64, args *Args) *Hash {
 
 	// Other arguments, in specified order.
 	if args != nil {
+		h.noMsg = args.NoMsg
+
 		if args.Person != nil {
 			h.addArg(personArg, args.Person)
 		}
@@ -407,6 +430,6 @@ func NewMAC(outLen uint64, key []byte) hash.Hash {
 // than one message. There are no limits on the length of key or nonce.
 func NewStream(key []byte, nonce []byte) cipher.Stream {
 	const streamOutLen = (1<<64 - 1) / 8 // 2^64 - 1 bits
-	h := New(streamOutLen, &Args{Key: key, Nonce: nonce})
+	h := New(streamOutLen, &Args{Key: key, Nonce: nonce, NoMsg: true})
 	return newOutputReader(h)
 }

@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
+	"io"
 	"testing"
 )
 
@@ -188,6 +189,20 @@ func TestNew(t *testing.T) {
 	}
 }
 
+func TestCopyIo(t *testing.T) {
+	for i, v := range testVectors {
+		h := New(v.outLen, v.args)
+		r := bytes.NewReader(v.input)
+		if _, err := io.Copy(h, r); err != nil {
+			t.Error(err)
+		}
+		sum := fmt.Sprintf("%x", h.Sum(nil))
+		if sum != v.hexResult {
+			t.Errorf("%d: expected %s, got %s", i, v.hexResult, sum)
+		}
+	}
+}
+
 func TestOutputReader(t *testing.T) {
 	h := New(125, nil)
 	h.Write([]byte("testing output reader"))
@@ -214,6 +229,19 @@ func xorInPortions(key, nonce, b []byte) {
 		}
 	}
 
+}
+
+func TestStreamKnown(t *testing.T) {
+	key := []byte("key")
+	nonce := []byte("nonce")
+	in := make([]byte, 10)
+	known := fromHex("ed036a52bbb40f471c77")
+
+	c := NewStream(key, nonce)
+	c.XORKeyStream(in, in)
+	if !bytes.Equal(in, known) {
+		t.Errorf("expected: %x, got %x", known, in)
+	}
 }
 
 func TestNewStream(t *testing.T) {
