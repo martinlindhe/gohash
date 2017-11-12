@@ -29,10 +29,12 @@ Compatibility: All platforms supported by go, notably Linux, macOS and Windows.
 ```go
 import "github.com/martinlindhe/gohash"
 
-// pretend to be hash() from PHP
-func hash(algo string, b *[]byte) string {
-	calc := gohash.NewCalculator(*b)
-	return hex.EncodeToString(*calc.Sum(algo))
+func ExampleNewCalculator() {
+	r := strings.NewReader("hello world")
+	calc := NewCalculator(r)
+	h, _ := calc.Sum("sha1")
+	fmt.Printf("%x", h)
+	// Output: 2aae6c35c94fcfb415dbe95f408b9ce91ee846ed
 }
 ```
 

@@ -3,6 +3,7 @@ package gohash
 import (
 	"bytes"
 	"encoding/hex"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -219,4 +220,12 @@ func BenchmarkHashes(b *testing.B) {
 			})
 		}
 	}
+}
+
+func ExampleNewCalculator() {
+	r := strings.NewReader("hello world")
+	calc := NewCalculator(r)
+	h, _ := calc.Sum("sha1")
+	fmt.Printf("%x", h)
+	// Output: 2aae6c35c94fcfb415dbe95f408b9ce91ee846ed
 }
