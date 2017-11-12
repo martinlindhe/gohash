@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/aybabtme/color/brush"
 	"github.com/martinlindhe/gohash"
@@ -18,6 +19,7 @@ var (
 	skipNewline   = kingpin.Flag("skip-newline", "Don't output newline.").Short('n').Bool()
 	skipFilename  = kingpin.Flag("skip-filename", "Don't output filename.").Bool()
 	reverseBytes  = kingpin.Flag("reverse-bytes", "Reverse byte order of displayed hex value.").Bool()
+	debugAllocs   = kingpin.Flag("debug-allocs", "Debugging: print memory allocations at end of execution.").Bool()
 )
 
 func main() {
@@ -41,13 +43,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	appInputData, err := gohash.ReadPipeOrFile(*fileName)
+	r, err := gohash.ReadPipeOrFile(*fileName)
 	if err != nil {
 		fmt.Println("error:", err)
 		os.Exit(1)
 	}
 
-	calc := gohash.NewCalculator(appInputData.Data)
+	calc := gohash.NewCalculator(r.Reader)
 	hash, err := calc.Sum(*algo)
 	if err != nil {
 		fmt.Println("error: ", err)
@@ -71,12 +73,18 @@ func main() {
 
 	fmt.Printf("%s", brush.Yellow(encodedHash))
 	if !*skipFilename {
-		if appInputData.IsPipe {
+		if r.IsPipe {
 			*fileName = "-"
 		}
 		fmt.Printf("  %s", brush.White(*fileName))
 	}
 	if !*skipNewline {
 		fmt.Println()
+	}
+
+	if *debugAllocs {
+		var m runtime.MemStats
+		runtime.ReadMemStats(&m)
+		fmt.Printf("\nAlloc = %v\nTotalAlloc = %v\nSys = %v\nNumGC = %v\n\n", m.Alloc/1024, m.TotalAlloc/1024, m.Sys/1024, m.NumGC)
 	}
 }

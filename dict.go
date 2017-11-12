@@ -1,7 +1,9 @@
 package gohash
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"sort"
 	"strings"
@@ -85,7 +87,8 @@ func (d *Dictionary) Find() (string, string, error) {
 			d.algo = algo // XXX slow to copy in hot path
 
 			for _, guess := range guesses {
-				if d.equals(algo, &guess) {
+				r := bytes.NewReader(guess)
+				if d.equals(algo, r) {
 					return line, algo, nil
 				}
 			}
@@ -112,8 +115,8 @@ func reverse(b []byte) []byte {
 	return res
 }
 
-func (d *Dictionary) equals(algo string, buffer *[]byte) bool {
-	calc := NewCalculator(*buffer)
+func (d *Dictionary) equals(algo string, r io.Reader) bool {
+	calc := NewCalculator(r)
 	sum, _ := calc.Sum(algo)
 	return byteArrayEquals(sum, d.expected)
 }

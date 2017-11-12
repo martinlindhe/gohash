@@ -54,7 +54,7 @@ func TestSequentialHasher(t *testing.T) {
 		hasher.Algo(algo)
 		hasher.Length(rev.length)
 		hasher.AllowedKeys(rev.allowedKeys)
-		hasher.ExpectedHash(rev.hash) // XXX "Hash()" ...
+		hasher.ExpectedHash(rev.hash)
 
 		res, err := hasher.FindSequential()
 		assert.Equal(t, nil, err)

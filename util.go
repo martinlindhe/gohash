@@ -2,7 +2,7 @@ package gohash
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"sort"
 
@@ -60,27 +60,22 @@ func (a byteSlice) Less(i, j int) bool { return a[i] < a[j] }
 
 // AppInputData is the captured input to the app, either from a pipe or a file
 type AppInputData struct {
-	Data   []byte
+	Reader io.Reader
 	IsPipe bool
 }
 
 // ReadPipeOrFile reads from stdin if pipe exists, else from provided file
 func ReadPipeOrFile(fileName string) (*AppInputData, error) {
-
 	res := AppInputData{}
-
 	if !termutil.Isatty(os.Stdin.Fd()) {
-		res.Data, _ = ioutil.ReadAll(os.Stdin)
+		res.Reader = os.Stdin
 		res.IsPipe = true
 	} else {
 		if fileName == "" {
 			return nil, fmt.Errorf("no piped data and no file provided")
 		}
-		var err error
-		res.Data, err = ioutil.ReadFile(fileName)
-		if err != nil {
-			return &res, err
-		}
+		file, _ := os.Open(fileName)
+		res.Reader = io.Reader(file)
 	}
 	return &res, nil
 }

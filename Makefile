@@ -14,3 +14,11 @@ update-vendor:
 
 release:
 	goreleaser --rm-dist
+
+test:
+	go test -v
+
+profile-mem:
+	rm mem.prof
+	go test --memprofile=mem.prof
+	go tool pprof --alloc_space --text mem.prof

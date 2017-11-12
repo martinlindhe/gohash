@@ -1,6 +1,7 @@
 package gohash
 
 import (
+	"bytes"
 	"fmt"
 	"math/rand"
 	"strings"
@@ -208,7 +209,8 @@ func (h *Hasher) verify() error {
 }
 
 func (h *Hasher) equals() bool {
-	calc := NewCalculator(h.buffer)
+	r := bytes.NewReader(h.buffer)
+	calc := NewCalculator(r)
 	sum, _ := calc.Sum(h.algo)
 	return byteArrayEquals(sum, h.expected)
 }

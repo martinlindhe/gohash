@@ -1,6 +1,7 @@
 package gohash
 
 import (
+	"bytes"
 	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha256"
@@ -11,6 +12,7 @@ import (
 	"hash/crc32"
 	"hash/crc64"
 	"hash/fnv"
+	"io"
 	"sort"
 
 	"github.com/cxmcc/tiger"
@@ -36,13 +38,13 @@ import (
 
 // Calculator is used to calculate hash of input cleartext
 type Calculator struct {
-	data []byte
+	reader io.Reader
 }
 
 // NewCalculator creates a new Calculator
-func NewCalculator(data []byte) *Calculator {
+func NewCalculator(reader io.Reader) *Calculator {
 	return &Calculator{
-		data: data,
+		reader: reader,
 	}
 }
 
@@ -100,7 +102,7 @@ var (
 		"whirlpool":         512,
 	}
 
-	hashers = map[string]func(*[]byte) []byte{
+	hashers = map[string]func(io.Reader) ([]byte, error){
 		"adler32":           adler32Sum,
 		"blake224":          blake224Sum,
 		"blake256":          blake256Sum,
@@ -157,7 +159,7 @@ var (
 func (c *Calculator) Sum(algo string) ([]byte, error) {
 	algo = resolveAlgoAliases(algo)
 	if checksum, ok := hashers[algo]; ok {
-		return checksum(&c.data), nil
+		return checksum(c.reader)
 	}
 	return nil, fmt.Errorf("%s", "FATAL: unknown algo "+algo)
 }
@@ -218,334 +220,416 @@ func resolveAlgoAliases(s string) string {
 	return s
 }
 
-func adler32Sum(b *[]byte) []byte {
-	i := adler32.Checksum(*b)
+func adler32Sum(r io.Reader) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r)
+	i := adler32.Checksum(buf.Bytes())
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
-	return bs
+	return bs, nil
 }
 
-func blake224Sum(b *[]byte) []byte {
-	w := blake256.New224()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func blake224Sum(r io.Reader) ([]byte, error) {
+	h := blake256.New224()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func blake256Sum(b *[]byte) []byte {
-	w := blake256.New()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func blake256Sum(r io.Reader) ([]byte, error) {
+	h := blake256.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func blake384Sum(b *[]byte) []byte {
-	w := blake512.New384()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func blake384Sum(r io.Reader) ([]byte, error) {
+	h := blake512.New384()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func blake512Sum(b *[]byte) []byte {
-	w := blake512.New()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func blake512Sum(r io.Reader) ([]byte, error) {
+	h := blake512.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func blake2b256Sum(b *[]byte) []byte {
-	x := blake2b.Sum256(*b)
-	res := x[:]
-	return res
+func blake2b256Sum(r io.Reader) ([]byte, error) {
+	h := blake2b.New256()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func blake2b512Sum(b *[]byte) []byte {
-	x := blake2b.Sum512(*b)
-	res := x[:]
-	return res
+func blake2b512Sum(r io.Reader) ([]byte, error) {
+	h := blake2b.New512()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func blake2s256Sum(b *[]byte) []byte {
-	x := blake2s.Sum256(*b)
-	res := x[:]
-	return res
+func blake2s256Sum(r io.Reader) ([]byte, error) {
+	h := blake2s.New256()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func crc8AtmSum(b *[]byte) []byte {
-	i := crc8.ChecksumATM(*b)
+func crc8AtmSum(r io.Reader) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r)
+	i := crc8.ChecksumATM(buf.Bytes())
 	bs := make([]byte, 1)
 	bs[0] = i
-	return bs
+	return bs, nil
 }
 
-func crc16CcittSum(b *[]byte) []byte {
-	i := crc16.ChecksumCCITT(*b)
+func crc16CcittSum(r io.Reader) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r)
+	i := crc16.ChecksumCCITT(buf.Bytes())
 	bs := make([]byte, 2)
 	binary.BigEndian.PutUint16(bs, i)
-	return bs
+	return bs, nil
 }
 
-func crc16CcittFalseSum(b *[]byte) []byte {
-	i := crc16.ChecksumCCITTFalse(*b)
+func crc16CcittFalseSum(r io.Reader) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r)
+	i := crc16.ChecksumCCITTFalse(buf.Bytes())
 	bs := make([]byte, 2)
 	binary.BigEndian.PutUint16(bs, i)
-	return bs
+	return bs, nil
 }
 
-func crc16IbmSum(b *[]byte) []byte {
-	i := crc16.ChecksumIBM(*b)
+func crc16IbmSum(r io.Reader) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r)
+	i := crc16.ChecksumIBM(buf.Bytes())
 	bs := make([]byte, 2)
 	binary.BigEndian.PutUint16(bs, i)
-	return bs
+	return bs, nil
 }
 
-func crc16ScsiSum(b *[]byte) []byte {
-	i := crc16.ChecksumSCSI(*b)
+func crc16ScsiSum(r io.Reader) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r)
+	i := crc16.ChecksumSCSI(buf.Bytes())
 	bs := make([]byte, 2)
 	binary.BigEndian.PutUint16(bs, i)
-	return bs
+	return bs, nil
 }
 
-func crc24OpenPGPSum(b *[]byte) []byte {
-	i := crc24.ChecksumOpenPGP(*b)
+func crc24OpenPGPSum(r io.Reader) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r)
+	i := crc24.ChecksumOpenPGP(buf.Bytes())
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
 	bs = bs[1:4]
-	return bs
+	return bs, nil
 }
 
-func crc32IEEESum(b *[]byte) []byte {
-	i := crc32.ChecksumIEEE(*b)
+func crc32IEEESum(r io.Reader) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r)
+	i := crc32.ChecksumIEEE(buf.Bytes())
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
-	return bs
+	return bs, nil
 }
 
-func crc32CastagnoliSum(b *[]byte) []byte {
+func crc32CastagnoliSum(r io.Reader) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r)
 	tbl := crc32.MakeTable(crc32.Castagnoli)
-	i := crc32.Checksum(*b, tbl)
+	i := crc32.Checksum(buf.Bytes(), tbl)
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
-	return bs
+	return bs, nil
 }
 
-func crc32KoopmanSum(b *[]byte) []byte {
+func crc32KoopmanSum(r io.Reader) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r)
 	tbl := crc32.MakeTable(crc32.Koopman)
-	i := crc32.Checksum(*b, tbl)
+	i := crc32.Checksum(buf.Bytes(), tbl)
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
-	return bs
+	return bs, nil
 }
 
-func crc64ISOSum(b *[]byte) []byte {
+func crc64ISOSum(r io.Reader) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r)
 	tbl := crc64.MakeTable(crc64.ISO)
-	i := crc64.Checksum(*b, tbl)
+	i := crc64.Checksum(buf.Bytes(), tbl)
 	bs := make([]byte, 8)
 	binary.BigEndian.PutUint64(bs, i)
-	return bs
+	return bs, nil
 }
 
-func crc64ECMASum(b *[]byte) []byte {
+func crc64ECMASum(r io.Reader) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r)
 	tbl := crc64.MakeTable(crc64.ECMA)
-	i := crc64.Checksum(*b, tbl)
+	i := crc64.Checksum(buf.Bytes(), tbl)
 	bs := make([]byte, 8)
 	binary.BigEndian.PutUint64(bs, i)
-	return bs
+	return bs, nil
 }
 
-func fnv1_32Sum(b *[]byte) []byte {
-	w := fnv.New32()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func fnv1_32Sum(r io.Reader) ([]byte, error) {
+	h := fnv.New32()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func fnv1a32Sum(b *[]byte) []byte {
-	w := fnv.New32a()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func fnv1a32Sum(r io.Reader) ([]byte, error) {
+	h := fnv.New32a()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func fnv1_64Sum(b *[]byte) []byte {
-	w := fnv.New64()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func fnv1_64Sum(r io.Reader) ([]byte, error) {
+	h := fnv.New64()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func fnv1a64Sum(b *[]byte) []byte {
-	w := fnv.New64a()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func fnv1a64Sum(r io.Reader) ([]byte, error) {
+	h := fnv.New64a()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func gost94Sum(b *[]byte) []byte {
+func gost94Sum(r io.Reader) ([]byte, error) {
 	h := gost341194.New(gost341194.SboxDefault)
-	h.Write(*b)
-	res := h.Sum(nil)
-	return res
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func gost94CryptoproSum(b *[]byte) []byte {
+func gost94CryptoproSum(r io.Reader) ([]byte, error) {
 	h := gost341194.New(&gost28147.GostR3411_94_CryptoProParamSet)
-	h.Write(*b)
-	res := h.Sum(nil)
-	return res
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func streebog256Sum(b *[]byte) []byte {
+func streebog256Sum(r io.Reader) ([]byte, error) {
 	h := gost34112012256.New()
-	h.Write(*b)
-	res := h.Sum(nil)
-	return res
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func streebog512Sum(b *[]byte) []byte {
+func streebog512Sum(r io.Reader) ([]byte, error) {
 	h := gost34112012512.New()
-	h.Write(*b)
-	res := h.Sum(nil)
-	return res
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func md2Sum(b *[]byte) []byte {
-	w := md2.New()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func md2Sum(r io.Reader) (digest []byte, err error) {
+	h := md2.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func md4Sum(b *[]byte) []byte {
-	w := md4.New()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func md4Sum(r io.Reader) (digest []byte, err error) {
+	h := md4.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func md5Sum(b *[]byte) []byte {
-	x := md5.Sum(*b)
-	res := x[:]
-	return res
+func md5Sum(r io.Reader) (digest []byte, err error) {
+	h := md5.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func ripemd160Sum(b *[]byte) []byte {
-	w := ripemd160.New()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func ripemd160Sum(r io.Reader) (digest []byte, err error) {
+	h := ripemd160.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func sha1Sum(b *[]byte) []byte {
-	x := sha1.Sum(*b)
-	res := x[:]
-	return res
+func sha1Sum(r io.Reader) (digest []byte, err error) {
+	h := sha1.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(digest[:0]), nil
 }
 
-func sha224Sum(b *[]byte) []byte {
-	x := sha256.Sum224(*b)
-	res := x[:]
-	return res
+func sha224Sum(r io.Reader) (digest []byte, err error) {
+	h := sha256.New224()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(digest[:0]), nil
 }
 
-func sha256Sum(b *[]byte) []byte {
-	x := sha256.Sum256(*b)
-	res := x[:]
-	return res
+func sha256Sum(r io.Reader) (digest []byte, err error) {
+	h := sha256.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(digest[:0]), nil
 }
 
-func sha384Sum(b *[]byte) []byte {
-	x := sha512.Sum384(*b)
-	res := x[:]
-	return res
+func sha384Sum(r io.Reader) (digest []byte, err error) {
+	h := sha512.New384()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(digest[:0]), nil
 }
 
-func sha512Sum(b *[]byte) []byte {
-	x := sha512.Sum512(*b)
-	res := x[:]
-	return res
+func sha512Sum(r io.Reader) (digest []byte, err error) {
+	h := sha512.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(digest[:0]), nil
 }
 
-func sha512_224Sum(b *[]byte) []byte {
-	x := sha512.Sum512_224(*b)
-	res := x[:]
-	return res
+func sha512_224Sum(r io.Reader) (digest []byte, err error) {
+	h := sha512.New512_224()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(digest[:0]), nil
 }
 
-func sha512_256Sum(b *[]byte) []byte {
-	x := sha512.Sum512_256(*b)
-	res := x[:]
-	return res
+func sha512_256Sum(r io.Reader) (digest []byte, err error) {
+	h := sha512.New512_256()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(digest[:0]), nil
 }
 
-func sha3_224Sum(b *[]byte) []byte {
-	x := sha3.Sum224(*b)
-	res := x[:]
-	return res
+func sha3_224Sum(r io.Reader) (digest []byte, err error) {
+	h := sha3.New224()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(digest[:0]), nil
 }
 
-func sha3_256Sum(b *[]byte) []byte {
-	x := sha3.Sum256(*b)
-	res := x[:]
-	return res
+func sha3_256Sum(r io.Reader) (digest []byte, err error) {
+	h := sha3.New256()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(digest[:0]), nil
 }
 
-func sha3_384Sum(b *[]byte) []byte {
-	x := sha3.Sum384(*b)
-	res := x[:]
-	return res
+func sha3_384Sum(r io.Reader) (digest []byte, err error) {
+	h := sha3.New384()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(digest[:0]), nil
 }
 
-func sha3_512Sum(b *[]byte) []byte {
-	x := sha3.Sum512(*b)
-	res := x[:]
-	return res
+func sha3_512Sum(r io.Reader) (digest []byte, err error) {
+	h := sha3.New512()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(digest[:0]), nil
 }
 
-func shake128_256Sum(b *[]byte) []byte {
-	res := make([]byte, 32)
-	sha3.ShakeSum128(res, *b)
-	return res
+func shake128_256Sum(r io.Reader) ([]byte, error) {
+	res := make([]byte, 32) // 256 bits
+	h := sha3.NewShake128()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	h.Read(res)
+	return res, nil
 }
 
-func shake256_512Sum(b *[]byte) []byte {
-	res := make([]byte, 64)
-	sha3.ShakeSum256(res, *b)
-	return res
+func shake256_512Sum(r io.Reader) ([]byte, error) {
+	res := make([]byte, 64) // 512 bits
+	h := sha3.NewShake256()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	h.Read(res)
+	return res, nil
 }
 
-func siphash2_4Sum(b *[]byte) []byte {
+func siphash2_4Sum(r io.Reader) ([]byte, error) {
 	key := make([]byte, 16) // NOTE using empty key
-	w := siphash.New(key)
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+	h := siphash.New(key)
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func skein512_256Sum(b *[]byte) []byte {
-	w := skein.NewHash(32)
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func skein512_256Sum(r io.Reader) ([]byte, error) {
+	h := skein.NewHash(32)
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func skein512_512Sum(b *[]byte) []byte {
-	w := skein.NewHash(64)
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func skein512_512Sum(r io.Reader) ([]byte, error) {
+	h := skein.NewHash(64)
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func tiger192Sum(b *[]byte) []byte {
-	w := tiger.New()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func tiger192Sum(r io.Reader) ([]byte, error) {
+	h := tiger.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
-func whirlpoolSum(b *[]byte) []byte {
-	w := whirlpool.New()
-	w.Write(*b)
-	res := w.Sum(nil)
-	return res
+func whirlpoolSum(r io.Reader) ([]byte, error) {
+	h := whirlpool.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
