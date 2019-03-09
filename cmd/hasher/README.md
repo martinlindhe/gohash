@@ -27,7 +27,7 @@ $ hasher -i file.dat sha1
 
 ```
 $ hasher -i file.dat sha1 --bsd
-SHA1 (README.md) = 57864a11ea26b249cd63e48117852366db0737da
+SHA1 (file.dat) = 57864a11ea26b249cd63e48117852366db0737da
 ```
 
 
