@@ -23,6 +23,13 @@ $ hasher -i file.dat sha1
 57864a11ea26b249cd63e48117852366db0737da  file.dat
 ```
 
+### Output result in BSD style
+
+```
+$ hasher -i file.dat sha1 --bsd
+SHA1 (README.md) = 57864a11ea26b249cd63e48117852366db0737da
+```
+
 
 ### Available hash algorithms
 ```

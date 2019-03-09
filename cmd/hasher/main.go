@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 
 	"github.com/aybabtme/color/brush"
 	"github.com/martinlindhe/gohash"
@@ -20,6 +21,7 @@ var (
 	skipFilename  = kingpin.Flag("skip-filename", "Don't output filename.").Bool()
 	reverseBytes  = kingpin.Flag("reverse-bytes", "Reverse byte order of displayed hex value.").Bool()
 	debugAllocs   = kingpin.Flag("debug-allocs", "Debugging: print memory allocations at end of execution.").Bool()
+	bsdSyntax     = kingpin.Flag("bsd", "Output result in BSD syntax.").Bool()
 )
 
 func main() {
@@ -71,13 +73,22 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("%s", brush.Yellow(encodedHash))
-	if !*skipFilename {
-		if r.IsPipe {
-			*fileName = "-"
-		}
-		fmt.Printf("  %s", brush.White(*fileName))
+	if r.IsPipe {
+		*fileName = "-"
 	}
+	if *bsdSyntax {
+		fmt.Printf("%s (%s) = ", strings.ToUpper(*algo), brush.White(*fileName))
+		fmt.Printf("%s", brush.Yellow(encodedHash))
+	} else {
+		fmt.Printf("%s", brush.Yellow(encodedHash))
+		if !*skipFilename {
+			if r.IsPipe {
+				*fileName = "-"
+			}
+			fmt.Printf("  %s", brush.White(*fileName))
+		}
+	}
+
 	if !*skipNewline {
 		fmt.Println()
 	}
