@@ -15,7 +15,7 @@ const (
 )
 
 var (
-	encoding = NewEncoding(UUAlphabet)
+	encoding = NewEncoding(UUAlphabet).WithPadding(NoPadding)
 )
 
 // Decoded holds result from uuencoded decode
@@ -49,7 +49,7 @@ func Decode(data []byte) (*Decoded, error) {
 	if rows[len(rows)-2] != "end" {
 		return dec, errors.New("invalid format: no 'end' marker found")
 	}
-	if rows[len(rows)-3] != "`" {
+	if rows[len(rows)-3] != "`" && rows[len(rows)-3] != " " {
 		return dec, errors.New("invalid ending format")
 	}
 
@@ -123,7 +123,7 @@ func EncodeBlock(data []byte) ([]byte, error) {
 			break
 		}
 		out = append(out, byte(n+32)) // length
-		out = append(out, encoding.EncodeToString(inputBlock)...)
+		out = append(out, encoding.EncodeToString(inputBlock[:n])...)
 		out = append(out, '\n')
 	}
 	return out, nil

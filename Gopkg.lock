@@ -3,187 +3,302 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:f3793f8a708522400cef1dba23385e901aede5519f68971fd69938ef330b07a1"
   name = "github.com/alecthomas/template"
-  packages = [".","parse"]
+  packages = [
+    ".",
+    "parse",
+  ]
+  pruneopts = "NUT"
   revision = "a0175ee3bccc567396460bf5acd36800cb10c49c"
 
 [[projects]]
   branch = "master"
+  digest = "1:fdd419e104ec26bb5bd63cc62637c640453ed2929a7453f3afadbd9a0223da66"
   name = "github.com/alecthomas/units"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "2efee857e7cfd4f3d0138cc3cbb1b4966962b93a"
 
 [[projects]]
   branch = "master"
+  digest = "1:9c94adb84080287919cda31447549e0ce8f8cc2067e19ce51537cf4572868d36"
   name = "github.com/andrew-d/go-termutil"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "009166a695a2f516c749a26b4ac1f183d89aa336"
 
 [[projects]]
   branch = "master"
+  digest = "1:ba7c0f86c6fa7ab36705367cf20c401922f2803b6d35967d56372e9f03e1c441"
   name = "github.com/aybabtme/color"
-  packages = [".","brush"]
+  packages = [
+    ".",
+    "brush",
+  ]
+  pruneopts = "NUT"
   revision = "28ad4cc941d69a60df8d0af1233fd5a2793c2801"
 
 [[projects]]
   branch = "master"
+  digest = "1:47de3d30c753182dbffb0d91bf51eef55b2b2d674e28e4e397bca7aa391d8593"
   name = "github.com/bproctor/base91"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "7de6f1dd34e89e8e836def19d458e9969d6cce33"
 
 [[projects]]
   branch = "master"
+  digest = "1:dab42edf619d779ed0b5af804b7a22aa69276edf2bfd7a4a4af13ab799290ad6"
   name = "github.com/cxmcc/tiger"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "bde35e2713d7f674987c2ecb21a6b0fc33749516"
 
 [[projects]]
+  digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
-  revision = "346938d642f2ec3594ed81d874461961cd0faa76"
-  version = "v1.1.0"
+  pruneopts = "NUT"
+  revision = "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
+  version = "v1.1.1"
 
 [[projects]]
   branch = "master"
+  digest = "1:1f0a8a8555d3e8700db3c2ac4c2acff5accb1e20601c91200a5d907781d58343"
   name = "github.com/dchest/blake256"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "dee3fe6eb0e98dc774a94fc231f85baf7c29d360"
 
 [[projects]]
   branch = "master"
+  digest = "1:f370e2eebadc63e19fcfcfe8f69321cc148f2d149a5f4830243f7e7298b2695d"
   name = "github.com/dchest/blake2b"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "06006a921c7d13e3fdf63c401cb0e4529a26e6e4"
 
 [[projects]]
   branch = "master"
+  digest = "1:bed96b30ee8d35c4b2b0a050bac31c8b844dbf53d332d0236627f742f12ecb55"
   name = "github.com/dchest/blake2s"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "02243320b5c6ff2a5f758dd42d8d4bb2c04e4896"
 
 [[projects]]
   branch = "master"
+  digest = "1:0d092d6f1f549d1e2c8629936271728c4fcfad8413b23bfcbd1d8383a75e212f"
   name = "github.com/dchest/blake512"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "9668dfef2d239349500b23b60834fbf1817546fb"
 
 [[projects]]
+  digest = "1:1605a72a775deccb79dcf7561f311270dfe79a4da8dec0d951f37610cfff2832"
   name = "github.com/dchest/siphash"
   packages = ["."]
-  revision = "42ba037e748c9062a75e0924705c43b893edefcd"
-  version = "v1.0.0"
+  pruneopts = "NUT"
+  revision = "34f201214d993633bb24f418ba11736ab8b55aa7"
+  version = "v1.2.1"
 
 [[projects]]
   branch = "master"
+  digest = "1:bc2b59e13e0a6a7c7487ab2bbc9fca58b0b6e41f5830b4fbd5b1cadfad0472ee"
   name = "github.com/dchest/skein"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "d7f1022db3907c43a432c6ed55bb0e23e644d415"
 
 [[projects]]
   branch = "master"
+  digest = "1:52c5834e2bebac9030c97cc0798ac11c3aa8a39f098aeb419f142533da6cd3cc"
   name = "github.com/google/gofuzz"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "24818f796faf91cd76ec7bddd72458fbced7a6c1"
 
 [[projects]]
   branch = "master"
+  digest = "1:2cddeb16ec58b8cdc46eb130de63d7132b3794f251dca9b33609871d0b8768d5"
   name = "github.com/howeyc/crc16"
   packages = ["."]
-  revision = "96a97a1abb579c7ff1a8ffa77f2e72d1c314b57f"
+  pruneopts = "NUT"
+  revision = "2b2a61e366a66d3efb279e46176e7291001e0354"
 
 [[projects]]
   branch = "master"
+  digest = "1:440039a0ec3fdafcba96d45e5081f849072641322a87b65e01d25b669c19891a"
   name = "github.com/htruong/go-md2"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "c69905b63f6f975561782d98caf92063200b6fb6"
 
 [[projects]]
+  digest = "1:2a11af5d4103831079dabd6a18cf215edaaf6f6e1447f436bfb9323919a42cce"
   name = "github.com/jbenet/go-base58"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "6237cf65f3a6f7111cd8a42be3590df99a66bc7d"
   version = "1.0.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:10b4c63c075afb1e1894efe948bf3c9ee42cfad1f2b552d575090606dbaf5d5c"
   name = "github.com/jzelinskie/whirlpool"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "c19460b8caa623b49cd9060e866f812c4b10c4ce"
 
 [[projects]]
   branch = "master"
+  digest = "1:23ffae70055f9e10c20f42157f8bcd9fa00fc5241ab453eaac3850541639ad0d"
   name = "github.com/martinlindhe/base36"
   packages = ["."]
-  revision = "44e007f2c95e7c7396eb67802b9bd1ac9123785f"
+  pruneopts = "NUT"
+  revision = "5cda0030da1725952be91a1223090c4ecef8dfb2"
 
 [[projects]]
   branch = "master"
+  digest = "1:485a15088519f8f99b6d21c3642c236cda494ea35cb79fa8d74428a1d31d3ed1"
   name = "github.com/martinlindhe/bubblebabble"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "a0a549d8557a2f4cf6806270a12bab934c02f047"
 
 [[projects]]
   branch = "master"
+  digest = "1:78c9795bbb4116639164ef9db432d2ad7eb10db9bf552f743edca502099545a5"
   name = "github.com/martinlindhe/crc24"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "2a4d832456161cadefab118b4821708aecc8d272"
 
 [[projects]]
   branch = "master"
+  digest = "1:176e1389b38dd5ff5bc2384d1df5d3ecd4323955eb1a36a92e73cfc1ed35f451"
   name = "github.com/martinlindhe/gogost"
-  packages = ["gost28147","gost34112012256","gost34112012512","gost341194","internal/gost34112012"]
+  packages = [
+    "gost28147",
+    "gost34112012256",
+    "gost34112012512",
+    "gost341194",
+    "internal/gost34112012",
+  ]
+  pruneopts = "NUT"
   revision = "31862914ae2006dd114c1224522d8fe6bd91b295"
 
 [[projects]]
   branch = "master"
+  digest = "1:548cb402cd8d1343594c97ab97d78f965c005870d5f493ebdcae104536f5aa7f"
   name = "github.com/martinlindhe/uu"
   packages = ["."]
-  revision = "09dbe06d0c0b786419d4a61d67b261902bdc18ad"
+  pruneopts = "NUT"
+  revision = "27d928e7b0bb240a872b9a1ae8bc2f9dbf7c587b"
 
 [[projects]]
+  digest = "1:7915fb4c76656bd65d4a6e0350491fe0ee97e77655297dcb92c9761fb88efa7b"
   name = "github.com/mewpkg/hashutil"
   packages = ["crc8"]
+  pruneopts = "NUT"
   revision = "576638dc68739d767ffde05d1b4f62e3c0659639"
   version = "v1.0.1"
 
 [[projects]]
+  digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
+  pruneopts = "NUT"
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:42e8c2456d7ec0f31e182c20022e74324c4da2cb3bd9069ff9b131fe33466308"
   name = "github.com/stretchr/testify"
   packages = ["assert"]
-  revision = "69483b4bd14f5845b5a1e55bca19e954e827f1d0"
-  version = "v1.1.4"
+  pruneopts = "NUT"
+  revision = "ffdc059bfe9ce6a4e144ba849dbedead332c6053"
+  version = "v1.3.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:672dc0104ce884199d0dba65c70126a0117d6b853bb696c5ccda309088c58278"
   name = "github.com/tilinna/z85"
   packages = ["."]
-  revision = "5caf146023ad64452767a53d9f5a9e40bddcdc6d"
+  pruneopts = "NUT"
+  revision = "b14483f97fd6af6707e318598e6ba519a0af3f6f"
 
 [[projects]]
   branch = "master"
+  digest = "1:9a51d4c183b4fc318a108e31aa45f48c81ad4fe1b589b54a5deedbfc783c1030"
   name = "golang.org/x/crypto"
-  packages = ["md4","ripemd160","sha3"]
-  revision = "6a293f2d4b14b8e6d3f0539e383f6d0d30fce3fd"
+  packages = [
+    "md4",
+    "ripemd160",
+    "sha3",
+  ]
+  pruneopts = "NUT"
+  revision = "c2843e01d9a2bc60bb26ad24e09734fdc2d9ec58"
 
 [[projects]]
+  branch = "master"
+  digest = "1:5179fde7a9603edf900af00ba8934e67d1ab0408f27e3e573a868f5f663585a7"
+  name = "golang.org/x/sys"
+  packages = ["cpu"]
+  pruneopts = "NUT"
+  revision = "584f3b12f43e1e55248c90e84804777009eed0a4"
+
+[[projects]]
+  digest = "1:22b2dee6f30bc8601f087449a2a819df8388e54e9547349c658f14d8f8c590f2"
   name = "gopkg.in/alecthomas/kingpin.v2"
   packages = ["."]
-  revision = "1087e65c9441605df944fb12c33f0fe7072d18ca"
-  version = "v2.2.5"
+  pruneopts = "NUT"
+  revision = "947dcec5ba9c011838740e680966fd7087a71d0d"
+  version = "v2.2.6"
 
 [[projects]]
+  digest = "1:9e656cb92b124b784edf4e7b44a6f18f0ceb3c44ea81497434a8e6937567b6ca"
   name = "gopkg.in/mewpkg/hashutil.v1"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "576638dc68739d767ffde05d1b4f62e3c0659639"
   version = "v1.0.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6dc5abe32fe3598ae3d99e0f02d3c668cf2ffcd26ba849588e73c8e817655698"
+  input-imports = [
+    "github.com/andrew-d/go-termutil",
+    "github.com/aybabtme/color/brush",
+    "github.com/bproctor/base91",
+    "github.com/cxmcc/tiger",
+    "github.com/dchest/blake256",
+    "github.com/dchest/blake2b",
+    "github.com/dchest/blake2s",
+    "github.com/dchest/blake512",
+    "github.com/dchest/siphash",
+    "github.com/dchest/skein",
+    "github.com/google/gofuzz",
+    "github.com/howeyc/crc16",
+    "github.com/htruong/go-md2",
+    "github.com/jbenet/go-base58",
+    "github.com/jzelinskie/whirlpool",
+    "github.com/martinlindhe/base36",
+    "github.com/martinlindhe/bubblebabble",
+    "github.com/martinlindhe/crc24",
+    "github.com/martinlindhe/gogost/gost28147",
+    "github.com/martinlindhe/gogost/gost34112012256",
+    "github.com/martinlindhe/gogost/gost34112012512",
+    "github.com/martinlindhe/gogost/gost341194",
+    "github.com/martinlindhe/uu",
+    "github.com/mewpkg/hashutil/crc8",
+    "github.com/stretchr/testify/assert",
+    "github.com/tilinna/z85",
+    "golang.org/x/crypto/md4",
+    "golang.org/x/crypto/ripemd160",
+    "golang.org/x/crypto/sha3",
+    "gopkg.in/alecthomas/kingpin.v2",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
