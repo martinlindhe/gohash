@@ -213,11 +213,14 @@ func decodeBubbleBabble(src []byte) ([]byte, error) {
 }
 
 func encodeDecimal(src []byte) ([]byte, error) {
-	res := ""
-	for _, b := range src {
-		res += fmt.Sprintf("%d", b) + separator
+	var res bytes.Buffer
+	for n, b := range src {
+		fmt.Fprintf(&res, "%d", b)
+		if n < len(src)-1 {
+			res.WriteString(separator)
+		}
 	}
-	return []byte(strings.TrimRight(res, separator)), nil
+	return res.Bytes(), nil
 }
 
 func decodeDecimal(src []byte) ([]byte, error) {
