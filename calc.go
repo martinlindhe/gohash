@@ -365,23 +365,19 @@ func crc32KoopmanSum(r io.Reader) ([]byte, error) {
 }
 
 func crc64ISOSum(r io.Reader) ([]byte, error) {
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(r)
-	tbl := crc64.MakeTable(crc64.ISO)
-	i := crc64.Checksum(buf.Bytes(), tbl)
-	bs := make([]byte, 8)
-	binary.BigEndian.PutUint64(bs, i)
-	return bs, nil
+	h := crc64.New(crc64.MakeTable(crc64.ISO))
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
 func crc64ECMASum(r io.Reader) ([]byte, error) {
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(r)
-	tbl := crc64.MakeTable(crc64.ECMA)
-	i := crc64.Checksum(buf.Bytes(), tbl)
-	bs := make([]byte, 8)
-	binary.BigEndian.PutUint64(bs, i)
-	return bs, nil
+	h := crc64.New(crc64.MakeTable(crc64.ECMA))
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
 func fnv1_32Sum(r io.Reader) ([]byte, error) {

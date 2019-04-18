@@ -250,3 +250,19 @@ func BenchmarkCrc32Koopman(b *testing.B) {
 		calc.Sum("crc32-koopman")
 	}
 }
+
+func BenchmarkCrc64ISO(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
+		calc := NewCalculator(r)
+		calc.Sum("crc64-iso")
+	}
+}
+
+func BenchmarkCrc64ECMA(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
+		calc := NewCalculator(r)
+		calc.Sum("crc64-ecma")
+	}
+}
