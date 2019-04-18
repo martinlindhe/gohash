@@ -254,12 +254,14 @@ func decodeHex(src []byte) ([]byte, error) {
 }
 
 func encodeOctal(src []byte) ([]byte, error) {
-	res := ""
-	for _, b := range src {
-		res += fmt.Sprintf("%#o", b) + separator
+	var res bytes.Buffer
+	for n, b := range src {
+		fmt.Fprintf(&res, "%#o", b)
+		if n < len(src)-1 {
+			res.WriteString(separator)
+		}
 	}
-
-	return []byte(strings.TrimRight(res, separator)), nil
+	return res.Bytes(), nil
 }
 
 func decodeOctal(src []byte) ([]byte, error) {
