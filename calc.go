@@ -357,13 +357,11 @@ func crc32CastagnoliSum(r io.Reader) ([]byte, error) {
 }
 
 func crc32KoopmanSum(r io.Reader) ([]byte, error) {
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(r)
-	tbl := crc32.MakeTable(crc32.Koopman)
-	i := crc32.Checksum(buf.Bytes(), tbl)
-	bs := make([]byte, 4)
-	binary.BigEndian.PutUint32(bs, i)
-	return bs, nil
+	h := crc32.New(crc32.MakeTable(crc32.Koopman))
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
 func crc64ISOSum(r io.Reader) ([]byte, error) {

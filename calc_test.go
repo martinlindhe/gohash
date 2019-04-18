@@ -242,3 +242,11 @@ func BenchmarkCrc32Castagnoli(b *testing.B) {
 		calc.Sum("crc32-castagnoli")
 	}
 }
+
+func BenchmarkCrc32Koopman(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
+		calc := NewCalculator(r)
+		calc.Sum("crc32-koopman")
+	}
+}
