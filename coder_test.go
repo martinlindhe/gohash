@@ -3,7 +3,7 @@ package gohash
 import (
 	"testing"
 
-	"github.com/google/gofuzz"
+	fuzz "github.com/google/gofuzz"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -221,4 +221,11 @@ func TestDecodeASCII85(t *testing.T) {
 	res, err := decodeASCII85([]byte(s))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "hello", string(res))
+}
+
+func BenchmarkEncodeBinary(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		coder := NewCoder("binary")
+		coder.Encode([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4f, 0x2a, 0x48, 0x4f, 0x2a})
+	}
 }

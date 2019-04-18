@@ -180,11 +180,14 @@ func decodeBase91(src []byte) ([]byte, error) {
 }
 
 func encodeBinary(src []byte) ([]byte, error) {
-	res := ""
-	for _, b := range src {
-		res += fmt.Sprintf("%08b", b) + separator
+	var res bytes.Buffer
+	for n, b := range src {
+		fmt.Fprintf(&res, "%08b", b)
+		if n < len(src)-1 {
+			res.WriteString(separator)
+		}
 	}
-	return []byte(strings.TrimRight(res, separator)), nil
+	return res.Bytes(), nil
 }
 
 func decodeBinary(src []byte) ([]byte, error) {
