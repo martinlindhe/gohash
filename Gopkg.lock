@@ -117,7 +117,7 @@
   name = "github.com/google/gofuzz"
   packages = ["."]
   pruneopts = "NUT"
-  revision = "24818f796faf91cd76ec7bddd72458fbced7a6c1"
+  revision = "f140a6486e521aad38f5917de355cbf147cc0496"
 
 [[projects]]
   branch = "master"
@@ -153,11 +153,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:23ffae70055f9e10c20f42157f8bcd9fa00fc5241ab453eaac3850541639ad0d"
+  digest = "1:9ccdb2f2c793ae7ff5ce3fe2e803d3d2466d5824f8b87fb839b691e5782afccf"
   name = "github.com/martinlindhe/base36"
   packages = ["."]
   pruneopts = "NUT"
-  revision = "5cda0030da1725952be91a1223090c4ecef8dfb2"
+  revision = "7c6542dfbb41505111dde1f321eb5d5002f5fb88"
 
 [[projects]]
   branch = "master"
@@ -231,7 +231,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:9a51d4c183b4fc318a108e31aa45f48c81ad4fe1b589b54a5deedbfc783c1030"
+  digest = "1:fd008f400bb2a930bfb7ab104f0f122585b12f3a91372a2a02764e9a60387d15"
   name = "golang.org/x/crypto"
   packages = [
     "md4",
@@ -239,15 +239,18 @@
     "sha3",
   ]
   pruneopts = "NUT"
-  revision = "c2843e01d9a2bc60bb26ad24e09734fdc2d9ec58"
+  revision = "df01cb2cc480549d72034218dd98bf97671450ac"
 
 [[projects]]
   branch = "master"
-  digest = "1:5179fde7a9603edf900af00ba8934e67d1ab0408f27e3e573a868f5f663585a7"
+  digest = "1:c5fe329884707cd1c81fa330fa40e2fc6d66f4fab703ca47234bf44c05fcfcd8"
   name = "golang.org/x/sys"
-  packages = ["cpu"]
+  packages = [
+    "cpu",
+    "unix",
+  ]
   pruneopts = "NUT"
-  revision = "584f3b12f43e1e55248c90e84804777009eed0a4"
+  revision = "f0ce4c0180bef7e9c51babed693a6e47fdd8962f"
 
 [[projects]]
   digest = "1:22b2dee6f30bc8601f087449a2a819df8388e54e9547349c658f14d8f8c590f2"
