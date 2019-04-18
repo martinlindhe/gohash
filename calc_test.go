@@ -227,6 +227,14 @@ func ExampleNewCalculator() {
 	// Output: 2aae6c35c94fcfb415dbe95f408b9ce91ee846ed
 }
 
+func BenchmarkCrc8ATM(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
+		calc := NewCalculator(r)
+		calc.Sum("crc8-atm")
+	}
+}
+
 func BenchmarkCrc32IEEE(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")

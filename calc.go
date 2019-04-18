@@ -286,12 +286,11 @@ func blake2s256Sum(r io.Reader) ([]byte, error) {
 }
 
 func crc8AtmSum(r io.Reader) ([]byte, error) {
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(r)
-	i := crc8.ChecksumATM(buf.Bytes())
-	bs := make([]byte, 1)
-	bs[0] = i
-	return bs, nil
+	h := crc8.NewATM()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
 func crc16CcittSum(r io.Reader) ([]byte, error) {
