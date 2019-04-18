@@ -226,3 +226,11 @@ func ExampleNewCalculator() {
 	fmt.Printf("%x", h)
 	// Output: 2aae6c35c94fcfb415dbe95f408b9ce91ee846ed
 }
+
+func BenchmarkCrc32IEEE(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
+		calc := NewCalculator(r)
+		calc.Sum("crc32-ieee")
+	}
+}
