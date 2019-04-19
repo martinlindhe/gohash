@@ -259,6 +259,21 @@ func BenchmarkCrc16IBM(b *testing.B) {
 	}
 }
 
+func BenchmarkCrc16SCSI(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
+		calc := NewCalculator(r)
+		calc.Sum("crc16-scsi")
+	}
+}
+
+func BenchmarkCrc24OpenPGP(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
+		calc := NewCalculator(r)
+		calc.Sum("crc24-openpgp")
+	}
+}
 func BenchmarkCrc32IEEE(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")

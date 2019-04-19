@@ -320,12 +320,11 @@ func crc16IbmSum(r io.Reader) ([]byte, error) {
 }
 
 func crc16ScsiSum(r io.Reader) ([]byte, error) {
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(r)
-	i := crc16.ChecksumSCSI(buf.Bytes())
-	bs := make([]byte, 2)
-	binary.BigEndian.PutUint16(bs, i)
-	return bs, nil
+	h := crc16.New(crc16.SCSITable)
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
 func crc24OpenPGPSum(r io.Reader) ([]byte, error) {
