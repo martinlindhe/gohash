@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"log"
 	"os"
@@ -50,10 +49,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(r.Reader)
-
-	res, err := gohash.RecodeInput(encodings, buf.Bytes(), *decode)
+	res, err := gohash.RecodeInput(encodings, r.Reader, *decode)
 	if err != nil {
 		log.Fatal("error:", err)
 	}

@@ -55,7 +55,7 @@ func (d *Dictionary) Suffix(s string) { d.suffix = s }
 
 // ExpectedHash sets the expected hash
 func (d *Dictionary) ExpectedHash(expected string) {
-	tmp, _ := decodeHex([]byte(expected))
+	tmp, _ := decodeHex(strings.NewReader(expected))
 	d.expected = tmp[:]
 }
 

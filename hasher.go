@@ -38,7 +38,7 @@ func (h *Hasher) Algo(algo string) {
 
 // ExpectedHash sets the expected hash
 func (h *Hasher) ExpectedHash(expected string) {
-	tmp, _ := decodeHex([]byte(expected))
+	tmp, _ := decodeHex(strings.NewReader(expected))
 	h.expected = tmp[:]
 }
 

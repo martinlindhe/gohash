@@ -1,6 +1,8 @@
 package gohash
 
 import (
+	"bytes"
+	"strings"
 	"testing"
 
 	fuzz "github.com/google/gofuzz"
@@ -87,7 +89,7 @@ func TestCalcExpectedEncodings(t *testing.T) {
 	for algo, forms := range expectedEncodings {
 		for form, hash := range forms {
 			coder := NewCoder(algo)
-			res, err := coder.Encode([]byte(form))
+			res, err := coder.Encode(strings.NewReader(form))
 			assert.Equal(t, nil, err, algo)
 			assert.Equal(t, hash, string(res), algo)
 		}
@@ -99,7 +101,7 @@ func TestCalcExpectedDecodings(t *testing.T) {
 		if forms, ok := expectedEncodings[algo]; ok {
 			for clear, coded := range forms {
 				coder := NewCoder(algo)
-				res, err := coder.Decode([]byte(coded))
+				res, err := coder.Decode(strings.NewReader(coded))
 				if err != nil {
 					t.Error(algo, coded, err)
 				} else {
@@ -129,11 +131,11 @@ func TestFuzzEncoders(t *testing.T) {
 				rnd = rnd[0:n]
 			}
 			coder := NewCoder(algo)
-			enc, err := coder.Encode(rnd)
+			enc, err := coder.Encode(bytes.NewReader(rnd))
 			assert.Equal(t, nil, err, algo)
 
 			if err == nil {
-				dec, err := coder.Decode(enc)
+				dec, err := coder.Decode(bytes.NewReader(enc))
 				assert.Equal(t, nil, err, algo)
 				if err == nil {
 					assert.Equal(t, string(rnd), string(dec), algo+" decode of "+string(enc))
@@ -150,67 +152,67 @@ func TestFuzzDecoders(t *testing.T) {
 			rnd := ""
 			f.Fuzz(&rnd)
 			coder := NewCoder(algo)
-			coder.Decode([]byte(rnd))
+			coder.Decode(strings.NewReader(rnd))
 		}
 	}
 }
 
 func TestEncodeZ85(t *testing.T) {
-	res, err := encodeZ85([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B})
+	res, err := encodeZ85(bytes.NewReader([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B}))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "HelloWorld", string(res))
 }
 
 func TestDecodeHexWithSpaces(t *testing.T) {
-	res, err := decodeHex([]byte("48 4f 2a"))
+	res, err := decodeHex(strings.NewReader("48 4f 2a"))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, []byte{0x48, 0x4f, 0x2a}, res)
 }
 
 func TestRecodeInputEncodeSingle(t *testing.T) {
-	res, err := RecodeInput([]string{"base64"}, []byte("hello"), false)
+	res, err := RecodeInput([]string{"base64"}, strings.NewReader("hello"), false)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "aGVsbG8=", string(res))
 }
 
 func TestRecodeInputDecodeSingle(t *testing.T) {
-	res, err := RecodeInput([]string{"base64"}, []byte("aGVsbG8="), true)
+	res, err := RecodeInput([]string{"base64"}, strings.NewReader("aGVsbG8="), true)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "hello", string(res))
 }
 
 func TestRecodeInputDecodeChain(t *testing.T) {
-	res, err := RecodeInput([]string{"hex", "base64"}, []byte("614756736247383d"), true)
+	res, err := RecodeInput([]string{"hex", "base64"}, strings.NewReader("614756736247383d"), true)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "hello", string(res))
 }
 
 func TestDecodeOctal(t *testing.T) {
-	res, err := decodeOctal([]byte{})
+	res, err := decodeOctal(bytes.NewReader([]byte{}))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, []byte{}, res)
 
-	res, err = decodeOctal([]byte("0377"))
+	res, err = decodeOctal(strings.NewReader("0377"))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, []byte{0xff}, res)
 }
 
 func TestDecodeBinary(t *testing.T) {
-	res, err := decodeBinary([]byte{})
+	res, err := decodeBinary(bytes.NewReader([]byte{}))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, []byte{}, res)
 
-	res, err = decodeBinary([]byte("11111111"))
+	res, err = decodeBinary(strings.NewReader("11111111"))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, []byte{0xff}, res)
 }
 
 func TestDecodeDecimal(t *testing.T) {
-	res, err := decodeDecimal([]byte{})
+	res, err := decodeDecimal(bytes.NewReader([]byte{}))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, []byte{}, res)
 
-	res, err = decodeDecimal([]byte("255"))
+	res, err = decodeDecimal(strings.NewReader("255"))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, []byte{0xff}, res)
 }
@@ -218,7 +220,7 @@ func TestDecodeDecimal(t *testing.T) {
 func TestDecodeASCII85(t *testing.T) {
 	s := "<~BOu!rDZ~>"
 
-	res, err := decodeASCII85([]byte(s))
+	res, err := decodeASCII85(strings.NewReader(s))
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "hello", string(res))
 }
@@ -226,20 +228,27 @@ func TestDecodeASCII85(t *testing.T) {
 func BenchmarkEncodeBinary(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		coder := NewCoder("binary")
-		coder.Encode([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4F, 0x2A, 0x48, 0x4F, 0x2A})
+		coder.Encode(bytes.NewReader([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4F, 0x2A, 0x48, 0x4F, 0x2A}))
 	}
 }
 
 func BenchmarkEncodeDecimal(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		coder := NewCoder("decimal")
-		coder.Encode([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4F, 0x2A, 0x48, 0x4F, 0x2A})
+		coder.Encode(bytes.NewReader([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4F, 0x2A, 0x48, 0x4F, 0x2A}))
 	}
 }
 
 func BenchmarkEncodeOctal(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		coder := NewCoder("octal")
-		coder.Encode([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4F, 0x2A, 0x48, 0x4F, 0x2A})
+		coder.Encode(bytes.NewReader([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4F, 0x2A, 0x48, 0x4F, 0x2A}))
+	}
+}
+
+func BenchmarkEncodeASCII85(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		coder := NewCoder("ascii85")
+		coder.Encode(strings.NewReader("zafdklsahdfkjlkajsgdfkhjgajshdgfjklagsdfasdfkjlhskdjgfjhagsdfjhgasjdgfkjh"))
 	}
 }

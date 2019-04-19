@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"runtime"
@@ -67,7 +68,7 @@ func main() {
 	}
 
 	coder := gohash.NewCoder(*encoding)
-	encodedHash, err := coder.Encode(hash)
+	encodedHash, err := coder.Encode(bytes.NewReader(hash))
 	if err != nil {
 		fmt.Println("error", err)
 		os.Exit(1)

@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"sort"
 	"strconv"
@@ -28,7 +29,7 @@ type Coder struct {
 
 var (
 	separator = " "
-	encoders  = map[string]func([]byte) ([]byte, error){
+	encoders  = map[string]func(r io.Reader) ([]byte, error){
 		"ascii85":      encodeASCII85,
 		"base32":       encodeBase32,
 		"base36":       encodeBase36,
@@ -45,7 +46,7 @@ var (
 		"z85":          encodeZ85,
 	}
 
-	decoders = map[string]func([]byte) ([]byte, error){
+	decoders = map[string]func(r io.Reader) ([]byte, error){
 		"ascii85":      decodeASCII85,
 		"base32":       decodeBase32,
 		"base36":       decodeBase36,
@@ -70,18 +71,18 @@ func NewCoder(encoding string) *Coder {
 	}
 }
 
-// Encode encodes src into some encoding
-func (c *Coder) Encode(src []byte) ([]byte, error) {
+// Encode encodes `r` into some encoding
+func (c *Coder) Encode(r io.Reader) ([]byte, error) {
 	if coder, ok := encoders[c.encoding]; ok {
-		return coder(src)
+		return coder(r)
 	}
 	return nil, fmt.Errorf("unknown encoding: %s", c.encoding)
 }
 
-// Decode decodes src from some encoding
-func (c *Coder) Decode(src []byte) ([]byte, error) {
+// Decode decodes `r` from some encoding
+func (c *Coder) Decode(r io.Reader) ([]byte, error) {
 	if coder, ok := decoders[c.encoding]; ok {
-		return coder(src)
+		return coder(r)
 	}
 	return nil, fmt.Errorf("unknown encoding: %s", c.encoding)
 }
@@ -97,14 +98,17 @@ func AvailableEncodings() []string {
 }
 
 // RecodeInput processes input `data` according to encodings, used by cmd/coder
-func RecodeInput(encodings []string, data []byte, decode bool) ([]byte, error) {
+func RecodeInput(encodings []string, r io.Reader, decode bool) ([]byte, error) {
 	var err error
+	data, _ := ioutil.ReadAll(r)
+
 	for _, enc := range encodings {
 		coder := NewCoder(enc)
+		datan := bytes.NewReader(data)
 		if decode {
-			data, err = coder.Decode(data)
+			data, err = coder.Decode(datan)
 		} else {
-			data, err = coder.Encode(data)
+			data, err = coder.Encode(datan)
 		}
 		if err != nil {
 			break
@@ -113,7 +117,10 @@ func RecodeInput(encodings []string, data []byte, decode bool) ([]byte, error) {
 	return data, err
 }
 
-func encodeASCII85(src []byte) ([]byte, error) {
+func encodeASCII85(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	var b bytes.Buffer
 	enc := ascii85.NewEncoder(&b)
 	enc.Write(src)
@@ -121,65 +128,101 @@ func encodeASCII85(src []byte) ([]byte, error) {
 	return b.Bytes(), err
 }
 
-func decodeASCII85(src []byte) ([]byte, error) {
+func decodeASCII85(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	// Often, ascii85-encoded data is wrapped in <~ and ~> symbols. Decode() expects these to have been stripped by the caller.
 	if len(src) >= 4 && src[0] == '<' && src[1] == '~' && src[len(src)-2] == '~' && src[len(src)-1] == '>' {
 		src = src[2 : len(src)-2]
 	}
-	r := bytes.NewBuffer(src)
+	r = bytes.NewBuffer(src)
 	dec := ascii85.NewDecoder(r)
 	res, err := ioutil.ReadAll(dec)
 	return res, err
 }
 
-func encodeBase32(src []byte) ([]byte, error) {
+func encodeBase32(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	dst := make([]byte, base32.StdEncoding.EncodedLen(len(src)))
 	base32.StdEncoding.Encode(dst, src)
 	return dst, nil
 }
 
-func decodeBase32(src []byte) ([]byte, error) {
+func decodeBase32(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	return base32.StdEncoding.DecodeString(string(src))
 }
 
-func encodeBase36(src []byte) ([]byte, error) {
+func encodeBase36(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	return base36.EncodeBytesAsBytes(src), nil
 }
 
-func decodeBase36(src []byte) ([]byte, error) {
+func decodeBase36(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	return base36.DecodeToBytes(string(src)), nil
 }
 
-func encodeBase58(src []byte) ([]byte, error) {
+func encodeBase58(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	return []byte(b58.Encode(src)), nil
 }
 
-func decodeBase58(src []byte) ([]byte, error) {
+func decodeBase58(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	return b58.Decode(string(src)), nil
 }
 
-func encodeBase64(src []byte) ([]byte, error) {
+func encodeBase64(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	dst := make([]byte, base64.StdEncoding.EncodedLen(len(src)))
 	base64.StdEncoding.Encode(dst, src)
 	return dst, nil
 }
 
-func decodeBase64(src []byte) ([]byte, error) {
+func decodeBase64(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	return base64.StdEncoding.DecodeString(string(src))
 }
 
-func encodeBase91(src []byte) ([]byte, error) {
+func encodeBase91(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	return base91.Encode(src), nil
 }
 
-func decodeBase91(src []byte) ([]byte, error) {
+func decodeBase91(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	if len(src) == 0 {
 		return []byte{}, nil
 	}
 	return base91.Decode(src), nil
 }
 
-func encodeBinary(src []byte) ([]byte, error) {
+func encodeBinary(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	var res bytes.Buffer
 	for n, b := range src {
 		fmt.Fprintf(&res, "%08b", b)
@@ -190,7 +233,10 @@ func encodeBinary(src []byte) ([]byte, error) {
 	return res.Bytes(), nil
 }
 
-func decodeBinary(src []byte) ([]byte, error) {
+func decodeBinary(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	if len(src) == 0 {
 		return []byte{}, nil
 	}
@@ -204,15 +250,24 @@ func decodeBinary(src []byte) ([]byte, error) {
 	return res, nil
 }
 
-func encodeBubbleBabble(src []byte) ([]byte, error) {
+func encodeBubbleBabble(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	return []byte(bubblebabble.EncodeToString(src)), nil
 }
 
-func decodeBubbleBabble(src []byte) ([]byte, error) {
+func decodeBubbleBabble(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	return bubblebabble.DecodeString(string(src))
 }
 
-func encodeDecimal(src []byte) ([]byte, error) {
+func encodeDecimal(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	var res bytes.Buffer
 	for n, b := range src {
 		fmt.Fprintf(&res, "%d", b)
@@ -223,7 +278,10 @@ func encodeDecimal(src []byte) ([]byte, error) {
 	return res.Bytes(), nil
 }
 
-func decodeDecimal(src []byte) ([]byte, error) {
+func decodeDecimal(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	if len(src) == 0 {
 		return []byte{}, nil
 	}
@@ -237,23 +295,35 @@ func decodeDecimal(src []byte) ([]byte, error) {
 	return res, nil
 }
 
-func encodeHex(src []byte) ([]byte, error) {
+func encodeHex(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	dst := make([]byte, hex.EncodedLen(len(src)))
 	hex.Encode(dst, src)
 	return dst, nil
 }
 
-func encodeHexUpper(src []byte) ([]byte, error) {
+func encodeHexUpper(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	return []byte(strings.ToUpper(hex.EncodeToString(src))), nil
 }
 
-func decodeHex(src []byte) ([]byte, error) {
+func decodeHex(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	s := stripSpaces(string(src))
 	res, err := hex.DecodeString(s)
 	return res, err
 }
 
-func encodeOctal(src []byte) ([]byte, error) {
+func encodeOctal(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	var res bytes.Buffer
 	for n, b := range src {
 		fmt.Fprintf(&res, "%#o", b)
@@ -264,7 +334,10 @@ func encodeOctal(src []byte) ([]byte, error) {
 	return res.Bytes(), nil
 }
 
-func decodeOctal(src []byte) ([]byte, error) {
+func decodeOctal(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	if len(src) == 0 {
 		return []byte{}, nil
 	}
@@ -279,16 +352,25 @@ func decodeOctal(src []byte) ([]byte, error) {
 	return res, nil
 }
 
-func encodeUU(src []byte) ([]byte, error) {
+func encodeUU(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	return uu.Encode(src, "file.txt", "644")
 }
 
-func decodeUU(src []byte) ([]byte, error) {
+func decodeUU(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	dec, err := uu.Decode(src)
 	return dec.Data, err
 }
 
-func encodeZ85(src []byte) ([]byte, error) {
+func encodeZ85(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	src4pad := src
 
 	// pad size, input must be divisible by 4
@@ -305,7 +387,10 @@ func encodeZ85(src []byte) ([]byte, error) {
 	return b85, err
 }
 
-func decodeZ85(src []byte) ([]byte, error) {
+func decodeZ85(r io.Reader) ([]byte, error) {
+	// XXX HACK
+	src, _ := ioutil.ReadAll(r)
+
 	dst := make([]byte, z85.DecodedLen(len(src)))
 	n, err := z85.Decode(dst, src)
 
