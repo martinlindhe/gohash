@@ -118,13 +118,12 @@ func RecodeInput(encodings []string, r io.Reader, decode bool) ([]byte, error) {
 }
 
 func encodeASCII85(r io.Reader) ([]byte, error) {
-	// XXX HACK
-	src, _ := ioutil.ReadAll(r)
-
 	var b bytes.Buffer
-	enc := ascii85.NewEncoder(&b)
-	enc.Write(src)
-	err := enc.Close()
+	h := ascii85.NewEncoder(&b)
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	err := h.Close()
 	return b.Bytes(), err
 }
 
