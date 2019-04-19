@@ -328,13 +328,11 @@ func crc16ScsiSum(r io.Reader) ([]byte, error) {
 }
 
 func crc24OpenPGPSum(r io.Reader) ([]byte, error) {
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(r)
-	i := crc24.ChecksumOpenPGP(buf.Bytes())
-	bs := make([]byte, 4)
-	binary.BigEndian.PutUint32(bs, i)
-	bs = bs[1:4]
-	return bs, nil
+	h := crc24.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
 func crc32IEEESum(r io.Reader) ([]byte, error) {
