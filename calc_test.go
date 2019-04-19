@@ -235,6 +235,30 @@ func BenchmarkCrc8ATM(b *testing.B) {
 	}
 }
 
+func BenchmarkCrc16CCITT(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
+		calc := NewCalculator(r)
+		calc.Sum("crc16-ccitt")
+	}
+}
+
+func BenchmarkCrc16CCITTFalse(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
+		calc := NewCalculator(r)
+		calc.Sum("crc16-ccitt-false")
+	}
+}
+
+func BenchmarkCrc16IBM(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
+		calc := NewCalculator(r)
+		calc.Sum("crc16-ibm")
+	}
+}
+
 func BenchmarkCrc32IEEE(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")

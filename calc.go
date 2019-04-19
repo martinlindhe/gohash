@@ -294,15 +294,15 @@ func crc8AtmSum(r io.Reader) ([]byte, error) {
 }
 
 func crc16CcittSum(r io.Reader) ([]byte, error) {
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(r)
-	i := crc16.ChecksumCCITT(buf.Bytes())
-	bs := make([]byte, 2)
-	binary.BigEndian.PutUint16(bs, i)
-	return bs, nil
+	h := crc16.New(crc16.CCITTTable)
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
 func crc16CcittFalseSum(r io.Reader) ([]byte, error) {
+	// NOTE: can not set crc16.digest.crc to 0xFFFF with current crc16 api so cannot use io.Copy() like in the others
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(r)
 	i := crc16.ChecksumCCITTFalse(buf.Bytes())
@@ -312,12 +312,11 @@ func crc16CcittFalseSum(r io.Reader) ([]byte, error) {
 }
 
 func crc16IbmSum(r io.Reader) ([]byte, error) {
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(r)
-	i := crc16.ChecksumIBM(buf.Bytes())
-	bs := make([]byte, 2)
-	binary.BigEndian.PutUint16(bs, i)
-	return bs, nil
+	h := crc16.New(crc16.IBMTable)
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
 }
 
 func crc16ScsiSum(r io.Reader) ([]byte, error) {
