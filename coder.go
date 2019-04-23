@@ -137,8 +137,7 @@ func decodeASCII85(r io.Reader) ([]byte, error) {
 	}
 	r = bytes.NewBuffer(src)
 	dec := ascii85.NewDecoder(r)
-	res, err := ioutil.ReadAll(dec)
-	return res, err
+	return ioutil.ReadAll(dec)
 }
 
 func encodeBase32(r io.Reader) ([]byte, error) {
@@ -152,10 +151,8 @@ func encodeBase32(r io.Reader) ([]byte, error) {
 }
 
 func decodeBase32(r io.Reader) ([]byte, error) {
-	// XXX HACK
-	src, _ := ioutil.ReadAll(r)
-
-	return base32.StdEncoding.DecodeString(string(src))
+	h := base32.NewDecoder(base32.StdEncoding, r)
+	return ioutil.ReadAll(h)
 }
 
 func encodeBase36(r io.Reader) ([]byte, error) {
@@ -197,10 +194,8 @@ func encodeBase64(r io.Reader) ([]byte, error) {
 }
 
 func decodeBase64(r io.Reader) ([]byte, error) {
-	// XXX HACK
-	src, _ := ioutil.ReadAll(r)
-
-	return base64.StdEncoding.DecodeString(string(src))
+	h := base64.NewDecoder(base64.StdEncoding, r)
+	return ioutil.ReadAll(h)
 }
 
 func encodeBase91(r io.Reader) ([]byte, error) {
