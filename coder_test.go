@@ -16,7 +16,7 @@ var (
 	fox   = "The quick brown fox jumps over the lazy dog"
 
 	f                 = fuzz.New()
-	iterationsPerAlgo = 500 // increase to fuzz properly, slows down tests
+	iterationsPerAlgo = 100 // increase to fuzz properly, slows down tests
 	expectedEncodings = map[string]expectedForms{
 		"ascii85": {
 			fox:   "<+ohcEHPu*CER),Dg-(AAoDo:C3=B4F!,CEATAo8BOr<&@=!2AA8c)",
@@ -249,6 +249,20 @@ func BenchmarkEncodeOctal(b *testing.B) {
 func BenchmarkEncodeASCII85(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		coder := NewCoder("ascii85")
+		coder.Encode(strings.NewReader("zafdklsahdfkjlkajsgdfkhjgajshdgfjklagsdfasdfkjlhskdjgfjhagsdfjhgasjdgfkjh"))
+	}
+}
+
+func BenchmarkEncodeBase32(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		coder := NewCoder("base32")
+		coder.Encode(strings.NewReader("zafdklsahdfkjlkajsgdfkhjgajshdgfjklagsdfasdfkjlhskdjgfjhagsdfjhgasjdgfkjh"))
+	}
+}
+
+func BenchmarkEncodeBase64(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		coder := NewCoder("base64")
 		coder.Encode(strings.NewReader("zafdklsahdfkjlkajsgdfkhjgajshdgfjklagsdfasdfkjlhskdjgfjhagsdfjhgasjdgfkjh"))
 	}
 }
