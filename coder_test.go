@@ -119,16 +119,7 @@ func TestFuzzEncoders(t *testing.T) {
 			var rnd []byte
 			f.Fuzz(&rnd)
 			if algo == "z85" {
-				// NOTE: trim trailing 0:s for z85, because "The binary frame SHALL have a length that is
-				// divisible by 4 with no remainder.", and trailing 0:s will not remain in the decode of
-				// such sequence. see https://rfc.zeromq.org/spec:32/Z85/
-				n := len(rnd)
-				for ; n > 0; n-- {
-					if rnd[n-1] != 0 {
-						break
-					}
-				}
-				rnd = rnd[0:n]
+				rnd = stripZ85Padding(rnd)
 			}
 			coder := NewCoder(algo)
 			enc, err := coder.Encode(bytes.NewReader(rnd))

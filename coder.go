@@ -128,7 +128,6 @@ func encodeASCII85(r io.Reader) ([]byte, error) {
 }
 
 func decodeASCII85(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
 
 	// Often, ascii85-encoded data is wrapped in <~ and ~> symbols. Decode() expects these to have been stripped by the caller.
@@ -156,30 +155,22 @@ func decodeBase32(r io.Reader) ([]byte, error) {
 }
 
 func encodeBase36(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
-
 	return base36.EncodeBytesAsBytes(src), nil
 }
 
 func decodeBase36(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
-
 	return base36.DecodeToBytes(string(src)), nil
 }
 
 func encodeBase58(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
-
 	return []byte(b58.Encode(src)), nil
 }
 
 func decodeBase58(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
-
 	return b58.Decode(string(src)), nil
 }
 
@@ -199,16 +190,12 @@ func decodeBase64(r io.Reader) ([]byte, error) {
 }
 
 func encodeBase91(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
-
 	return base91.Encode(src), nil
 }
 
 func decodeBase91(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
-
 	if len(src) == 0 {
 		return []byte{}, nil
 	}
@@ -216,7 +203,6 @@ func decodeBase91(r io.Reader) ([]byte, error) {
 }
 
 func encodeBinary(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
 
 	var res bytes.Buffer
@@ -230,7 +216,6 @@ func encodeBinary(r io.Reader) ([]byte, error) {
 }
 
 func decodeBinary(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
 
 	if len(src) == 0 {
@@ -247,21 +232,16 @@ func decodeBinary(r io.Reader) ([]byte, error) {
 }
 
 func encodeBubbleBabble(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
-
 	return []byte(bubblebabble.EncodeToString(src)), nil
 }
 
 func decodeBubbleBabble(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
-
 	return bubblebabble.DecodeString(string(src))
 }
 
 func encodeDecimal(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
 
 	var res bytes.Buffer
@@ -275,7 +255,6 @@ func encodeDecimal(r io.Reader) ([]byte, error) {
 }
 
 func decodeDecimal(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
 
 	if len(src) == 0 {
@@ -292,7 +271,6 @@ func decodeDecimal(r io.Reader) ([]byte, error) {
 }
 
 func encodeHex(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
 
 	dst := make([]byte, hex.EncodedLen(len(src)))
@@ -301,14 +279,12 @@ func encodeHex(r io.Reader) ([]byte, error) {
 }
 
 func encodeHexUpper(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
 
 	return []byte(strings.ToUpper(hex.EncodeToString(src))), nil
 }
 
 func decodeHex(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
 
 	s := stripSpaces(string(src))
@@ -317,7 +293,6 @@ func decodeHex(r io.Reader) ([]byte, error) {
 }
 
 func encodeOctal(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
 
 	var res bytes.Buffer
@@ -331,7 +306,6 @@ func encodeOctal(r io.Reader) ([]byte, error) {
 }
 
 func decodeOctal(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
 
 	if len(src) == 0 {
@@ -349,22 +323,17 @@ func decodeOctal(r io.Reader) ([]byte, error) {
 }
 
 func encodeUU(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
-
 	return uu.Encode(src, "file.txt", "644")
 }
 
 func decodeUU(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
-
 	dec, err := uu.Decode(src)
 	return dec.Data, err
 }
 
 func encodeZ85(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
 
 	src4pad := src
@@ -384,19 +353,26 @@ func encodeZ85(r io.Reader) ([]byte, error) {
 }
 
 func decodeZ85(r io.Reader) ([]byte, error) {
-	// XXX HACK
 	src, _ := ioutil.ReadAll(r)
-
+	src = []byte(strings.TrimRight(string(src), "\r\n"))
 	dst := make([]byte, z85.DecodedLen(len(src)))
-	n, err := z85.Decode(dst, src)
+	_, err := z85.Decode(dst, src)
+	dst = stripZ85Padding(dst)
+	return dst, err
+}
 
-	// strip padding
+func stripZ85Padding(b []byte) []byte {
+	// trim trailing 0:s for z85, because "The binary frame SHALL have a length that is
+	// divisible by 4 with no remainder.", and trailing 0:s will not remain in the decode of
+	// such sequence. See https://rfc.zeromq.org/spec:32/Z85/
+
+	n := len(b)
 	for ; n > 0; n-- {
-		if dst[n-1] != 0 {
+		if b[n-1] != 0 {
 			break
 		}
 	}
-	return dst[0:n], err
+	return b[0:n]
 }
 
 // defaults to "hex" if encoding is unspecified
