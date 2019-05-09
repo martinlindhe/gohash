@@ -239,18 +239,18 @@
     "sha3",
   ]
   pruneopts = "NUT"
-  revision = "df01cb2cc480549d72034218dd98bf97671450ac"
+  revision = "e1dfcc566284e143ba8f9afbb3fa563f2a0d212b"
 
 [[projects]]
   branch = "master"
-  digest = "1:c5fe329884707cd1c81fa330fa40e2fc6d66f4fab703ca47234bf44c05fcfcd8"
+  digest = "1:a948ef52b80dd366c87c263611b7b0dce29b21d8d6fe23c4299ec5291aa47de1"
   name = "golang.org/x/sys"
   packages = [
     "cpu",
     "unix",
   ]
   pruneopts = "NUT"
-  revision = "f0ce4c0180bef7e9c51babed693a6e47fdd8962f"
+  revision = "a5b02f93d862f065920dd6a40dddc66b60d0dec4"
 
 [[projects]]
   digest = "1:22b2dee6f30bc8601f087449a2a819df8388e54e9547349c658f14d8f8c590f2"
