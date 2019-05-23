@@ -20,6 +20,7 @@ var (
 	listEncodings = kingpin.Flag("list-encodings", "List available encodings.").Short('E').Bool()
 	skipNewline   = kingpin.Flag("skip-newline", "Don't output newline.").Short('n').Bool()
 	skipFilename  = kingpin.Flag("skip-filename", "Don't output filename.").Bool()
+	noColors      = kingpin.Flag("no-colors", "Don't output colors.").Bool()
 	reverseBytes  = kingpin.Flag("reverse-bytes", "Reverse byte order of displayed hex value.").Bool()
 	debugAllocs   = kingpin.Flag("debug-allocs", "Debugging: print memory allocations at end of execution.").Bool()
 	bsdSyntax     = kingpin.Flag("bsd", "Output result in BSD syntax.").Bool()
@@ -78,15 +79,38 @@ func main() {
 		*fileName = "-"
 	}
 	if *bsdSyntax {
-		fmt.Printf("%s (%s) = ", strings.ToUpper(*algo), brush.White(*fileName))
-		fmt.Printf("%s", brush.Yellow(encodedHash))
+		fmt.Print(strings.ToUpper(*algo))
+		if !*skipFilename {
+			fmt.Print(" (")
+			if !*noColors {
+				fmt.Print(brush.White(*fileName))
+			} else {
+				fmt.Print(*fileName)
+			}
+			fmt.Print(")")
+		}
+		fmt.Print(" = ")
+		if !*noColors {
+			fmt.Print(brush.Yellow(encodedHash))
+		} else {
+			fmt.Print(string(encodedHash))
+		}
 	} else {
-		fmt.Printf("%s", brush.Yellow(encodedHash))
+		if !*noColors {
+			fmt.Print(brush.Yellow(encodedHash))
+		} else {
+			fmt.Print(string(encodedHash))
+		}
 		if !*skipFilename {
 			if r.IsPipe {
 				*fileName = "-"
 			}
-			fmt.Printf("  %s", brush.White(*fileName))
+			fmt.Print("  ")
+			if !*noColors {
+				fmt.Print(brush.White(*fileName))
+			} else {
+				fmt.Print(*fileName)
+			}
 		}
 	}
 
