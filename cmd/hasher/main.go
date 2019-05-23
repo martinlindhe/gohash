@@ -7,9 +7,9 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/alecthomas/kingpin"
 	"github.com/aybabtme/color/brush"
 	"github.com/martinlindhe/gohash"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 var (

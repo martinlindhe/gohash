@@ -7,9 +7,9 @@
 // http://www.ross.net/crc/download/crc_v3.txt for information.
 package crc8
 
-import "gopkg.in/mewpkg/hashutil.v1"
+import "github.com/mewpkg/hashutil"
 
-// The size of a CRC-8 checksum in bytes.
+// Size of a CRC-8 checksum in bytes.
 const Size = 1
 
 // Predefined polynomials.

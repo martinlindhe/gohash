@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/alecthomas/kingpin"
 	"github.com/martinlindhe/gohash"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 var (

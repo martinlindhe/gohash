@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/alecthomas/kingpin"
 	"github.com/martinlindhe/gohash"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 var (

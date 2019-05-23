@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:22b2dee6f30bc8601f087449a2a819df8388e54e9547349c658f14d8f8c590f2"
+  name = "github.com/alecthomas/kingpin"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "947dcec5ba9c011838740e680966fd7087a71d0d"
+  version = "v2.2.6"
+
+[[projects]]
   branch = "master"
   digest = "1:f3793f8a708522400cef1dba23385e901aede5519f68971fd69938ef330b07a1"
   name = "github.com/alecthomas/template"
@@ -96,12 +104,12 @@
   revision = "9668dfef2d239349500b23b60834fbf1817546fb"
 
 [[projects]]
+  branch = "master"
   digest = "1:1605a72a775deccb79dcf7561f311270dfe79a4da8dec0d951f37610cfff2832"
   name = "github.com/dchest/siphash"
   packages = ["."]
   pruneopts = "NUT"
   revision = "34f201214d993633bb24f418ba11736ab8b55aa7"
-  version = "v1.2.1"
 
 [[projects]]
   branch = "master"
@@ -136,12 +144,12 @@
   revision = "c69905b63f6f975561782d98caf92063200b6fb6"
 
 [[projects]]
+  branch = "master"
   digest = "1:2a11af5d4103831079dabd6a18cf215edaaf6f6e1447f436bfb9323919a42cce"
   name = "github.com/jbenet/go-base58"
   packages = ["."]
   pruneopts = "NUT"
   revision = "6237cf65f3a6f7111cd8a42be3590df99a66bc7d"
-  version = "1.0.0"
 
 [[projects]]
   branch = "master"
@@ -198,12 +206,15 @@
   revision = "27d928e7b0bb240a872b9a1ae8bc2f9dbf7c587b"
 
 [[projects]]
-  digest = "1:7915fb4c76656bd65d4a6e0350491fe0ee97e77655297dcb92c9761fb88efa7b"
+  branch = "master"
+  digest = "1:df4854f781d16429b31a99e710f68af512a5e5f1aa64732344a372e4e239f3dc"
   name = "github.com/mewpkg/hashutil"
-  packages = ["crc8"]
+  packages = [
+    ".",
+    "crc8",
+  ]
   pruneopts = "NUT"
-  revision = "576638dc68739d767ffde05d1b4f62e3c0659639"
-  version = "v1.0.1"
+  revision = "bc0840ff65bbc7a740bc592a995d477ff1ac6b36"
 
 [[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
@@ -231,7 +242,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:fd008f400bb2a930bfb7ab104f0f122585b12f3a91372a2a02764e9a60387d15"
+  digest = "1:3cc96e0c6e2fd157d518fd23bc1177439749784b34c28ace1ea6e6bb456e1dd9"
   name = "golang.org/x/crypto"
   packages = [
     "md4",
@@ -239,39 +250,24 @@
     "sha3",
   ]
   pruneopts = "NUT"
-  revision = "e1dfcc566284e143ba8f9afbb3fa563f2a0d212b"
+  revision = "22d7a77e9e5f409e934ed268692e56707cd169e5"
 
 [[projects]]
   branch = "master"
-  digest = "1:a948ef52b80dd366c87c263611b7b0dce29b21d8d6fe23c4299ec5291aa47de1"
+  digest = "1:a52c47381b4013746f1ef8ddd3b67860dae3cb5c156792c22f7522cb4a7f4a8b"
   name = "golang.org/x/sys"
   packages = [
     "cpu",
     "unix",
   ]
   pruneopts = "NUT"
-  revision = "a5b02f93d862f065920dd6a40dddc66b60d0dec4"
-
-[[projects]]
-  digest = "1:22b2dee6f30bc8601f087449a2a819df8388e54e9547349c658f14d8f8c590f2"
-  name = "gopkg.in/alecthomas/kingpin.v2"
-  packages = ["."]
-  pruneopts = "NUT"
-  revision = "947dcec5ba9c011838740e680966fd7087a71d0d"
-  version = "v2.2.6"
-
-[[projects]]
-  digest = "1:9e656cb92b124b784edf4e7b44a6f18f0ceb3c44ea81497434a8e6937567b6ca"
-  name = "gopkg.in/mewpkg/hashutil.v1"
-  packages = ["."]
-  pruneopts = "NUT"
-  revision = "576638dc68739d767ffde05d1b4f62e3c0659639"
-  version = "v1.0.1"
+  revision = "8097e1b27ff5e40620836729a9584e91b094b062"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/alecthomas/kingpin",
     "github.com/andrew-d/go-termutil",
     "github.com/aybabtme/color/brush",
     "github.com/bproctor/base91",
@@ -301,7 +297,6 @@
     "golang.org/x/crypto/md4",
     "golang.org/x/crypto/ripemd160",
     "golang.org/x/crypto/sha3",
-    "gopkg.in/alecthomas/kingpin.v2",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
