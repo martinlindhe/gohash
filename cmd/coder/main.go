@@ -18,11 +18,11 @@ var (
 	decode            = kingpin.Flag("decode", "Decode input.").Short('d').Bool()
 	outFileName       = kingpin.Flag("output", "Write output to file.").Short('o').String()
 	noTrailingNewline = kingpin.Flag("no-newline", "Do not output the trailing newline.").Short('n').Bool()
+	verbose           = kingpin.Flag("verbose", "Verbose mode.").Short('v').Bool()
 )
 
 func main() {
 
-	// support -h for --help
 	kingpin.CommandLine.HelpFlag.Short('h')
 	kingpin.Parse()
 
@@ -45,11 +45,10 @@ func main() {
 
 	r, err := gohash.ReadPipeOrFile(*fileName)
 	if err != nil {
-		fmt.Println("error:", err)
-		os.Exit(1)
+		log.Fatal("error:", err)
 	}
 
-	res, err := gohash.RecodeInput(encodings, r.Reader, *decode)
+	res, err := gohash.RecodeInput(encodings, r.Reader, *decode, *verbose)
 	if err != nil {
 		log.Fatal("error:", err)
 	}
@@ -64,11 +63,15 @@ func main() {
 		if err != nil {
 			log.Fatal("error:", err)
 		}
+		return
+	}
+
+	if *verbose {
+		fmt.Println("final result:")
+	}
+	if *noTrailingNewline {
+		fmt.Print(string(res))
 	} else {
-		if *noTrailingNewline {
-			fmt.Print(string(res))
-		} else {
-			fmt.Println(string(res))
-		}
+		fmt.Println(string(res))
 	}
 }

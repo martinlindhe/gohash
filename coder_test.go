@@ -176,19 +176,19 @@ func TestDecodeHexWithSeparators(t *testing.T) {
 }
 
 func TestRecodeInputEncodeSingle(t *testing.T) {
-	res, err := RecodeInput([]string{"base64"}, strings.NewReader("hello"), false)
+	res, err := RecodeInput([]string{"base64"}, strings.NewReader("hello"), false, false)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "aGVsbG8=", string(res))
 }
 
 func TestRecodeInputDecodeSingle(t *testing.T) {
-	res, err := RecodeInput([]string{"base64"}, strings.NewReader("aGVsbG8="), true)
+	res, err := RecodeInput([]string{"base64"}, strings.NewReader("aGVsbG8="), true, false)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "hello", string(res))
 }
 
 func TestRecodeInputDecodeChain(t *testing.T) {
-	res, err := RecodeInput([]string{"hex", "base64"}, strings.NewReader("614756736247383d"), true)
+	res, err := RecodeInput([]string{"hex", "base64"}, strings.NewReader("614756736247383d"), true, false)
 	assert.Equal(t, nil, err)
 	assert.Equal(t, "hello", string(res))
 }

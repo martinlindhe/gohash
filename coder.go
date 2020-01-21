@@ -104,20 +104,28 @@ func AvailableEncodings() []string {
 }
 
 // RecodeInput processes input `data` according to encodings, used by cmd/coder
-func RecodeInput(encodings []string, r io.Reader, decode bool) ([]byte, error) {
+func RecodeInput(encodings []string, r io.Reader, decode bool, verbose bool) ([]byte, error) {
 	var err error
 	data, _ := ioutil.ReadAll(r)
 
 	for _, enc := range encodings {
+		if verbose {
+			fmt.Println("recode to", enc+":")
+			fmt.Println(hex.Dump(data))
+		}
 		coder := NewCoder(enc)
-		datan := bytes.NewReader(data)
+		r := bytes.NewReader(data)
 		if decode {
-			data, err = coder.Decode(datan)
+			data, err = coder.Decode(r)
 		} else {
-			data, err = coder.Encode(datan)
+			data, err = coder.Encode(r)
 		}
 		if err != nil {
 			break
+		}
+		if verbose {
+			fmt.Println("recoded result:")
+			fmt.Println(hex.Dump(data))
 		}
 	}
 	return data, err
