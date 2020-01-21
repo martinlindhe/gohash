@@ -1,16 +1,13 @@
 # About
 
 [![Travis-CI](https://api.travis-ci.org/martinlindhe/gohash.svg)](https://travis-ci.org/martinlindhe/gohash)
-[![codecov.io](https://codecov.io/github/martinlindhe/gohash/coverage.svg?branch=master)](https://codecov.io/github/martinlindhe/gohash?branch=master)
 [![GoDoc](https://godoc.org/github.com/martinlindhe/gohash?status.svg)](https://godoc.org/github.com/martinlindhe/gohash)
-[![Go Report Card](https://goreportcard.com/badge/github.com/martinlindhe/gohash)](https://goreportcard.com/report/github.com/martinlindhe/gohash)
 
 Command line tools and library to work with hashes and various encodings.
 
 Compatibility: All platforms supported by go, notably Linux, macOS and Windows.
 
-
-### Commands
+## Commands
 
 [coder](cmd/coder)        encode / decode pipes or files between various encodings
 
@@ -18,13 +15,16 @@ Compatibility: All platforms supported by go, notably Linux, macOS and Windows.
 
 [findhash](cmd/findhash)  search for plaintext matching known hashes
 
+## Install everything
 
-### Install everything
+See Releases for binary packages for macOS and Windows.
+To compile from source with the go toolchain:
 
-	go get -u github.com/martinlindhe/gohash/...
+```sh
+go get -u github.com/martinlindhe/gohash/...
+```
 
-
-### Library example
+## Library example
 
 ```go
 import "github.com/martinlindhe/gohash"
@@ -38,8 +38,7 @@ func ExampleNewCalculator() {
 }
 ```
 
-
-### Hash algorithms
+## Hash algorithms
 
 Set algo with `hasher <id>`, list all supported hashes
 with `hasher --list-hashes`
@@ -95,8 +94,7 @@ with `hasher --list-hashes`
 | tiger192          | Tiger                     | 192 bit  | 24 byte  | 1996 |
 | whirlpool         | Whirlpool                 | 512 bit  | 64 byte  | 2000 |
 
-
-### Binary-to-text encodings
+## Binary-to-text encodings
 
 Set algo with `hasher --encoding=<id>`, list all supported encodings
 with `hasher --list-encodings`
@@ -118,7 +116,6 @@ with `hasher --list-encodings`
 | uu                | Uuencoded "%:&5L;&\"   |
 | z85               | Z85                    |
 
-
-### License
+## License
 
 Under [MIT](LICENSE)
