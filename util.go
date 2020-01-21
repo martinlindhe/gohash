@@ -6,7 +6,7 @@ import (
 	"os"
 	"sort"
 
-	termutil "github.com/andrew-d/go-termutil"
+	isatty "github.com/mattn/go-isatty"
 )
 
 func byteArrayEquals(a []byte, b []byte) bool {
@@ -67,7 +67,7 @@ type AppInputData struct {
 // ReadPipeOrFile reads from stdin if pipe exists, else from provided file
 func ReadPipeOrFile(fileName string) (*AppInputData, error) {
 	res := AppInputData{}
-	if !termutil.Isatty(os.Stdin.Fd()) {
+	if !isatty.IsTerminal(os.Stdout.Fd()) {
 		res.Reader = os.Stdin
 		res.IsPipe = true
 	} else {

@@ -21,3 +21,6 @@ profile-mem:
 	rm mem.prof
 	go test --memprofile=mem.prof
 	go tool pprof --alloc_space --text mem.prof
+
+wasm-coder:
+	tinygo build -o wasm.wasm -target=wasm cmd/coder/main.go
