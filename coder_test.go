@@ -163,6 +163,12 @@ func TestDecodeHexWithSpaces(t *testing.T) {
 	assert.Equal(t, []byte{0x48, 0x4f, 0x2a}, res)
 }
 
+func TestDecodeHexWithSeparators(t *testing.T) {
+	res, err := decodeHex(strings.NewReader("48;4f;2a"))
+	assert.Equal(t, nil, err)
+	assert.Equal(t, []byte{0x48, 0x4f, 0x2a}, res)
+}
+
 func TestRecodeInputEncodeSingle(t *testing.T) {
 	res, err := RecodeInput([]string{"base64"}, strings.NewReader("hello"), false)
 	assert.Equal(t, nil, err)

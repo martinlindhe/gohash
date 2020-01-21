@@ -289,7 +289,7 @@ func encodeHexUpper(r io.Reader) ([]byte, error) {
 func decodeHex(r io.Reader) ([]byte, error) {
 	src, _ := ioutil.ReadAll(r)
 
-	s := stripSpaces(string(src))
+	s := stripSeparators(string(src))
 	res, err := hex.DecodeString(s)
 	return res, err
 }
@@ -410,9 +410,10 @@ func resolveEncodingAliases(s string) string {
 	return s
 }
 
-func stripSpaces(str string) string {
+// removes spaces and ; from string
+func stripSeparators(str string) string {
 	return strings.Map(func(r rune) rune {
-		if unicode.IsSpace(r) {
+		if unicode.IsSpace(r) || r == ';' {
 			return -1
 		}
 		return r
