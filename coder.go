@@ -42,6 +42,7 @@ var (
 		"hex":          encodeHex,
 		"hexup":        encodeHexUpper,
 		"octal":        encodeOctal,
+		"reverse":      encodeReverse,
 		"uu":           encodeUU,
 		"z85":          encodeZ85,
 	}
@@ -59,6 +60,7 @@ var (
 		"hex":          decodeHex,
 		"hexup":        decodeHex,
 		"octal":        decodeOctal,
+		"reverse":      encodeReverse,
 		"uu":           decodeUU,
 		"z85":          decodeZ85,
 	}
@@ -320,6 +322,15 @@ func decodeOctal(r io.Reader) ([]byte, error) {
 		res[i] = byte(b)
 	}
 	return res, nil
+}
+
+// encode/decode bytes in reverse order
+func encodeReverse(r io.Reader) ([]byte, error) {
+	a, _ := ioutil.ReadAll(r)
+	for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
+		a[i], a[j] = a[j], a[i]
+	}
+	return a, nil
 }
 
 func encodeUU(r io.Reader) ([]byte, error) {

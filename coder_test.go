@@ -59,6 +59,9 @@ var (
 			fox: "0124 0150 0145 040 0161 0165 0151 0143 0153 040 0142 0162 0157 0167 0156 040 0146 0157 0170 040" +
 				" 0152 0165 0155 0160 0163 040 0157 0166 0145 0162 040 0164 0150 0145 040 0154 0141 0172 0171 040 0144 0157 0147",
 			blank: ""},
+		"reverse": {
+			fox:   "god yzal eht revo spmuj xof nworb kciuq ehT",
+			blank: ""},
 		"uu": {
 			fox:   "begin 644 file.txt\nK5&AE('%U:6-K(&)R;W=N(&9O>\"!J=6UP<R!O=F5R('1H92!L87IY(&1O9P\n`\nend\n",
 			blank: "begin 644 file.txt\n`\nend\n",
