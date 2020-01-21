@@ -22,7 +22,6 @@ type Dictionary struct {
 
 	// runtime stats
 	try    uint64
-	tick   uint64
 	buffer []byte
 	algo   string
 }
@@ -68,15 +67,12 @@ func (d *Dictionary) Find() (string, string, error) {
 	}
 
 	// fmt.Println("Trying with", d.possibleAlgos)
-
-	buf := make([]byte, 256)
-
 	for _, line := range d.lines {
 		if line == "" {
 			continue
 		}
 
-		buf = []byte(d.prefix + line + d.suffix)
+		buf := []byte(d.prefix + line + d.suffix)
 
 		guesses := [][]byte{
 			buf,

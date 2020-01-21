@@ -222,7 +222,7 @@ func resolveAlgoAliases(s string) string {
 
 func adler32Sum(r io.Reader) ([]byte, error) {
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 	i := adler32.Checksum(buf.Bytes())
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, i)
@@ -304,7 +304,7 @@ func crc16CcittSum(r io.Reader) ([]byte, error) {
 func crc16CcittFalseSum(r io.Reader) ([]byte, error) {
 	// NOTE: can not set crc16.digest.crc to 0xFFFF with current crc16 api so cannot use io.Copy() like in the others
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 	i := crc16.ChecksumCCITTFalse(buf.Bytes())
 	bs := make([]byte, 2)
 	binary.BigEndian.PutUint16(bs, i)
@@ -565,7 +565,7 @@ func shake128_256Sum(r io.Reader) ([]byte, error) {
 	if _, err := io.Copy(h, r); err != nil {
 		return nil, err
 	}
-	h.Read(res)
+	_, _ = h.Read(res)
 	return res, nil
 }
 
@@ -575,7 +575,7 @@ func shake256_512Sum(r io.Reader) ([]byte, error) {
 	if _, err := io.Copy(h, r); err != nil {
 		return nil, err
 	}
-	h.Read(res)
+	_, _ = h.Read(res)
 	return res, nil
 }
 

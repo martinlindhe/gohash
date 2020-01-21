@@ -152,7 +152,7 @@ func TestFuzzDecoders(t *testing.T) {
 			rnd := ""
 			f.Fuzz(&rnd)
 			coder := NewCoder(algo)
-			coder.Decode(strings.NewReader(rnd))
+			_, _ = coder.Decode(strings.NewReader(rnd))
 		}
 	}
 }
@@ -234,41 +234,41 @@ func TestDecodeASCII85(t *testing.T) {
 func BenchmarkEncodeBinary(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		coder := NewCoder("binary")
-		coder.Encode(bytes.NewReader([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4F, 0x2A, 0x48, 0x4F, 0x2A}))
+		_, _ = coder.Encode(bytes.NewReader([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4F, 0x2A, 0x48, 0x4F, 0x2A}))
 	}
 }
 
 func BenchmarkEncodeDecimal(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		coder := NewCoder("decimal")
-		coder.Encode(bytes.NewReader([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4F, 0x2A, 0x48, 0x4F, 0x2A}))
+		_, _ = coder.Encode(bytes.NewReader([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4F, 0x2A, 0x48, 0x4F, 0x2A}))
 	}
 }
 
 func BenchmarkEncodeOctal(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		coder := NewCoder("octal")
-		coder.Encode(bytes.NewReader([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4F, 0x2A, 0x48, 0x4F, 0x2A}))
+		_, _ = coder.Encode(bytes.NewReader([]byte{0x86, 0x4F, 0xD2, 0x6F, 0xB5, 0x59, 0xF7, 0x5B, 0x48, 0x4F, 0x2A, 0x48, 0x4F, 0x2A}))
 	}
 }
 
 func BenchmarkEncodeASCII85(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		coder := NewCoder("ascii85")
-		coder.Encode(strings.NewReader("zafdklsahdfkjlkajsgdfkhjgajshdgfjklagsdfasdfkjlhskdjgfjhagsdfjhgasjdgfkjh"))
+		_, _ = coder.Encode(strings.NewReader("zafdklsahdfkjlkajsgdfkhjgajshdgfjklagsdfasdfkjlhskdjgfjhagsdfjhgasjdgfkjh"))
 	}
 }
 
 func BenchmarkEncodeBase32(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		coder := NewCoder("base32")
-		coder.Encode(strings.NewReader("zafdklsahdfkjlkajsgdfkhjgajshdgfjklagsdfasdfkjlhskdjgfjhagsdfjhgasjdgfkjh"))
+		_, _ = coder.Encode(strings.NewReader("zafdklsahdfkjlkajsgdfkhjgajshdgfjklagsdfasdfkjlhskdjgfjhagsdfjhgasjdgfkjh"))
 	}
 }
 
 func BenchmarkEncodeBase64(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		coder := NewCoder("base64")
-		coder.Encode(strings.NewReader("zafdklsahdfkjlkajsgdfkhjgajshdgfjklagsdfasdfkjlhskdjgfjhagsdfjhgasjdgfkjh"))
+		_, _ = coder.Encode(strings.NewReader("zafdklsahdfkjlkajsgdfkhjgajshdgfjklagsdfasdfkjlhskdjgfjhagsdfjhgasjdgfkjh"))
 	}
 }

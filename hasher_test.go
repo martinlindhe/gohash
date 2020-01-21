@@ -117,5 +117,5 @@ func BenchmarkSha1Speed(*testing.B) {
 	hasher.ExpectedHash("0000000000000000000000000000000000000000")
 	hasher.Length(5)
 
-	hasher.FindSequential()
+	_, _ = hasher.FindSequential()
 }

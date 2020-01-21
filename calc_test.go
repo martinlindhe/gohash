@@ -184,7 +184,7 @@ func TestFuzzHashes(t *testing.T) {
 			f.Fuzz(&rnd)
 			r := bytes.NewReader(rnd)
 			calc := NewCalculator(r)
-			calc.Sum(algo)
+			_, _ = calc.Sum(algo)
 		}
 	}
 }
@@ -212,7 +212,7 @@ func BenchmarkHashes(b *testing.B) {
 				for i := 0; i < b.N; i++ {
 					r := strings.NewReader(form)
 					calc := NewCalculator(r)
-					calc.Sum(algo)
+					_, _ = calc.Sum(algo)
 				}
 			})
 		}
@@ -231,7 +231,7 @@ func BenchmarkCrc8ATM(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
 		calc := NewCalculator(r)
-		calc.Sum("crc8-atm")
+		_, _ = calc.Sum("crc8-atm")
 	}
 }
 
@@ -239,7 +239,7 @@ func BenchmarkCrc16CCITT(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
 		calc := NewCalculator(r)
-		calc.Sum("crc16-ccitt")
+		_, _ = calc.Sum("crc16-ccitt")
 	}
 }
 
@@ -247,7 +247,7 @@ func BenchmarkCrc16CCITTFalse(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
 		calc := NewCalculator(r)
-		calc.Sum("crc16-ccitt-false")
+		_, _ = calc.Sum("crc16-ccitt-false")
 	}
 }
 
@@ -255,7 +255,7 @@ func BenchmarkCrc16IBM(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
 		calc := NewCalculator(r)
-		calc.Sum("crc16-ibm")
+		_, _ = calc.Sum("crc16-ibm")
 	}
 }
 
@@ -263,7 +263,7 @@ func BenchmarkCrc16SCSI(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
 		calc := NewCalculator(r)
-		calc.Sum("crc16-scsi")
+		_, _ = calc.Sum("crc16-scsi")
 	}
 }
 
@@ -271,14 +271,14 @@ func BenchmarkCrc24OpenPGP(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
 		calc := NewCalculator(r)
-		calc.Sum("crc24-openpgp")
+		_, _ = calc.Sum("crc24-openpgp")
 	}
 }
 func BenchmarkCrc32IEEE(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
 		calc := NewCalculator(r)
-		calc.Sum("crc32-ieee")
+		_, _ = calc.Sum("crc32-ieee")
 	}
 }
 
@@ -286,7 +286,7 @@ func BenchmarkCrc32Castagnoli(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
 		calc := NewCalculator(r)
-		calc.Sum("crc32-castagnoli")
+		_, _ = calc.Sum("crc32-castagnoli")
 	}
 }
 
@@ -294,7 +294,7 @@ func BenchmarkCrc32Koopman(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
 		calc := NewCalculator(r)
-		calc.Sum("crc32-koopman")
+		_, _ = calc.Sum("crc32-koopman")
 	}
 }
 
@@ -302,7 +302,7 @@ func BenchmarkCrc64ISO(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
 		calc := NewCalculator(r)
-		calc.Sum("crc64-iso")
+		_, _ = calc.Sum("crc64-iso")
 	}
 }
 
@@ -310,6 +310,6 @@ func BenchmarkCrc64ECMA(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		r := strings.NewReader("dsfgklhkjsdhfgkjhsdkjfghljksdhfgjkhsdfgkjhjksdfhgkhsdfgksdfg")
 		calc := NewCalculator(r)
-		calc.Sum("crc64-ecma")
+		_, _ = calc.Sum("crc64-ecma")
 	}
 }

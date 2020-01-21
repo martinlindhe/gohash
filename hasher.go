@@ -20,7 +20,6 @@ type Hasher struct {
 
 	// runtime stats
 	try    uint64
-	tick   uint64
 	buffer []byte
 }
 

@@ -393,16 +393,13 @@ func decodeUU(r io.Reader) ([]byte, error) {
 
 func encodeZ85(r io.Reader) ([]byte, error) {
 	src, _ := ioutil.ReadAll(r)
-
 	src4pad := src
 
 	// pad size, input must be divisible by 4
 	if len(src4pad)%4 != 0 {
 		l := len(src4pad) + 4 - (len(src4pad) % 4)
 		src4pad = make([]byte, l)
-		for i, b := range src {
-			src4pad[i] = b
-		}
+		copy(src4pad, src)
 	}
 
 	b85 := make([]byte, z85.EncodedLen(len(src4pad)))
