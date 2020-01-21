@@ -62,6 +62,9 @@ var (
 		"reverse": {
 			fox:   "god yzal eht revo spmuj xof nworb kciuq ehT",
 			blank: ""},
+		"rot13": {
+			fox:   "Gur dhvpx oebja sbk whzcf bire gur ynml qbt",
+			blank: ""},
 		"rot47": {
 			fox:   "%96 BF:4< 3C@H? 7@I ;F>AD @G6C E96 =2KJ 5@8",
 			blank: ""},

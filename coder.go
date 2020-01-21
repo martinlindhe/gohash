@@ -43,6 +43,7 @@ var (
 		"hexup":        encodeHexUpper,
 		"octal":        encodeOctal,
 		"reverse":      encodeReverse,
+		"rot13":        encodeROT13,
 		"rot47":        encodeROT47,
 		"uu":           encodeUU,
 		"z85":          encodeZ85,
@@ -62,6 +63,7 @@ var (
 		"hexup":        decodeHex,
 		"octal":        decodeOctal,
 		"reverse":      encodeReverse,
+		"rot13":        encodeROT13,
 		"rot47":        encodeROT47,
 		"uu":           decodeUU,
 		"z85":          decodeZ85,
@@ -333,6 +335,28 @@ func encodeReverse(r io.Reader) ([]byte, error) {
 		a[i], a[j] = a[j], a[i]
 	}
 	return a, nil
+}
+
+func rot13(b byte) byte {
+	var a, z byte
+	switch {
+	case 'a' <= b && b <= 'z':
+		a, z = 'a', 'z'
+	case 'A' <= b && b <= 'Z':
+		a, z = 'A', 'Z'
+	default:
+		return b
+	}
+	return (b-a+13)%(z-a+1) + a
+}
+
+// encode/decode bytes in ROT13
+func encodeROT13(r io.Reader) ([]byte, error) {
+	src, _ := ioutil.ReadAll(r)
+	for i, b := range src {
+		src[i] = rot13(b)
+	}
+	return src, nil
 }
 
 // encode/decode bytes in ROT47
