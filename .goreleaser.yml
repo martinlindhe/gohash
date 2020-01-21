@@ -1,6 +1,6 @@
 # Build customization
 builds:
-  -
+  - id: coder
     main: ./cmd/coder/main.go
     binary: coder
     goos:
@@ -12,7 +12,7 @@ builds:
     ignore:
       - goos: darwin
         goarch: 386
-  -
+  - id: findhash
     main: ./cmd/findhash/main.go
     binary: findhash
     goos:
@@ -24,7 +24,7 @@ builds:
     ignore:
       - goos: darwin
         goarch: 386
-  -
+  - id: hasher
     main: ./cmd/hasher/main.go
     binary: hasher
     goos:
@@ -37,15 +37,16 @@ builds:
       - goos: darwin
         goarch: 386
 # Archive customization
-archive:
-  format: tar.gz
-  format_overrides:
-    - goos: windows
-      format: zip
-  replacements:
-    amd64: 64-bit
-    386: 32-bit
-    darwin: macOS
-  files:
-    - README.md
-    - LICENSE
+archives:
+  - id: tgz
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    replacements:
+      amd64: 64-bit
+      386: 32-bit
+      darwin: macOS
+    files:
+      - README.md
+      - LICENSE
