@@ -1,3 +1,5 @@
+.PHONY: wasm
+
 install:
 	go get ./cmd/...
 
@@ -5,7 +7,7 @@ bench:
 	go test -bench=.
 
 lint:
-	gometalinter --enable-all --line-length=180 --deadline 5m --exclude=vendor ./...
+	golangci-lint run ./...
 
 update-vendor:
 	dep ensure
@@ -22,5 +24,7 @@ profile-mem:
 	go test --memprofile=mem.prof
 	go tool pprof --alloc_space --text mem.prof
 
-wasm-coder:
-	tinygo build -o wasm.wasm -target=wasm cmd/coder/main.go
+wasm:
+	# tinygo 0.11 fails to compile math/big
+	# curl -L https://raw.githubusercontent.com/tinygo-org/tinygo/master/targets/wasm_exec.js -o wasm/coder/wasm_exec.js
+	tinygo build -o wasm/coder/wasm.wasm -target=wasm wasm/coder/wasm.go
