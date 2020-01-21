@@ -62,6 +62,9 @@ var (
 		"reverse": {
 			fox:   "god yzal eht revo spmuj xof nworb kciuq ehT",
 			blank: ""},
+		"rot47": {
+			fox:   "%96 BF:4< 3C@H? 7@I ;F>AD @G6C E96 =2KJ 5@8",
+			blank: ""},
 		"uu": {
 			fox:   "begin 644 file.txt\nK5&AE('%U:6-K(&)R;W=N(&9O>\"!J=6UP<R!O=F5R('1H92!L87IY(&1O9P\n`\nend\n",
 			blank: "begin 644 file.txt\n`\nend\n",
