@@ -13,8 +13,3 @@
 # TODO encodings
 
 XXEncoded   https://en.wikipedia.org/wiki/Xxencoding
-
-
-# TODO coder
-
-- static web tool for github.io page
