@@ -67,7 +67,7 @@ type AppInputData struct {
 // ReadPipeOrFile reads from stdin if pipe exists, else from provided file
 func ReadPipeOrFile(fileName string) (*AppInputData, error) {
 	res := AppInputData{}
-	if !isatty.IsTerminal(os.Stdout.Fd()) {
+	if !isatty.IsTerminal(os.Stdin.Fd()) {
 		res.Reader = os.Stdin
 		res.IsPipe = true
 	} else {
