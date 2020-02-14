@@ -36,6 +36,9 @@ var (
 		"blake2s-256": {
 			fox:   "606beeec743ccbeff6cbcdf5d5302aa855c256c29b88c8ed331ea1a6bf3c8812",
 			blank: "69217a3079908094e11121d042354a7c1f55b6482ca1a51e1b250dfd1ed0eef9"},
+		"blake3": {
+			fox:   "2f1514181aadccd913abd94cfa592701a5686ab23f8df1dff1b74710febc6d4a",
+			blank: "af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262"},
 		"crc8-atm": {
 			fox:   "c1",
 			blank: "00"},

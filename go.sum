@@ -74,3 +74,5 @@ gopkg.in/yaml.v2 v2.2.2 h1:ZCJp+EgiOT7lHqUV2J862kp8Qj64Jo6az82+3Td9dZw=
 gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
 gopkg.in/yaml.v2 v2.2.7 h1:VUgggvou5XRW9mHwD/yXxIYSMtY0zoKQf/v226p2nyo=
 gopkg.in/yaml.v2 v2.2.7/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
+lukechampine.com/blake3 v1.0.0 h1:dNj1NVD7SLgkU7dykKjmmOSOTTx7ZmxnDyUyvxnQP2Q=
+lukechampine.com/blake3 v1.0.0/go.mod h1:e0XQzEQp6LtbXBhzYxRoh6s3kcmX+fMMg8sC9VgWloQ=

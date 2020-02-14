@@ -34,6 +34,7 @@ import (
 	"golang.org/x/crypto/md4"
 	"golang.org/x/crypto/ripemd160"
 	"golang.org/x/crypto/sha3"
+	"lukechampine.com/blake3"
 )
 
 // Calculator is used to calculate hash of input cleartext
@@ -59,6 +60,7 @@ var (
 		"blake2b-256":       256,
 		"blake2b-512":       512,
 		"blake2s-256":       256,
+		"blake3":            256,
 		"crc8-atm":          8,
 		"crc16-ccitt":       16,
 		"crc16-ccitt-false": 16,
@@ -111,6 +113,7 @@ var (
 		"blake2b-256":       blake2b256Sum,
 		"blake2b-512":       blake2b512Sum,
 		"blake2s-256":       blake2s256Sum,
+		"blake3":            blake3Sum,
 		"crc8-atm":          crc8AtmSum,
 		"crc16-ccitt":       crc16CcittSum,
 		"crc16-ccitt-false": crc16CcittFalseSum,
@@ -279,6 +282,14 @@ func blake2b512Sum(r io.Reader) ([]byte, error) {
 
 func blake2s256Sum(r io.Reader) ([]byte, error) {
 	h := blake2s.New256()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
+}
+
+func blake3Sum(r io.Reader) ([]byte, error) {
+	h := blake3.New(256/8, nil)
 	if _, err := io.Copy(h, r); err != nil {
 		return nil, err
 	}
