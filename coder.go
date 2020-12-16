@@ -41,10 +41,12 @@ var (
 		"decimal":      encodeDecimal,
 		"hex":          encodeHex,
 		"hexup":        encodeHexUpper,
+		"lowercase":    encodeLowercase,
 		"octal":        encodeOctal,
 		"reverse":      encodeReverse,
 		"rot13":        encodeROT13,
 		"rot47":        encodeROT47,
+		"uppercase":    encodeUppercase,
 		"uu":           encodeUU,
 		"z85":          encodeZ85,
 	}
@@ -61,10 +63,12 @@ var (
 		"decimal":      decodeDecimal,
 		"hex":          decodeHex,
 		"hexup":        decodeHex,
+		"lowercase":    encodeLowercase,
 		"octal":        decodeOctal,
 		"reverse":      encodeReverse,
 		"rot13":        encodeROT13,
 		"rot47":        encodeROT47,
+		"uppercase":    encodeUppercase,
 		"uu":           decodeUU,
 		"z85":          decodeZ85,
 	}
@@ -296,6 +300,46 @@ func encodeHexUpper(r io.Reader) ([]byte, error) {
 	src, _ := ioutil.ReadAll(r)
 
 	return []byte(strings.ToUpper(hex.EncodeToString(src))), nil
+}
+
+var asciiCaseOffset = byte('a' - 'A')
+
+func isUpper(b byte) bool {
+	return b >= 'A' && b <= 'Z'
+}
+
+func isASCIIAlphabet(b byte) bool {
+	return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')
+}
+
+// translates input ascii to upper case
+func encodeUppercase(r io.Reader) ([]byte, error) {
+	src, _ := ioutil.ReadAll(r)
+
+	var res bytes.Buffer
+	for _, b := range src {
+		if !isASCIIAlphabet(b) || isUpper(b) {
+			res.WriteByte(b)
+		} else {
+			res.WriteByte(b - asciiCaseOffset)
+		}
+	}
+	return res.Bytes(), nil
+}
+
+// translates input ascii to lower case
+func encodeLowercase(r io.Reader) ([]byte, error) {
+	src, _ := ioutil.ReadAll(r)
+
+	var res bytes.Buffer
+	for _, b := range src {
+		if !isASCIIAlphabet(b) || !isUpper(b) {
+			res.WriteByte(b)
+		} else {
+			res.WriteByte(b + asciiCaseOffset)
+		}
+	}
+	return res.Bytes(), nil
 }
 
 func decodeHex(r io.Reader) ([]byte, error) {

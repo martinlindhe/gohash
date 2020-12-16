@@ -55,6 +55,9 @@ var (
 		"hexup": {
 			fox:   "54686520717569636B2062726F776E20666F78206A756D7073206F76657220746865206C617A7920646F67",
 			blank: ""},
+		"lowercase": {
+			fox:   "the quick brown fox jumps over the lazy dog",
+			blank: ""},
 		"octal": {
 			fox: "0124 0150 0145 040 0161 0165 0151 0143 0153 040 0142 0162 0157 0167 0156 040 0146 0157 0170 040" +
 				" 0152 0165 0155 0160 0163 040 0157 0166 0145 0162 040 0164 0150 0145 040 0154 0141 0172 0171 040 0144 0157 0147",
@@ -67,6 +70,9 @@ var (
 			blank: ""},
 		"rot47": {
 			fox:   "%96 BF:4< 3C@H? 7@I ;F>AD @G6C E96 =2KJ 5@8",
+			blank: ""},
+		"uppercase": {
+			fox:   "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG",
 			blank: ""},
 		"uu": {
 			fox:   "begin 644 file.txt\nK5&AE('%U:6-K(&)R;W=N(&9O>\"!J=6UP<R!O=F5R('1H92!L87IY(&1O9P\n`\nend\n",
@@ -106,7 +112,13 @@ func TestCalcExpectedEncodings(t *testing.T) {
 }
 
 func TestCalcExpectedDecodings(t *testing.T) {
+	// these encodings are destructive and cannot be reversed
+	skip := []string{"uppercase", "lowercase"}
+
 	for algo := range decoders {
+		if isStringInSlice(algo, skip) {
+			continue
+		}
 		if forms, ok := expectedEncodings[algo]; ok {
 			for clear, coded := range forms {
 				coder := NewCoder(algo)
@@ -123,7 +135,14 @@ func TestCalcExpectedDecodings(t *testing.T) {
 
 func TestFuzzEncoders(t *testing.T) {
 	// feed encoders with random data and decoding it, making sure we always get the same result back
+
+	// these encodings are destructive and cannot be reversed
+	skip := []string{"uppercase", "lowercase"}
+
 	for algo := range expectedEncodings {
+		if isStringInSlice(algo, skip) {
+			continue
+		}
 		for i := 0; i < iterationsPerAlgo; i++ {
 			var rnd []byte
 			f.Fuzz(&rnd)

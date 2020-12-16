@@ -10,7 +10,6 @@ import (
 )
 
 func byteArrayEquals(a []byte, b []byte) bool {
-
 	if len(a) != len(b) {
 		return false
 	}
@@ -22,8 +21,16 @@ func byteArrayEquals(a []byte, b []byte) bool {
 	return true
 }
 
-func isByteInSlice(a byte, list []byte) bool {
+func isStringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
+}
 
+func isByteInSlice(a byte, list []byte) bool {
 	for _, b := range list {
 		if b == a {
 			return true
@@ -33,7 +40,6 @@ func isByteInSlice(a byte, list []byte) bool {
 }
 
 func strToDistinctByteSlice(s string) []byte {
-
 	res := []byte{}
 
 	ptr := 0
