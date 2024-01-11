@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/alecthomas/kingpin"
-	"github.com/aybabtme/color/brush"
+	"github.com/fatih/color"
 	"github.com/martinlindhe/gohash"
 )
 
@@ -24,6 +24,9 @@ var (
 	reverseBytes  = kingpin.Flag("reverse-bytes", "Reverse byte order of displayed hex value.").Bool()
 	debugAllocs   = kingpin.Flag("debug-allocs", "Debugging: print memory allocations at end of execution.").Bool()
 	bsdSyntax     = kingpin.Flag("bsd", "Output result in BSD syntax.").Bool()
+
+	white  = color.New(color.FgWhite).SprintFunc()
+	yellow = color.New(color.FgYellow).SprintFunc()
 )
 
 func main() {
@@ -83,7 +86,7 @@ func main() {
 		if !*skipFilename {
 			fmt.Print(" (")
 			if !*noColors {
-				fmt.Print(brush.White(*fileName))
+				fmt.Print(white(*fileName))
 			} else {
 				fmt.Print(*fileName)
 			}
@@ -91,13 +94,13 @@ func main() {
 		}
 		fmt.Print(" = ")
 		if !*noColors {
-			fmt.Print(brush.Yellow(encodedHash))
+			fmt.Print(yellow(encodedHash))
 		} else {
 			fmt.Print(string(encodedHash))
 		}
 	} else {
 		if !*noColors {
-			fmt.Print(brush.Yellow(encodedHash))
+			fmt.Print(yellow(encodedHash))
 		} else {
 			fmt.Print(string(encodedHash))
 		}
@@ -107,7 +110,7 @@ func main() {
 			}
 			fmt.Print("  ")
 			if !*noColors {
-				fmt.Print(brush.White(*fileName))
+				fmt.Print(white(*fileName))
 			} else {
 				fmt.Print(*fileName)
 			}
