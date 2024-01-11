@@ -36,17 +36,19 @@ builds:
     ignore:
       - goos: darwin
         goarch: 386
-# Archive customization
+
 archives:
   - id: tgz
     format: tar.gz
     format_overrides:
       - goos: windows
         format: zip
-    replacements:
-      amd64: 64-bit
-      386: 32-bit
-      darwin: macOS
     files:
       - README.md
       - LICENSE
+
+checksum:
+  name_template: 'checksums.txt'
+
+changelog:
+  sort: asc

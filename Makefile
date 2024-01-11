@@ -12,7 +12,7 @@ lint:
 	golangci-lint run ./...
 
 release:
-	goreleaser --rm-dist
+	goreleaser --clean
 
 test:
 	go test -v
