@@ -1,6 +1,5 @@
 # About
 
-[![Travis-CI](https://api.travis-ci.org/martinlindhe/gohash.svg)](https://travis-ci.org/martinlindhe/gohash)
 [![GoDoc](https://godoc.org/github.com/martinlindhe/gohash?status.svg)](https://godoc.org/github.com/martinlindhe/gohash)
 
 Command line tools and library to work with hashes and various encodings.
