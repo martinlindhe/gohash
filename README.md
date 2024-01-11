@@ -94,6 +94,7 @@ with `hasher --list-hashes`
 | streebog-512      | GOST R 34.11-2012-512     | 512 bit  | 64 byte  | 2012 |
 | tiger192          | Tiger                     | 192 bit  | 24 byte  | 1996 |
 | whirlpool         | Whirlpool                 | 512 bit  | 64 byte  | 2000 |
+| xxh64             | xxHash 64                 | 64 bit   | 4 byte   | 2012 |
 
 ## Binary-to-text encodings
 

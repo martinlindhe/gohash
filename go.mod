@@ -8,6 +8,7 @@ require (
 	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137 // indirect
 	github.com/aybabtme/color v0.0.0-20140713052517-28ad4cc941d6
 	github.com/bproctor/base91 v0.0.0-20160902125316-7de6f1dd34e8
+	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cxmcc/tiger v0.0.0-20170524142333-bde35e2713d7
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dchest/blake256 v1.1.0

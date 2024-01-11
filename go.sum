@@ -1,3 +1,4 @@
+github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/alecthomas/kingpin v2.2.6+incompatible h1:5svnBTFgJjZvGKyYBtMB0+m5wvrbUHiqye8wRJMlnYI=
 github.com/alecthomas/kingpin v2.2.6+incompatible/go.mod h1:59OFYbFVLKQKq+mqrL6Rw5bR0c3ACQaawgXx0QYndlE=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 h1:JYp7IbQjafoB+tBA3gMyHYHrpOtNuDiK/uB5uXxq5wM=
@@ -8,6 +9,8 @@ github.com/aybabtme/color v0.0.0-20140713052517-28ad4cc941d6 h1:k5FebMq+CuzGrf3L
 github.com/aybabtme/color v0.0.0-20140713052517-28ad4cc941d6/go.mod h1:k6bCbg1gudUfWem/VvfWXsk5Qqag/NDXzEHu0mNcsPM=
 github.com/bproctor/base91 v0.0.0-20160902125316-7de6f1dd34e8 h1:AOcLIabtn5jh31VACsbAI1R6y/FjyFRDyuNxkvHmSTI=
 github.com/bproctor/base91 v0.0.0-20160902125316-7de6f1dd34e8/go.mod h1:Qf+Cy/9Oy2JSEKDrf5nBXdsBqEFBNbU8Rzrart5f7h0=
+github.com/cespare/xxhash v1.1.0 h1:a6HrQnmkObjyL+Gs60czilIUGqrzKutQD6XZog3p+ko=
+github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/cxmcc/tiger v0.0.0-20170524142333-bde35e2713d7 h1:jBEtq1t2gpn2kEzvRlCUxvvrxl5aSWkXNPwe/hwvSNQ=
 github.com/cxmcc/tiger v0.0.0-20170524142333-bde35e2713d7/go.mod h1:ruCYvt9rtYymAr4rNmfYJrl1dz8HSXUFP7cufqKOsDI=
@@ -63,6 +66,7 @@ github.com/mewpkg/hashutil v1.0.1 h1:me5DWIMS8wLeMmtZnMxwNTMIA9nT9HvQZLYVMbmBIyw
 github.com/mewpkg/hashutil v1.0.1/go.mod h1:DSL30IKicBzaNFwGvhg9BG8YkZj0Nb+d6TDPb9P7hQY=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/spaolacci/murmur3 v0.0.0-20180118202830-f09979ecbc72/go.mod h1:JwIasOWyU6f++ZhiEuf87xNszmSA2myDM2Kzu9HwQUA=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=

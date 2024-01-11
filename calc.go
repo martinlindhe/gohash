@@ -15,6 +15,7 @@ import (
 	"io"
 	"sort"
 
+	"github.com/cespare/xxhash"
 	"github.com/cxmcc/tiger"
 	"github.com/dchest/blake256"
 	"github.com/dchest/blake2b"
@@ -76,6 +77,7 @@ var (
 		"fnv1a-32":          32,
 		"fnv1-64":           64,
 		"fnv1a-64":          64,
+		"xxh64":             64,
 		"gost94":            256,
 		"gost94-cryptopro":  256,
 		"md2":               128,
@@ -129,6 +131,7 @@ var (
 		"fnv1a-32":          fnv1a32Sum,
 		"fnv1-64":           fnv1_64Sum,
 		"fnv1a-64":          fnv1a64Sum,
+		"xxh64":             xxh64Sum,
 		"gost94":            gost94Sum,
 		"gost94-cryptopro":  gost94CryptoproSum,
 		"md2":               md2Sum,
@@ -625,6 +628,14 @@ func tiger192Sum(r io.Reader) ([]byte, error) {
 
 func whirlpoolSum(r io.Reader) ([]byte, error) {
 	h := whirlpool.New()
+	if _, err := io.Copy(h, r); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
+}
+
+func xxh64Sum(r io.Reader) ([]byte, error) {
+	h := xxhash.New()
 	if _, err := io.Copy(h, r); err != nil {
 		return nil, err
 	}
