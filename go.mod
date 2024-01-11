@@ -6,17 +6,16 @@ require (
 	github.com/alecthomas/kingpin v2.2.6+incompatible
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20231202071711-9a357b53e9c9 // indirect
-	github.com/aybabtme/color v0.0.0-20140713052517-28ad4cc941d6
 	github.com/bproctor/base91 v0.0.0-20160902125316-7de6f1dd34e8
 	github.com/cespare/xxhash v1.1.0
 	github.com/cxmcc/tiger v0.0.0-20170524142333-bde35e2713d7
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dchest/blake256 v1.1.0
 	github.com/dchest/blake2b v1.0.0
 	github.com/dchest/blake2s v1.0.0
 	github.com/dchest/blake512 v1.0.0
 	github.com/dchest/siphash v1.2.3
 	github.com/dchest/skein v0.0.0-20171112102903-d7f1022db390
+	github.com/fatih/color v1.16.0
 	github.com/google/gofuzz v1.2.0
 	github.com/howeyc/crc16 v0.0.0-20171223171357-2b2a61e366a6
 	github.com/htruong/go-md2 v0.0.0-20170914203617-c69905b63f6f
@@ -31,11 +30,10 @@ require (
 	github.com/martinlindhe/uu v0.0.0-20211021104116-02a47cb3d5f1
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mewpkg/hashutil v1.0.1
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.8.4
 	github.com/tilinna/z85 v1.0.0
 	golang.org/x/crypto v0.18.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/mewpkg/hashutil.v1 v1.0.1 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 	lukechampine.com/blake3 v1.2.1
 )
