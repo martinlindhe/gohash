@@ -11,8 +11,8 @@ bench:
 lint:
 	golangci-lint run ./...
 
-release:
-	goreleaser --clean
+test-release:
+	goreleaser --skip-publish --skip-validate --clean
 
 test:
 	go test -v
